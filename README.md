@@ -100,12 +100,16 @@ The project is configured for GitHub Pages deployment. The base URL is set to `/
 
 ## 🚢 Deployment
 
-The application automatically deploys to GitHub Pages when code is pushed to the `main` branch. The deployment workflow is configured in `.github/workflows/deploy.yml`.
+The application automatically deploys to GitHub Pages when code is pushed to the `main` branch.
 
-To enable GitHub Pages:
-1. Go to repository Settings → Pages
-2. Set Source to "GitHub Actions"
-3. Push to main branch to trigger deployment
+**⚠️ First-time Setup Required:** Before the first deployment can succeed, GitHub Pages must be enabled in the repository settings. See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed setup instructions.
+
+**Quick Setup:**
+1. Go to [Repository Settings → Pages](https://github.com/kehwar/echo_game/settings/pages)
+2. Under "Source", select **"GitHub Actions"**
+3. Save and re-run the failed deployment workflow
+
+For detailed deployment information, troubleshooting, and local testing instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md).
 
 ## 📝 Development Guidelines
 
