@@ -109,6 +109,11 @@ The application automatically deploys to GitHub Pages when code is pushed to the
 2. Under "Source", select **"GitHub Actions"**
 3. Save and re-run the failed deployment workflow
 
+**Verify Your Setup:**
+```bash
+./check-deployment-setup.sh
+```
+
 For detailed deployment information, troubleshooting, and local testing instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md).
 
 ## 📝 Development Guidelines

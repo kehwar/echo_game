@@ -37,7 +37,23 @@ The deployment process is automated through GitHub Actions:
 
 ### Local Testing
 
-To test the production build locally:
+To verify your setup is correct before deploying, run the setup checker:
+
+```bash
+# Make the script executable (first time only)
+chmod +x check-deployment-setup.sh
+
+# Run the checker
+./check-deployment-setup.sh
+```
+
+This script will verify:
+- Node.js and npm versions
+- Configuration files
+- Nuxt configuration for GitHub Pages
+- Build process
+
+To test the production build manually:
 
 ```bash
 # Generate the static site

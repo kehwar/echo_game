@@ -1,5 +1,10 @@
 name: Deploy to GitHub Pages
 
+# NOTE: Before this workflow can succeed, GitHub Pages must be enabled in repository settings.
+# Go to: https://github.com/kehwar/echo_game/settings/pages
+# Set Source to "GitHub Actions" and save.
+# See DEPLOYMENT.md for detailed setup instructions.
+
 on:
   push:
     branches: [ main ]
