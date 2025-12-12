@@ -1,62 +1,99 @@
 <template>
-  <div class="container">
-    <header class="header">
-      <div class="room-info">
-        <h1>Room: {{ roomCode }}</h1>
-        <button class="btn-secondary" @click="leaveGame">Leave Game</button>
+  <div class="min-h-screen p-4 max-w-7xl mx-auto">
+    <header class="mb-8">
+      <div class="flex flex-wrap justify-between items-center gap-4">
+        <h1 class="text-3xl font-bold text-foreground">Room: {{ roomCode }}</h1>
+        <Button variant="secondary" @click="leaveGame">
+          Leave Game
+        </Button>
       </div>
     </header>
 
-    <main class="game-area">
-      <div class="game-status">
-        <div class="status-card">
-          <h3>Round {{ currentRound }} / {{ maxRounds }}</h3>
-        </div>
-        <div class="status-card">
-          <h3>Time: {{ timeRemaining }}s</h3>
-        </div>
-        <div class="status-card">
-          <h3>Score: {{ score }}</h3>
-        </div>
+    <main class="space-y-8">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <Card class="bg-gradient-to-br from-primary to-purple-600 text-primary-foreground border-0">
+          <CardContent class="p-6 text-center">
+            <h3 class="text-lg font-semibold">Round {{ currentRound }} / {{ maxRounds }}</h3>
+          </CardContent>
+        </Card>
+        <Card class="bg-gradient-to-br from-primary to-purple-600 text-primary-foreground border-0">
+          <CardContent class="p-6 text-center">
+            <h3 class="text-lg font-semibold">Time: {{ timeRemaining }}s</h3>
+          </CardContent>
+        </Card>
+        <Card class="bg-gradient-to-br from-primary to-purple-600 text-primary-foreground border-0">
+          <CardContent class="p-6 text-center">
+            <h3 class="text-lg font-semibold">Score: {{ score }}</h3>
+          </CardContent>
+        </Card>
       </div>
 
-      <div v-if="!gameStarted" class="waiting-area">
-        <h2>Waiting for game to start...</h2>
-        <p>Room Code: <strong>{{ roomCode }}</strong></p>
-        <p>Share this code with your friends!</p>
-      </div>
+      <Card v-if="!gameStarted" class="bg-muted">
+        <CardContent class="py-12 text-center">
+          <h2 class="text-2xl font-bold mb-4">Waiting for game to start...</h2>
+          <p class="text-muted-foreground mb-2">
+            Room Code: <strong class="text-foreground">{{ roomCode }}</strong>
+          </p>
+          <p class="text-muted-foreground">Share this code with your friends!</p>
+        </CardContent>
+      </Card>
 
-      <div v-else class="game-play-area">
-        <div class="word-display">
-          <h2 v-if="isActing">Your word:</h2>
-          <h2 v-else>Guess the word!</h2>
-          <div v-if="isActing" class="word">{{ currentWord }}</div>
-          <div v-else class="word-hidden">***</div>
-        </div>
+      <Card v-else>
+        <CardContent class="py-8">
+          <div class="text-center space-y-8">
+            <div>
+              <h2 v-if="isActing" class="text-2xl font-bold mb-4">Your word:</h2>
+              <h2 v-else class="text-2xl font-bold mb-4">Guess the word!</h2>
+              <div v-if="isActing" class="text-5xl md:text-6xl font-bold text-primary bg-muted p-8 rounded-lg">
+                {{ currentWord }}
+              </div>
+              <div v-else class="text-5xl md:text-6xl bg-muted p-8 rounded-lg">
+                ***
+              </div>
+            </div>
 
-        <div class="action-buttons">
-          <button v-if="isActing" class="btn-warning" @click="skipWord">
-            Skip Word
-          </button>
-          <button v-else class="btn-success" @click="guessCorrect">
-            Correct Guess!
-          </button>
-        </div>
-      </div>
+            <div class="flex justify-center gap-4">
+              <Button v-if="isActing" variant="outline" size="lg" @click="skipWord">
+                Skip Word
+              </Button>
+              <Button v-else size="lg" @click="guessCorrect">
+                Correct Guess!
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
-      <div class="players-list">
-        <h3>Players</h3>
-        <ul>
-          <li v-for="player in players" :key="player" :class="{ active: player === currentActor }">
-            {{ player }} {{ player === currentActor ? '(Acting)' : '' }}
-          </li>
-        </ul>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Players</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ul class="space-y-2">
+            <li
+              v-for="player in players"
+              :key="player"
+              :class="cn(
+                'p-3 rounded-md transition-colors',
+                player === currentActor
+                  ? 'bg-primary text-primary-foreground font-semibold'
+                  : 'bg-muted'
+              )"
+            >
+              {{ player }} {{ player === currentActor ? '(Acting)' : '' }}
+            </li>
+          </ul>
+        </CardContent>
+      </Card>
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
+
 const route = useRoute()
 const roomCode = computed(() => route.params.id as string)
 
@@ -96,169 +133,3 @@ onMounted(() => {
   }, 2000)
 })
 </script>
-
-<style scoped>
-.container {
-  min-height: 100vh;
-  padding: 1rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.header {
-  margin-bottom: 2rem;
-}
-
-.room-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.room-info h1 {
-  margin: 0;
-  color: #2c3e50;
-}
-
-.btn-secondary {
-  padding: 0.5rem 1rem;
-  background: #95a5a6;
-  color: white;
-  border: none;
-  border-radius: 0.5rem;
-  cursor: pointer;
-}
-
-.game-area {
-  display: grid;
-  gap: 2rem;
-}
-
-.game-status {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 1rem;
-}
-
-.status-card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 1.5rem;
-  border-radius: 0.75rem;
-  text-align: center;
-}
-
-.status-card h3 {
-  margin: 0;
-  font-size: 1.25rem;
-}
-
-.waiting-area {
-  text-align: center;
-  padding: 3rem;
-  background: #f8f9fa;
-  border-radius: 1rem;
-}
-
-.waiting-area h2 {
-  color: #2c3e50;
-}
-
-.game-play-area {
-  background: white;
-  padding: 2rem;
-  border-radius: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.word-display {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.word-display h2 {
-  color: #2c3e50;
-  margin-bottom: 1rem;
-}
-
-.word {
-  font-size: 3rem;
-  font-weight: bold;
-  color: #667eea;
-  padding: 2rem;
-  background: #f8f9fa;
-  border-radius: 1rem;
-}
-
-.word-hidden {
-  font-size: 3rem;
-  padding: 2rem;
-  background: #f8f9fa;
-  border-radius: 1rem;
-}
-
-.action-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-}
-
-.btn-warning {
-  padding: 1rem 2rem;
-  background: #f39c12;
-  color: white;
-  border: none;
-  border-radius: 0.5rem;
-  font-size: 1.1rem;
-  cursor: pointer;
-}
-
-.btn-success {
-  padding: 1rem 2rem;
-  background: #27ae60;
-  color: white;
-  border: none;
-  border-radius: 0.5rem;
-  font-size: 1.1rem;
-  cursor: pointer;
-}
-
-.players-list {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.players-list h3 {
-  margin-top: 0;
-  color: #2c3e50;
-}
-
-.players-list ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.players-list li {
-  padding: 0.75rem;
-  margin: 0.5rem 0;
-  background: #f8f9fa;
-  border-radius: 0.5rem;
-}
-
-.players-list li.active {
-  background: #667eea;
-  color: white;
-  font-weight: 600;
-}
-
-@media (max-width: 768px) {
-  .word {
-    font-size: 2rem;
-  }
-}
-</style>
