@@ -18,7 +18,16 @@ export default defineNuxtConfig({
   },
   
   // ESLint module
-  modules: ['@nuxt/eslint'],
+  modules: ['@nuxt/eslint', '@nuxtjs/tailwindcss', 'shadcn-nuxt'],
+
+  // Global CSS
+  css: ['~/assets/css/main.css'],
+
+  // Shadcn-nuxt configuration
+  shadcn: {
+    prefix: '',
+    componentDir: './components/ui'
+  },
   
   // Nitro configuration for static generation
   nitro: {
