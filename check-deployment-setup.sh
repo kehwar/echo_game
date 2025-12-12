@@ -2,7 +2,7 @@
 # GitHub Pages Deployment Setup Checker
 # This script verifies that your local environment is ready for GitHub Pages deployment
 
-set -e
+set -euo pipefail
 
 echo "🔍 GitHub Pages Deployment Setup Checker"
 echo "=========================================="
@@ -97,8 +97,10 @@ echo ""
 
 # Try to build
 echo "🏗️  Testing build process..."
-if npm run generate > /dev/null 2>&1; then
+BUILD_OUTPUT=$(mktemp)
+if npm run generate > "$BUILD_OUTPUT" 2>&1; then
     echo -e "${GREEN}✓${NC} Build successful"
+    rm "$BUILD_OUTPUT"
     
     # Check if output directory exists
     if [ -d ".output/public" ]; then
@@ -122,7 +124,12 @@ if npm run generate > /dev/null 2>&1; then
     fi
 else
     echo -e "${RED}✗${NC} Build failed"
-    echo "Run 'npm run generate' to see detailed error messages"
+    echo ""
+    echo "Build output:"
+    cat "$BUILD_OUTPUT"
+    rm "$BUILD_OUTPUT"
+    echo ""
+    echo "Please fix the build errors before deploying."
     exit 1
 fi
 echo ""
