@@ -1,14 +1,18 @@
 # 🎭 Echo Game
 
-A web-based charades game application built with Nuxt 4, designed for group play and deployed on GitHub Pages.
+A phone-on-forehead charades game built with Nuxt 4, designed for local group play and deployed on GitHub Pages.
+
+**🎮 [Play Now](https://kehwar.github.io/echo_game/)** | Live on GitHub Pages
 
 ## 🎮 Features
 
-- **Create Game Rooms**: Start a new game and share a room code with friends
-- **Join Existing Games**: Enter a room code to join others
-- **Real-time Gameplay**: Take turns acting out words while others guess
-- **Score Tracking**: Keep track of points throughout the game
-- **Responsive Design**: Play on mobile or desktop devices
+- **Theme Selection**: Choose from 7 different themes (Animals, Food, Sports, etc.)
+- **Phone-on-Forehead Gameplay**: Place your phone on your forehead while friends give you clues
+- **Simple Tap Controls**: Tap left for correct, right to skip - no need to look at the screen!
+- **2-Minute Timer**: Fast-paced rounds with automatic timing
+- **Score Tracking**: See your correct guesses and skipped words at the end
+- **Responsive Design**: Optimized for mobile devices
+- **No Network Required**: Fully local gameplay, no server or multiplayer needed
 
 ## 🚀 Getting Started
 
@@ -70,14 +74,13 @@ echo_game/
 ├── .github/
 │   ├── workflows/           # CI/CD workflows
 │   └── copilot-instructions.md  # Coding agent instructions
+├── data/
+│   └── themes.ts           # Game themes and word lists
 ├── pages/                   # Nuxt pages (file-based routing)
-│   ├── index.vue           # Home page
-│   ├── create.vue          # Create game page
-│   ├── join.vue            # Join game page
+│   ├── index.vue           # Home page with theme selection
 │   └── game/
-│       └── [id].vue        # Game room page
-├── components/              # Vue components
-├── composables/             # Composable functions
+│       └── [id].vue        # Game play page
+├── components/              # Vue components (shadcn-vue UI components)
 ├── assets/                  # Static assets
 ├── public/                  # Public static files
 ├── test/                    # Test files
@@ -85,14 +88,17 @@ echo_game/
 └── package.json            # Dependencies
 ```
 
-## 🎯 Game Instructions
+## 🎯 How to Play
 
-1. **Create a Game**: Click "Create Game" and set up your game preferences
-2. **Share Room Code**: Share the generated room code with your friends
-3. **Join the Room**: Others can join using the room code
-4. **Play**: Take turns acting out words while others guess
-5. **Score Points**: Earn points for correct guesses
-6. **Win**: The player with the most points at the end wins!
+1. **Choose a Theme**: Select from Animals, Food, Sports, Professions, and more
+2. **Start the Game**: Press the START GAME button
+3. **Place Phone on Forehead**: Hold the phone against your forehead facing outward so others can see the screen
+4. **Get Clues**: Your friends give you hints about the word displayed
+5. **Tap to Score**: 
+   - Tap the **LEFT** side of the screen when you guess correctly ✓
+   - Tap the **RIGHT** side to skip a difficult word ✗
+6. **Beat the Clock**: You have 2 minutes to guess as many words as possible!
+7. **See Your Score**: After time runs out, view your correct and skipped words
 
 ## 🔧 Configuration
 
