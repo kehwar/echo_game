@@ -1,135 +1,242 @@
 <template>
-  <div class="min-h-screen p-4 max-w-7xl mx-auto">
-    <header class="mb-8">
-      <div class="flex flex-wrap justify-between items-center gap-4">
-        <h1 class="text-3xl font-bold text-foreground">Room: {{ roomCode }}</h1>
-        <Button variant="secondary" @click="leaveGame">
-          Leave Game
-        </Button>
-      </div>
-    </header>
+  <div class="min-h-screen bg-background">
+    <!-- Pre-game screen -->
+    <div v-if="!gameStarted && !gameEnded" class="min-h-screen flex flex-col p-4 max-w-2xl mx-auto justify-center">
+      <header class="text-center mb-8">
+        <NuxtLink to="/" class="inline-block mb-4 text-primary hover:underline">
+          ← Back to Theme Selection
+        </NuxtLink>
+        <h1 class="text-4xl font-bold text-foreground mb-4">{{ selectedTheme?.name }}</h1>
+        <p class="text-xl text-muted-foreground">{{ selectedTheme?.description }}</p>
+      </header>
 
-    <main class="space-y-8">
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card class="bg-gradient-to-br from-primary to-purple-600 text-primary-foreground border-0">
-          <CardContent class="p-6 text-center">
-            <h3 class="text-lg font-semibold">Round {{ currentRound }} / {{ maxRounds }}</h3>
-          </CardContent>
-        </Card>
-        <Card class="bg-gradient-to-br from-primary to-purple-600 text-primary-foreground border-0">
-          <CardContent class="p-6 text-center">
-            <h3 class="text-lg font-semibold">Time: {{ timeRemaining }}s</h3>
-          </CardContent>
-        </Card>
-        <Card class="bg-gradient-to-br from-primary to-purple-600 text-primary-foreground border-0">
-          <CardContent class="p-6 text-center">
-            <h3 class="text-lg font-semibold">Score: {{ score }}</h3>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card v-if="!gameStarted" class="bg-muted">
-        <CardContent class="py-12 text-center">
-          <h2 class="text-2xl font-bold mb-4">Waiting for game to start...</h2>
-          <p class="text-muted-foreground mb-2">
-            Room Code: <strong class="text-foreground">{{ roomCode }}</strong>
-          </p>
-          <p class="text-muted-foreground">Share this code with your friends!</p>
+      <Card class="mb-8">
+        <CardContent class="py-12 text-center space-y-6">
+          <div class="text-6xl mb-4">📱</div>
+          <h2 class="text-2xl font-bold">Ready to Play?</h2>
+          <div class="text-left max-w-md mx-auto space-y-3 text-muted-foreground">
+            <p>1. Press START below</p>
+            <p>2. Place your phone on your forehead facing others</p>
+            <p>3. Tap LEFT side = Correct guess ✓</p>
+            <p>4. Tap RIGHT side = Skip word ✗</p>
+            <p>5. You have 2 minutes!</p>
+          </div>
+          <Button size="lg" class="w-full max-w-md mt-8" @click="startGame">
+            START GAME
+          </Button>
         </CardContent>
       </Card>
+    </div>
 
-      <Card v-else>
-        <CardContent class="py-8">
-          <div class="text-center space-y-8">
-            <div>
-              <h2 v-if="isActing" class="text-2xl font-bold mb-4">Your word:</h2>
-              <h2 v-else class="text-2xl font-bold mb-4">Guess the word!</h2>
-              <div v-if="isActing" class="text-5xl md:text-6xl font-bold text-primary bg-muted p-8 rounded-lg">
-                {{ currentWord }}
-              </div>
-              <div v-else class="text-5xl md:text-6xl bg-muted p-8 rounded-lg">
-                ***
-              </div>
-            </div>
+    <!-- Active game screen with tap zones -->
+    <div v-else-if="gameStarted && !gameEnded" class="min-h-screen flex flex-col">
+      <!-- Timer and score bar -->
+      <div class="bg-gradient-to-br from-primary to-purple-600 text-primary-foreground p-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+          <div class="text-2xl font-bold">⏱️ {{ timeRemaining }}s</div>
+          <div class="text-2xl font-bold">✓ {{ correctCount }} | ✗ {{ wrongCount }}</div>
+        </div>
+      </div>
 
-            <div class="flex justify-center gap-4">
-              <Button v-if="isActing" variant="outline" size="lg" @click="skipWord">
-                Skip Word
-              </Button>
-              <Button v-else size="lg" @click="guessCorrect">
-                Correct Guess!
-              </Button>
+      <!-- Main game area with left/right tap zones -->
+      <div class="flex-1 flex">
+        <!-- Left tap zone (Correct) -->
+        <div 
+          class="flex-1 bg-green-500 hover:bg-green-600 active:bg-green-700 cursor-pointer flex items-center justify-center transition-colors"
+          @click="markCorrect"
+        >
+          <div class="text-center text-white pointer-events-none select-none">
+            <div class="text-8xl mb-4 rotate-180">✓</div>
+            <div class="text-3xl font-bold rotate-180">CORRECT</div>
+          </div>
+        </div>
+
+        <!-- Center word display -->
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div class="bg-white/95 rounded-2xl p-12 shadow-2xl max-w-2xl mx-4 text-center">
+            <div class="text-6xl md:text-8xl font-bold text-primary break-words">
+              {{ currentWord }}
             </div>
+          </div>
+        </div>
+
+        <!-- Right tap zone (Skip/Wrong) -->
+        <div 
+          class="flex-1 bg-red-500 hover:bg-red-600 active:bg-red-700 cursor-pointer flex items-center justify-center transition-colors"
+          @click="markWrong"
+        >
+          <div class="text-center text-white pointer-events-none select-none">
+            <div class="text-8xl mb-4 rotate-180">✗</div>
+            <div class="text-3xl font-bold rotate-180">SKIP</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- End game screen -->
+    <div v-else-if="gameEnded" class="min-h-screen flex flex-col p-4 max-w-2xl mx-auto justify-center">
+      <Card>
+        <CardContent class="py-12 text-center space-y-6">
+          <div class="text-6xl mb-4">🎉</div>
+          <h2 class="text-4xl font-bold">Time's Up!</h2>
+          
+          <div class="my-8 space-y-4">
+            <div class="bg-green-100 dark:bg-green-900/20 p-6 rounded-lg">
+              <div class="text-5xl font-bold text-green-600 dark:text-green-400">{{ correctCount }}</div>
+              <div class="text-xl text-green-700 dark:text-green-300 mt-2">Correct Guesses ✓</div>
+            </div>
+            
+            <div class="bg-red-100 dark:bg-red-900/20 p-6 rounded-lg">
+              <div class="text-3xl font-bold text-red-600 dark:text-red-400">{{ wrongCount }}</div>
+              <div class="text-lg text-red-700 dark:text-red-300 mt-2">Skipped Words ✗</div>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <Button size="lg" class="w-full" @click="playAgain">
+              Play Again
+            </Button>
+            <Button variant="outline" size="lg" class="w-full" @click="chooseNewTheme">
+              Choose Different Theme
+            </Button>
           </div>
         </CardContent>
       </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Players</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ul class="space-y-2">
-            <li
-              v-for="player in players"
-              :key="player"
-              :class="cn(
-                'p-3 rounded-md transition-colors',
-                player === currentActor
-                  ? 'bg-primary text-primary-foreground font-semibold'
-                  : 'bg-muted'
-              )"
-            >
-              {{ player }} {{ player === currentActor ? '(Acting)' : '' }}
-            </li>
-          </ul>
-        </CardContent>
-      </Card>
-    </main>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
+import { themes } from '@/data/themes'
 
 const route = useRoute()
-const roomCode = computed(() => route.params.id as string)
+const themeId = computed(() => route.params.id as string)
 
+// Find the selected theme
+const selectedTheme = computed(() => themes.find(t => t.id === themeId.value))
+
+// Game state
 const gameStarted = ref(false)
-const currentRound = ref(1)
-const maxRounds = ref(5)
-const timeRemaining = ref(60)
-const score = ref(0)
-const currentWord = ref('ELEPHANT')
-const isActing = ref(true)
-const currentActor = ref('Player 1')
-const players = ref(['Player 1', 'Player 2', 'Player 3'])
+const gameEnded = ref(false)
+const timeRemaining = ref(120) // 2 minutes in seconds
+const currentWord = ref('')
+const correctCount = ref(0)
+const wrongCount = ref(0)
+const usedWords = ref<string[]>([])
+const availableWords = ref<string[]>([])
 
-// Sample words for charades
-const words = [
-  'ELEPHANT', 'PIZZA', 'SUPERHERO', 'DANCING', 'GUITAR',
-  'BASKETBALL', 'RAINBOW', 'ASTRONAUT', 'KARATE', 'PHOTOGRAPHY'
-]
+let timerInterval: number | null = null
 
-function leaveGame() {
+// Initialize game
+function initializeGame() {
+  if (!selectedTheme.value) {
+    navigateTo('/')
+    return
+  }
+  
+  availableWords.value = [...selectedTheme.value.words]
+  shuffleArray(availableWords.value)
+  usedWords.value = []
+  correctCount.value = 0
+  wrongCount.value = 0
+  timeRemaining.value = 120
+  gameEnded.value = false
+  nextWord()
+}
+
+// Shuffle array helper
+function shuffleArray<T>(array: T[]): void {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]]
+  }
+}
+
+// Get next word
+function nextWord() {
+  if (availableWords.value.length === 0) {
+    // Refill with unused words first, or all words if all have been used
+    const unusedWords = selectedTheme.value?.words.filter(
+      word => !usedWords.value.includes(word)
+    ) || []
+    
+    if (unusedWords.length > 0) {
+      availableWords.value = [...unusedWords]
+    } else {
+      // All words used, reset and start over
+      availableWords.value = [...(selectedTheme.value?.words || [])]
+      usedWords.value = []
+    }
+    shuffleArray(availableWords.value)
+  }
+  
+  currentWord.value = availableWords.value.pop() || ''
+}
+
+// Start the game
+function startGame() {
+  gameStarted.value = true
+  initializeGame()
+  
+  // Start timer
+  timerInterval = setInterval(() => {
+    timeRemaining.value--
+    
+    if (timeRemaining.value <= 0) {
+      endGame()
+    }
+  }, 1000)
+}
+
+// End the game
+function endGame() {
+  gameStarted.value = false
+  gameEnded.value = true
+  
+  if (timerInterval) {
+    clearInterval(timerInterval)
+    timerInterval = null
+  }
+}
+
+// Mark word as correct
+function markCorrect() {
+  correctCount.value++
+  usedWords.value.push(currentWord.value)
+  nextWord()
+}
+
+// Mark word as wrong/skip
+function markWrong() {
+  wrongCount.value++
+  usedWords.value.push(currentWord.value)
+  nextWord()
+}
+
+// Play again with same theme
+function playAgain() {
+  gameEnded.value = false
+  startGame()
+}
+
+// Choose a new theme
+function chooseNewTheme() {
   navigateTo('/')
 }
 
-function skipWord() {
-  currentWord.value = words[Math.floor(Math.random() * words.length)]
-}
+// Cleanup on unmount
+onUnmounted(() => {
+  if (timerInterval) {
+    clearInterval(timerInterval)
+  }
+})
 
-function guessCorrect() {
-  score.value += 10
-  currentWord.value = words[Math.floor(Math.random() * words.length)]
-}
-
-// Auto-start game for demo purposes
+// Redirect if theme not found
 onMounted(() => {
-  setTimeout(() => {
-    gameStarted.value = true
-  }, 2000)
+  if (!selectedTheme.value) {
+    navigateTo('/')
+  }
 })
 </script>
