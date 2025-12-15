@@ -2,6 +2,8 @@
 
 A web-based charades game application built with Nuxt 4, designed for group play and deployed on GitHub Pages.
 
+**🔗 [Play the game here!](https://kehwar.github.io/echo_game/)**
+
 ## 🎮 Features
 
 - **Create Game Rooms**: Start a new game and share a room code with friends
