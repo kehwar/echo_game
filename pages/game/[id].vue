@@ -127,7 +127,7 @@ const wrongCount = ref(0)
 const usedWords = ref<string[]>([])
 const availableWords = ref<string[]>([])
 
-let timerInterval: NodeJS.Timeout | null = null
+let timerInterval: number | null = null
 
 // Initialize game
 function initializeGame() {
@@ -157,8 +157,18 @@ function shuffleArray<T>(array: T[]): void {
 // Get next word
 function nextWord() {
   if (availableWords.value.length === 0) {
-    // Refill if we run out of words
-    availableWords.value = [...(selectedTheme.value?.words || [])]
+    // Refill with unused words first, or all words if all have been used
+    const unusedWords = selectedTheme.value?.words.filter(
+      word => !usedWords.value.includes(word)
+    ) || []
+    
+    if (unusedWords.length > 0) {
+      availableWords.value = [...unusedWords]
+    } else {
+      // All words used, reset and start over
+      availableWords.value = [...(selectedTheme.value?.words || [])]
+      usedWords.value = []
+    }
     shuffleArray(availableWords.value)
   }
   
