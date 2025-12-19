@@ -19,8 +19,28 @@
             <p>2. Place your phone on your forehead facing others</p>
             <p>3. Tap LEFT side = Correct guess ✓</p>
             <p>4. Tap RIGHT side = Skip word ✗</p>
-            <p>5. You have 2 minutes!</p>
+            <p>5. You have {{ selectedDuration }} seconds!</p>
           </div>
+          
+          <div class="max-w-md mx-auto mt-6">
+            <label class="block text-sm font-medium mb-3">Round Duration</label>
+            <div class="flex gap-3 justify-center">
+              <button
+                v-for="duration in durationOptions"
+                :key="duration"
+                :class="[
+                  'px-6 py-3 rounded-lg font-medium transition-all',
+                  selectedDuration === duration
+                    ? 'bg-primary text-primary-foreground shadow-lg scale-105'
+                    : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                ]"
+                @click="selectedDuration = duration"
+              >
+                {{ duration }}s
+              </button>
+            </div>
+          </div>
+          
           <Button size="lg" class="w-full max-w-md mt-8" @click="startGame">
             START GAME
           </Button>
@@ -114,6 +134,8 @@ const selectedTheme = computed(() => themes.find(t => t.id === themeId.value))
 // Game state
 const gameStarted = ref(false)
 const gameEnded = ref(false)
+const durationOptions = [60, 90, 120]
+const selectedDuration = ref(120) // Default to 120 seconds
 const timeRemaining = ref(120) // 2 minutes in seconds
 const currentWord = ref('')
 const correctCount = ref(0)
@@ -135,7 +157,7 @@ function initializeGame() {
   usedWords.value = []
   correctCount.value = 0
   wrongCount.value = 0
-  timeRemaining.value = 120
+  timeRemaining.value = selectedDuration.value
   gameEnded.value = false
   nextWord()
 }
