@@ -9,7 +9,7 @@ The game follows a simple 4-step flow that repeats for each round:
 ### 1. **Select Theme** 🎨
 
 - Players start at the home page where they can choose from 7 different themes
-- Available themes include: Animals, Food, Sports, Professions, Countries, Movies, and Random
+- Available themes include: Animals, Actions & Activities, Food & Drinks, Professions, Sports & Games, Objects & Things, and Movies & Entertainment
 - Each theme has its own set of words tailored to that category
 - Click/tap on a theme card to proceed to the game setup screen
 
