@@ -19,7 +19,8 @@
             <p>2. Place your phone on your forehead facing others</p>
             <p>3. Tap LEFT side = Correct guess ✓</p>
             <p>4. Tap RIGHT side = Skip word ✗</p>
-            <p>5. You have {{ selectedDuration }} seconds!</p>
+            <p>5. Double-tap anywhere to PAUSE ⏸️</p>
+            <p>6. You have {{ selectedDuration }} seconds!</p>
           </div>
           
           <div class="max-w-md mx-auto mt-6">
@@ -65,7 +66,7 @@
           class="flex-1 cursor-pointer"
           role="button"
           aria-label="Mark answer as correct"
-          @click="markCorrect"
+          @click="handleTap('correct')"
         />
 
         <!-- Center word display -->
@@ -75,6 +76,29 @@
               {{ currentWord }}
             </div>
           </div>
+        </div>
+
+        <!-- Pause overlay -->
+        <div 
+          v-if="gamePaused" 
+          class="absolute inset-0 bg-black/80 flex items-center justify-center z-50 pointer-events-auto"
+        >
+          <Card class="max-w-md mx-4 w-full">
+            <CardContent class="py-12 text-center space-y-6">
+              <div class="text-6xl mb-4">⏸️</div>
+              <h2 class="text-4xl font-bold">PAUSED</h2>
+              <p class="text-muted-foreground">Game timer is paused</p>
+              
+              <div class="space-y-3 pt-4">
+                <Button size="lg" class="w-full" @click="resumeGame">
+                  Resume Game
+                </Button>
+                <Button variant="outline" size="lg" class="w-full" @click="endGame">
+                  End Round Early
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         <!-- End Game Button -->
@@ -94,7 +118,7 @@
           class="flex-1 cursor-pointer"
           role="button"
           aria-label="Skip or mark answer as wrong"
-          @click="markWrong"
+          @click="handleTap('wrong')"
         />
       </div>
     </div>
@@ -146,6 +170,7 @@ const selectedTheme = computed(() => themes.find(t => t.id === themeId.value))
 // Game state
 const gameStarted = ref(false)
 const gameEnded = ref(false)
+const gamePaused = ref(false)
 const durationOptions = [60, 90, 120]
 const selectedDuration = ref(120) // Default to 120 seconds
 const timeRemaining = ref(selectedDuration.value)
@@ -156,6 +181,8 @@ const usedWords = ref<string[]>([])
 const availableWords = ref<string[]>([])
 
 let timerInterval: number | null = null
+let lastTapTime = 0
+const DOUBLE_TAP_DELAY = 300 // milliseconds
 
 // Initialize game
 function initializeGame() {
@@ -222,6 +249,7 @@ function startGame() {
 function endGame() {
   gameStarted.value = false
   gameEnded.value = true
+  gamePaused.value = false
   
   if (timerInterval) {
     clearInterval(timerInterval)
@@ -229,8 +257,39 @@ function endGame() {
   }
 }
 
+// Handle tap with double-tap detection
+function handleTap(action: 'correct' | 'wrong') {
+  if (gamePaused.value) return
+  
+  const currentTime = Date.now()
+  const timeSinceLastTap = currentTime - lastTapTime
+  
+  if (timeSinceLastTap < DOUBLE_TAP_DELAY) {
+    // Double tap detected - pause the game
+    pauseGame()
+    lastTapTime = 0 // Reset to prevent triple tap issues
+    return
+  }
+  
+  lastTapTime = currentTime
+  
+  // Execute the action after a short delay to allow for potential double tap
+  setTimeout(() => {
+    const finalTimeSinceLastTap = Date.now() - lastTapTime
+    if (finalTimeSinceLastTap >= DOUBLE_TAP_DELAY - 50) {
+      // No second tap detected, execute the action
+      if (action === 'correct') {
+        markCorrect()
+      } else {
+        markWrong()
+      }
+    }
+  }, DOUBLE_TAP_DELAY)
+}
+
 // Mark word as correct
 function markCorrect() {
+  if (gamePaused.value) return
   correctCount.value++
   usedWords.value.push(currentWord.value)
   nextWord()
@@ -238,9 +297,38 @@ function markCorrect() {
 
 // Mark word as wrong/skip
 function markWrong() {
+  if (gamePaused.value) return
   wrongCount.value++
   usedWords.value.push(currentWord.value)
   nextWord()
+}
+
+// Pause the game
+function pauseGame() {
+  if (!gameStarted.value || gameEnded.value) return
+  
+  gamePaused.value = true
+  
+  if (timerInterval) {
+    clearInterval(timerInterval)
+    timerInterval = null
+  }
+}
+
+// Resume the game
+function resumeGame() {
+  if (!gameStarted.value || gameEnded.value) return
+  
+  gamePaused.value = false
+  
+  // Restart timer
+  timerInterval = setInterval(() => {
+    timeRemaining.value--
+    
+    if (timeRemaining.value <= 0) {
+      endGame()
+    }
+  }, 1000)
 }
 
 // Play again with same theme
