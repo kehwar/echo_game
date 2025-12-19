@@ -42,14 +42,11 @@
       <div class="flex-1 flex">
         <!-- Left tap zone (Correct) -->
         <div 
-          class="flex-1 bg-green-500 hover:bg-green-600 active:bg-green-700 cursor-pointer flex items-center justify-center transition-colors"
+          class="flex-1 cursor-pointer"
+          role="button"
+          aria-label="Mark answer as correct"
           @click="markCorrect"
-        >
-          <div class="text-center text-white pointer-events-none select-none">
-            <div class="text-8xl mb-4 rotate-180">✓</div>
-            <div class="text-3xl font-bold rotate-180">CORRECT</div>
-          </div>
-        </div>
+        />
 
         <!-- Center word display -->
         <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -62,14 +59,11 @@
 
         <!-- Right tap zone (Skip/Wrong) -->
         <div 
-          class="flex-1 bg-red-500 hover:bg-red-600 active:bg-red-700 cursor-pointer flex items-center justify-center transition-colors"
+          class="flex-1 cursor-pointer"
+          role="button"
+          aria-label="Skip or mark answer as wrong"
           @click="markWrong"
-        >
-          <div class="text-center text-white pointer-events-none select-none">
-            <div class="text-8xl mb-4 rotate-180">✗</div>
-            <div class="text-3xl font-bold rotate-180">SKIP</div>
-          </div>
-        </div>
+        />
       </div>
     </div>
 
