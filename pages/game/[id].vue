@@ -181,8 +181,10 @@ const usedWords = ref<string[]>([])
 const availableWords = ref<string[]>([])
 
 let timerInterval: number | null = null
-let lastTapTime = 0
+const lastTapTime = ref(0)
 const DOUBLE_TAP_DELAY = 300 // milliseconds
+const SINGLE_TAP_BUFFER = 50 // milliseconds buffer to ensure double-tap check completes
+let pendingTapTimeout: ReturnType<typeof setTimeout> | null = null
 
 // Initialize game
 function initializeGame() {
@@ -262,21 +264,27 @@ function handleTap(action: 'correct' | 'wrong') {
   if (gamePaused.value) return
   
   const currentTime = Date.now()
-  const timeSinceLastTap = currentTime - lastTapTime
+  const timeSinceLastTap = currentTime - lastTapTime.value
+  
+  // Clear any pending single tap action
+  if (pendingTapTimeout) {
+    clearTimeout(pendingTapTimeout)
+    pendingTapTimeout = null
+  }
   
   if (timeSinceLastTap < DOUBLE_TAP_DELAY) {
     // Double tap detected - pause the game
     pauseGame()
-    lastTapTime = 0 // Reset to prevent triple tap issues
+    lastTapTime.value = 0 // Reset to prevent triple tap issues
     return
   }
   
-  lastTapTime = currentTime
+  lastTapTime.value = currentTime
   
   // Execute the action after a short delay to allow for potential double tap
-  setTimeout(() => {
-    const finalTimeSinceLastTap = Date.now() - lastTapTime
-    if (finalTimeSinceLastTap >= DOUBLE_TAP_DELAY - 50) {
+  pendingTapTimeout = setTimeout(() => {
+    const finalTimeSinceLastTap = Date.now() - lastTapTime.value
+    if (finalTimeSinceLastTap >= DOUBLE_TAP_DELAY - SINGLE_TAP_BUFFER) {
       // No second tap detected, execute the action
       if (action === 'correct') {
         markCorrect()
@@ -284,6 +292,7 @@ function handleTap(action: 'correct' | 'wrong') {
         markWrong()
       }
     }
+    pendingTapTimeout = null
   }, DOUBLE_TAP_DELAY)
 }
 
@@ -346,6 +355,9 @@ function chooseNewTheme() {
 onUnmounted(() => {
   if (timerInterval) {
     clearInterval(timerInterval)
+  }
+  if (pendingTapTimeout) {
+    clearTimeout(pendingTapTimeout)
   }
 })
 
