@@ -43,6 +43,8 @@
         <!-- Left tap zone (Correct) -->
         <div 
           class="flex-1 cursor-pointer"
+          role="button"
+          aria-label="Mark answer as correct"
           @click="markCorrect"
         />
 
@@ -58,6 +60,8 @@
         <!-- Right tap zone (Skip/Wrong) -->
         <div 
           class="flex-1 cursor-pointer"
+          role="button"
+          aria-label="Skip or mark answer as wrong"
           @click="markWrong"
         />
       </div>
