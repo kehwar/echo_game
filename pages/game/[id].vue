@@ -46,8 +46,7 @@
           @click="markCorrect"
         >
           <div class="text-center text-white pointer-events-none select-none">
-            <div class="text-8xl mb-4 rotate-180">✓</div>
-            <div class="text-3xl font-bold rotate-180">CORRECT</div>
+            <div class="text-8xl rotate-180">✓</div>
           </div>
         </div>
 
@@ -66,8 +65,7 @@
           @click="markWrong"
         >
           <div class="text-center text-white pointer-events-none select-none">
-            <div class="text-8xl mb-4 rotate-180">✗</div>
-            <div class="text-3xl font-bold rotate-180">SKIP</div>
+            <div class="text-8xl rotate-180">✗</div>
           </div>
         </div>
       </div>
