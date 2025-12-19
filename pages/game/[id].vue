@@ -260,7 +260,9 @@ function endGame() {
 // Mark word as correct
 function markCorrect() {
   correctCount.value++
-  correctWords.value.push(currentWord.value)
+  if (!correctWords.value.includes(currentWord.value)) {
+    correctWords.value.push(currentWord.value)
+  }
   usedWords.value.push(currentWord.value)
   nextWord()
 }
@@ -268,7 +270,9 @@ function markCorrect() {
 // Mark word as wrong/skip
 function markWrong() {
   wrongCount.value++
-  skippedWords.value.push(currentWord.value)
+  if (!skippedWords.value.includes(currentWord.value)) {
+    skippedWords.value.push(currentWord.value)
+  }
   usedWords.value.push(currentWord.value)
   nextWord()
 }
