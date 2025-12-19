@@ -110,11 +110,35 @@
             <div class="bg-green-100 dark:bg-green-900/20 p-6 rounded-lg">
               <div class="text-5xl font-bold text-green-600 dark:text-green-400">{{ correctCount }}</div>
               <div class="text-xl text-green-700 dark:text-green-300 mt-2">Correct Guesses ✓</div>
+              <div v-if="correctWords.length > 0" class="mt-4 text-left max-h-48 overflow-y-auto">
+                <div class="text-sm font-semibold text-green-700 dark:text-green-300 mb-2">Words guessed:</div>
+                <div class="flex flex-wrap gap-2">
+                  <span 
+                    v-for="word in correctWords" 
+                    :key="word"
+                    class="inline-block bg-green-200 dark:bg-green-800 text-green-800 dark:text-green-200 px-3 py-1 rounded-full text-sm"
+                  >
+                    {{ word }}
+                  </span>
+                </div>
+              </div>
             </div>
             
             <div class="bg-red-100 dark:bg-red-900/20 p-6 rounded-lg">
               <div class="text-3xl font-bold text-red-600 dark:text-red-400">{{ wrongCount }}</div>
               <div class="text-lg text-red-700 dark:text-red-300 mt-2">Skipped Words ✗</div>
+              <div v-if="skippedWords.length > 0" class="mt-4 text-left max-h-48 overflow-y-auto">
+                <div class="text-sm font-semibold text-red-700 dark:text-red-300 mb-2">Words skipped:</div>
+                <div class="flex flex-wrap gap-2">
+                  <span 
+                    v-for="word in skippedWords" 
+                    :key="word"
+                    class="inline-block bg-red-200 dark:bg-red-800 text-red-800 dark:text-red-200 px-3 py-1 rounded-full text-sm"
+                  >
+                    {{ word }}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -153,6 +177,8 @@ const currentWord = ref('')
 const correctCount = ref(0)
 const wrongCount = ref(0)
 const usedWords = ref<string[]>([])
+const correctWords = ref<string[]>([])
+const skippedWords = ref<string[]>([])
 const availableWords = ref<string[]>([])
 
 let timerInterval: number | null = null
@@ -167,6 +193,8 @@ function initializeGame() {
   availableWords.value = [...selectedTheme.value.words]
   shuffleArray(availableWords.value)
   usedWords.value = []
+  correctWords.value = []
+  skippedWords.value = []
   correctCount.value = 0
   wrongCount.value = 0
   timeRemaining.value = selectedDuration.value
@@ -232,6 +260,7 @@ function endGame() {
 // Mark word as correct
 function markCorrect() {
   correctCount.value++
+  correctWords.value.push(currentWord.value)
   usedWords.value.push(currentWord.value)
   nextWord()
 }
@@ -239,6 +268,7 @@ function markCorrect() {
 // Mark word as wrong/skip
 function markWrong() {
   wrongCount.value++
+  skippedWords.value.push(currentWord.value)
   usedWords.value.push(currentWord.value)
   nextWord()
 }
