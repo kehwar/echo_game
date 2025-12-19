@@ -263,6 +263,7 @@ function endGame() {
 
 // Handle tap with double-tap detection
 function handleTap(action: 'correct' | 'wrong') {
+  // Ignore taps while game is paused
   if (gamePaused.value) return
   
   const currentTime = Date.now()
@@ -277,7 +278,7 @@ function handleTap(action: 'correct' | 'wrong') {
   if (timeSinceLastTap < DOUBLE_TAP_DELAY) {
     // Double tap detected - pause the game
     pauseGame()
-    lastTapTime.value = 0 // Reset to prevent triple tap issues
+    lastTapTime.value = 0 // Reset to prevent additional taps from being detected as part of a sequence
     return
   }
   
