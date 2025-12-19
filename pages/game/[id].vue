@@ -183,7 +183,6 @@ const availableWords = ref<string[]>([])
 let timerInterval: number | null = null
 const lastTapTime = ref(0)
 const DOUBLE_TAP_DELAY = 300 // milliseconds
-const SINGLE_TAP_BUFFER = 50 // milliseconds buffer to ensure double-tap check completes
 let pendingTapTimeout: ReturnType<typeof setTimeout> | null = null
 
 // Initialize game
@@ -236,8 +235,11 @@ function nextWord() {
 function startGame() {
   gameStarted.value = true
   initializeGame()
-  
-  // Start timer
+  startTimer()
+}
+
+// Start/restart the timer
+function startTimer() {
   timerInterval = setInterval(() => {
     timeRemaining.value--
     
@@ -281,16 +283,13 @@ function handleTap(action: 'correct' | 'wrong') {
   
   lastTapTime.value = currentTime
   
-  // Execute the action after a short delay to allow for potential double tap
+  // Execute the action after delay to check if a double-tap occurs
   pendingTapTimeout = setTimeout(() => {
-    const finalTimeSinceLastTap = Date.now() - lastTapTime.value
-    if (finalTimeSinceLastTap >= DOUBLE_TAP_DELAY - SINGLE_TAP_BUFFER) {
-      // No second tap detected, execute the action
-      if (action === 'correct') {
-        markCorrect()
-      } else {
-        markWrong()
-      }
+    // If we reach here, no double-tap occurred, so execute the action
+    if (action === 'correct') {
+      markCorrect()
+    } else {
+      markWrong()
     }
     pendingTapTimeout = null
   }, DOUBLE_TAP_DELAY)
@@ -329,15 +328,7 @@ function resumeGame() {
   if (!gameStarted.value || gameEnded.value) return
   
   gamePaused.value = false
-  
-  // Restart timer
-  timerInterval = setInterval(() => {
-    timeRemaining.value--
-    
-    if (timeRemaining.value <= 0) {
-      endGame()
-    }
-  }, 1000)
+  startTimer()
 }
 
 // Play again with same theme
