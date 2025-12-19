@@ -1,3 +1,8 @@
+---
+applyTo: "**"
+---
+
+
 # 🎮 Echo Game - Game Flow Instructions
 
 This document describes how the game loop works in Echo Game, a phone-on-forehead charades game.
