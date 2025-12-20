@@ -19,7 +19,7 @@
             <p>2. Place your phone on your forehead facing others</p>
             <p>3. Tap LEFT side = Correct guess ✓</p>
             <p>4. Tap RIGHT side = Skip word ✗</p>
-            <p>5. Double-tap anywhere to PAUSE ⏸️</p>
+            <p>5. Tap pause button in corners to PAUSE ⏸️</p>
             <p>6. You have {{ selectedDuration }} seconds!</p>
           </div>
           
@@ -51,11 +51,24 @@
 
     <!-- Active game screen with tap zones -->
     <div v-else-if="gameStarted && !gameEnded" class="min-h-screen flex flex-col">
-      <!-- Timer and score bar -->
+      <!-- Timer and pause bar -->
       <div class="bg-gradient-to-br from-primary to-purple-600 text-primary-foreground p-4">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
-          <div class="text-2xl font-bold">⏱️ {{ timeRemaining }}s</div>
-          <div class="text-2xl font-bold">✓ {{ correctCount }} | ✗ {{ wrongCount }}</div>
+          <button 
+            class="text-2xl font-bold p-2 hover:bg-white/20 rounded-lg transition-colors"
+            aria-label="Pause game"
+            @click="pauseGame"
+          >
+            ⏸️
+          </button>
+          <div class="text-3xl font-bold">⏱️ {{ timeRemaining }}s</div>
+          <button 
+            class="text-2xl font-bold p-2 hover:bg-white/20 rounded-lg transition-colors"
+            aria-label="Pause game"
+            @click="pauseGame"
+          >
+            ⏸️
+          </button>
         </div>
       </div>
 
@@ -195,9 +208,6 @@ const skippedWords = ref<string[]>([])
 const availableWords = ref<string[]>([])
 
 let timerInterval: number | null = null
-const lastTapTime = ref(0)
-const DOUBLE_TAP_DELAY = 300 // milliseconds
-let pendingTapTimeout: ReturnType<typeof setTimeout> | null = null
 
 // Initialize game
 function initializeGame() {
@@ -277,39 +287,16 @@ function endGame() {
   }
 }
 
-// Handle tap with double-tap detection
+// Handle tap without double-tap detection
 function handleTap(action: 'correct' | 'wrong') {
   // Ignore taps while game is paused
   if (gamePaused.value) return
   
-  const currentTime = Date.now()
-  const timeSinceLastTap = currentTime - lastTapTime.value
-  
-  // Clear any pending single tap action
-  if (pendingTapTimeout) {
-    clearTimeout(pendingTapTimeout)
-    pendingTapTimeout = null
+  if (action === 'correct') {
+    markCorrect()
+  } else {
+    markWrong()
   }
-  
-  if (timeSinceLastTap < DOUBLE_TAP_DELAY) {
-    // Double tap detected - pause the game
-    pauseGame()
-    lastTapTime.value = 0 // Reset to prevent additional taps from being detected as part of a sequence
-    return
-  }
-  
-  lastTapTime.value = currentTime
-  
-  // Execute the action after delay to check if a double-tap occurs
-  pendingTapTimeout = setTimeout(() => {
-    // If we reach here, no double-tap occurred, so execute the action
-    if (action === 'correct') {
-      markCorrect()
-    } else {
-      markWrong()
-    }
-    pendingTapTimeout = null
-  }, DOUBLE_TAP_DELAY)
 }
 
 // Mark word as correct
@@ -369,9 +356,6 @@ function chooseNewTheme() {
 onUnmounted(() => {
   if (timerInterval) {
     clearInterval(timerInterval)
-  }
-  if (pendingTapTimeout) {
-    clearTimeout(pendingTapTimeout)
   }
 })
 
