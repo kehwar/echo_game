@@ -18,7 +18,7 @@ export default defineNuxtConfig({
   },
   
   // ESLint module
-  modules: ['@nuxt/eslint', '@nuxtjs/tailwindcss', 'shadcn-nuxt'],
+  modules: ['@nuxt/eslint', '@nuxtjs/tailwindcss', 'shadcn-nuxt', '@nuxtjs/i18n'],
 
   // Global CSS
   css: ['~/assets/css/main.css'],
@@ -27,6 +27,20 @@ export default defineNuxtConfig({
   shadcn: {
     prefix: '',
     componentDir: './components/ui'
+  },
+
+  // i18n configuration
+  i18n: {
+    locales: [
+      {
+        code: 'en-US',
+        name: 'English (US)',
+        file: 'en-US.json'
+      }
+    ],
+    defaultLocale: 'en-US',
+    strategy: 'no_prefix',
+    vueI18n: './i18n.config.ts'
   },
   
   // Nitro configuration for static generation
