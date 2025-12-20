@@ -1,7 +1,7 @@
 <template>
-  <div class="min-h-screen bg-background">
+  <div class="h-screen bg-background overflow-hidden">
     <!-- Pre-game screen -->
-    <div v-if="!gameStarted && !gameEnded" class="min-h-screen flex flex-col p-4 max-w-2xl mx-auto justify-center">
+    <div v-if="!gameStarted && !gameEnded" class="h-screen flex flex-col p-4 max-w-2xl mx-auto justify-center overflow-y-auto">
       <header class="text-center mb-8">
         <NuxtLink to="/" class="inline-block mb-4 text-primary hover:underline">
           ← Back to Theme Selection
@@ -50,7 +50,7 @@
     </div>
 
     <!-- Active game screen with tap zones -->
-    <div v-else-if="gameStarted && !gameEnded" class="min-h-screen flex flex-col">
+    <div v-else-if="gameStarted && !gameEnded" class="h-screen flex flex-col">
       <!-- Timer and pause bar -->
       <div class="bg-gradient-to-br from-primary to-purple-600 text-primary-foreground p-4">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
@@ -125,7 +125,7 @@
     </div>
 
     <!-- End game screen -->
-    <div v-else-if="gameEnded" class="min-h-screen flex flex-col p-4 max-w-2xl mx-auto justify-center">
+    <div v-else-if="gameEnded" class="h-screen flex flex-col p-4 max-w-2xl mx-auto justify-center overflow-y-auto">
       <Card>
         <CardContent class="py-12 text-center space-y-6">
           <div class="text-6xl mb-4">🎉</div>

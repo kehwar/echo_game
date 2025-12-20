@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex flex-col p-4 max-w-7xl mx-auto">
+  <div class="h-screen flex flex-col p-4 max-w-7xl mx-auto overflow-y-auto">
     <header class="text-center my-8">
       <h1 class="text-5xl md:text-6xl font-bold mb-2 text-foreground">🎭 Echo Game</h1>
       <p class="text-xl text-muted-foreground">The phone-on-forehead charades game!</p>
