@@ -1,0 +1,83 @@
+{
+  "app": {
+    "title": "Echo Game",
+    "subtitle": "The phone-on-forehead charades game!"
+  },
+  "home": {
+    "howToPlay": {
+      "title": "How to Play",
+      "step1": "Choose a theme below",
+      "step2": "Place your phone on your forehead facing others",
+      "step3": "Your friends give you clues about the word on the screen",
+      "step4": "Tap the left side of the screen when you guess correctly",
+      "step5": "Tap the right side to skip a word",
+      "step6": "You have 2 minutes to guess as many words as possible!"
+    },
+    "chooseTheme": "Choose a Theme",
+    "footer": "Built with Nuxt 4 | Deployed on GitHub Pages"
+  },
+  "game": {
+    "backToThemes": "← Back to Theme Selection",
+    "preGame": {
+      "readyToPlay": "Ready to Play?",
+      "step1": "1. Press START below",
+      "step2": "2. Place your phone on your forehead facing others",
+      "step3": "3. Tap LEFT side = Correct guess ✓",
+      "step4": "4. Tap RIGHT side = Skip word ✗",
+      "step5": "5. Tap pause button in corners to PAUSE ⏸️",
+      "step6": "6. You have {duration} seconds!",
+      "durationLabel": "Round Duration",
+      "startButton": "START GAME"
+    },
+    "pause": {
+      "title": "PAUSED",
+      "subtitle": "Game timer is paused",
+      "resumeButton": "Resume Game",
+      "endButton": "End Round Early"
+    },
+    "results": {
+      "title": "Time's Up!",
+      "correctGuesses": "Correct Guesses ✓",
+      "skippedWords": "Skipped Words ✗",
+      "wordsGuessed": "Words guessed:",
+      "wordsSkipped": "Words skipped:",
+      "playAgainButton": "Play Again",
+      "chooseDifferentButton": "Choose Different Theme"
+    },
+    "ariaLabels": {
+      "pauseGame": "Pause game",
+      "markCorrect": "Mark answer as correct",
+      "markSkip": "Skip or mark answer as wrong"
+    }
+  },
+  "themes": {
+    "animals": {
+      "name": "Animals",
+      "description": "Act out your favorite animals - from tiny insects to giant elephants!"
+    },
+    "actions": {
+      "name": "Actions & Activities",
+      "description": "Perform everyday activities and fun actions!"
+    },
+    "food": {
+      "name": "Food & Drinks",
+      "description": "Show your love for delicious food and tasty drinks!"
+    },
+    "professions": {
+      "name": "Professions",
+      "description": "Act out different jobs and careers!"
+    },
+    "sports": {
+      "name": "Sports & Games",
+      "description": "Show off your athletic moves and game skills!"
+    },
+    "objects": {
+      "name": "Objects & Things",
+      "description": "Act out everyday objects and special items!"
+    },
+    "movies": {
+      "name": "Movies & Entertainment",
+      "description": "Act out famous movie scenes and entertainment themes!"
+    }
+  }
+}

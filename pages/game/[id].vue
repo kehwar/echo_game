@@ -4,27 +4,27 @@
     <div v-if="!gameStarted && !gameEnded" class="h-screen flex flex-col p-4 max-w-2xl mx-auto justify-center overflow-y-auto">
       <header class="text-center mb-8">
         <NuxtLink to="/" class="inline-block mb-4 text-primary hover:underline">
-          ← Back to Theme Selection
+          {{ t('game.backToThemes') }}
         </NuxtLink>
-        <h1 class="text-4xl font-bold text-foreground mb-4">{{ selectedTheme?.name }}</h1>
-        <p class="text-xl text-muted-foreground">{{ selectedTheme?.description }}</p>
+        <h1 class="text-4xl font-bold text-foreground mb-4">{{ t(`themes.${themeId}.name`) }}</h1>
+        <p class="text-xl text-muted-foreground">{{ t(`themes.${themeId}.description`) }}</p>
       </header>
 
       <Card class="mb-8">
         <CardContent class="py-12 text-center space-y-6">
           <div class="text-6xl mb-4">📱</div>
-          <h2 class="text-2xl font-bold">Ready to Play?</h2>
+          <h2 class="text-2xl font-bold">{{ t('game.preGame.readyToPlay') }}</h2>
           <div class="text-left max-w-md mx-auto space-y-3 text-muted-foreground">
-            <p>1. Press START below</p>
-            <p>2. Place your phone on your forehead facing others</p>
-            <p>3. Tap LEFT side = Correct guess ✓</p>
-            <p>4. Tap RIGHT side = Skip word ✗</p>
-            <p>5. Tap pause button in corners to PAUSE ⏸️</p>
-            <p>6. You have {{ selectedDuration }} seconds!</p>
+            <p>{{ t('game.preGame.step1') }}</p>
+            <p>{{ t('game.preGame.step2') }}</p>
+            <p>{{ t('game.preGame.step3') }}</p>
+            <p>{{ t('game.preGame.step4') }}</p>
+            <p>{{ t('game.preGame.step5') }}</p>
+            <p>{{ t('game.preGame.step6', { duration: selectedDuration }) }}</p>
           </div>
           
           <div class="max-w-md mx-auto mt-6">
-            <label class="block text-sm font-medium mb-3">Round Duration</label>
+            <label class="block text-sm font-medium mb-3">{{ t('game.preGame.durationLabel') }}</label>
             <div class="flex gap-3 justify-center">
               <button
                 v-for="duration in durationOptions"
@@ -43,7 +43,7 @@
           </div>
           
           <Button size="lg" class="w-full max-w-md mt-8" @click="startGame">
-            START GAME
+            {{ t('game.preGame.startButton') }}
           </Button>
         </CardContent>
       </Card>
@@ -56,7 +56,7 @@
         <div class="max-w-7xl mx-auto flex justify-between items-center">
           <button 
             class="text-2xl font-bold p-2 hover:bg-white/20 rounded-lg transition-colors"
-            aria-label="Pause game"
+            :aria-label="t('game.ariaLabels.pauseGame')"
             @click="pauseGame"
           >
             ⏸️
@@ -64,7 +64,7 @@
           <div class="text-3xl font-bold">⏱️ {{ timeRemaining }}s</div>
           <button 
             class="text-2xl font-bold p-2 hover:bg-white/20 rounded-lg transition-colors"
-            aria-label="Pause game"
+            :aria-label="t('game.ariaLabels.pauseGame')"
             @click="pauseGame"
           >
             ⏸️
@@ -78,7 +78,7 @@
         <div 
           class="flex-1 cursor-pointer"
           role="button"
-          aria-label="Mark answer as correct"
+          :aria-label="t('game.ariaLabels.markCorrect')"
           @click="handleTap('correct')"
         />
 
@@ -99,15 +99,15 @@
           <Card class="max-w-md mx-4 w-full">
             <CardContent class="py-12 text-center space-y-6">
               <div class="text-6xl mb-4">⏸️</div>
-              <h2 class="text-4xl font-bold">PAUSED</h2>
-              <p class="text-muted-foreground">Game timer is paused</p>
+              <h2 class="text-4xl font-bold">{{ t('game.pause.title') }}</h2>
+              <p class="text-muted-foreground">{{ t('game.pause.subtitle') }}</p>
               
               <div class="space-y-3 pt-4">
                 <Button size="lg" class="w-full" @click="resumeGame">
-                  Resume Game
+                  {{ t('game.pause.resumeButton') }}
                 </Button>
                 <Button variant="outline" size="lg" class="w-full" @click="endGame">
-                  End Round Early
+                  {{ t('game.pause.endButton') }}
                 </Button>
               </div>
             </CardContent>
@@ -118,7 +118,7 @@
         <div 
           class="flex-1 cursor-pointer"
           role="button"
-          aria-label="Skip or mark answer as wrong"
+          :aria-label="t('game.ariaLabels.markSkip')"
           @click="handleTap('wrong')"
         />
       </div>
@@ -129,14 +129,14 @@
       <Card>
         <CardContent class="py-12 text-center space-y-6">
           <div class="text-6xl mb-4">🎉</div>
-          <h2 class="text-4xl font-bold">Time's Up!</h2>
+          <h2 class="text-4xl font-bold">{{ t('game.results.title') }}</h2>
           
           <div class="my-8 space-y-4">
             <div class="bg-green-100 dark:bg-green-900/20 p-6 rounded-lg">
               <div class="text-5xl font-bold text-green-600 dark:text-green-400">{{ correctCount }}</div>
-              <div class="text-xl text-green-700 dark:text-green-300 mt-2">Correct Guesses ✓</div>
+              <div class="text-xl text-green-700 dark:text-green-300 mt-2">{{ t('game.results.correctGuesses') }}</div>
               <div v-if="correctWords.length > 0" class="mt-4 text-left max-h-48 overflow-y-auto">
-                <div class="text-sm font-semibold text-green-700 dark:text-green-300 mb-2">Words guessed:</div>
+                <div class="text-sm font-semibold text-green-700 dark:text-green-300 mb-2">{{ t('game.results.wordsGuessed') }}</div>
                 <div class="flex flex-wrap gap-2">
                   <span 
                     v-for="word in correctWords" 
@@ -151,9 +151,9 @@
             
             <div class="bg-red-100 dark:bg-red-900/20 p-6 rounded-lg">
               <div class="text-3xl font-bold text-red-600 dark:text-red-400">{{ wrongCount }}</div>
-              <div class="text-lg text-red-700 dark:text-red-300 mt-2">Skipped Words ✗</div>
+              <div class="text-lg text-red-700 dark:text-red-300 mt-2">{{ t('game.results.skippedWords') }}</div>
               <div v-if="skippedWords.length > 0" class="mt-4 text-left max-h-48 overflow-y-auto">
-                <div class="text-sm font-semibold text-red-700 dark:text-red-300 mb-2">Words skipped:</div>
+                <div class="text-sm font-semibold text-red-700 dark:text-red-300 mb-2">{{ t('game.results.wordsSkipped') }}</div>
                 <div class="flex flex-wrap gap-2">
                   <span 
                     v-for="word in skippedWords" 
@@ -169,10 +169,10 @@
 
           <div class="space-y-3">
             <Button size="lg" class="w-full" @click="playAgain">
-              Play Again
+              {{ t('game.results.playAgainButton') }}
             </Button>
             <Button variant="outline" size="lg" class="w-full" @click="chooseNewTheme">
-              Choose Different Theme
+              {{ t('game.results.chooseDifferentButton') }}
             </Button>
           </div>
         </CardContent>
@@ -186,6 +186,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { themes } from '@/data/themes'
 
+const { t } = useI18n()
 const route = useRoute()
 const themeId = computed(() => route.params.id as string)
 
