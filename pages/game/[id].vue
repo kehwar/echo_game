@@ -101,18 +101,6 @@
           </Card>
         </div>
 
-        <!-- End Game Button -->
-        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 pointer-events-none">
-          <Button 
-            variant="outline" 
-            size="lg" 
-            class="pointer-events-auto bg-white/95 hover:bg-white shadow-lg"
-            @click="endGame"
-          >
-            End Game
-          </Button>
-        </div>
-
         <!-- Right tap zone (Skip/Wrong) -->
         <div 
           class="flex-1 cursor-pointer"
