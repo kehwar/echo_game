@@ -76,19 +76,59 @@ echo_game/
 ├── .github/
 │   ├── workflows/           # CI/CD workflows
 │   └── copilot-instructions.md  # Coding agent instructions
+├── assets/
+│   └── decks/               # Game deck markdown files
+│       └── en-US/           # Locale-specific decks
+│           ├── animals.md
+│           ├── actions.md
+│           └── ...          # Other deck files
 ├── data/
-│   └── decks.ts             # Game decks and card lists
+│   └── decks.ts             # Deck loader (reads markdown files)
 ├── pages/                   # Nuxt pages (file-based routing)
 │   ├── index.vue           # Home page with deck selection
 │   └── game/
 │       └── [id].vue        # Game play page
 ├── components/              # Vue components (shadcn-vue UI components)
-├── assets/                  # Static assets
 ├── public/                  # Public static files
 ├── test/                    # Test files
 ├── nuxt.config.ts          # Nuxt configuration
 └── package.json            # Dependencies
 ```
+
+## 🃏 Deck Format
+
+Decks are stored as markdown files with YAML frontmatter in `assets/decks/{locale}/`. Each deck file contains:
+
+**Frontmatter** (metadata):
+- `name`: Display name of the deck
+- `description`: Brief description shown on deck selection
+- `locale`: Language/locale code (e.g., `en-US`)
+
+**Content** (cards):
+- One card per line
+- Cards are uppercase by convention
+- Empty lines are ignored
+
+**Example** (`assets/decks/en-US/animals.md`):
+```markdown
+---
+name: Animals
+description: Act out your favorite animals - from tiny insects to giant elephants!
+locale: en-US
+---
+
+ELEPHANT
+KANGAROO
+PENGUIN
+GIRAFFE
+...
+```
+
+To add a new deck:
+1. Create a new `.md` file in `assets/decks/en-US/`
+2. Add frontmatter with name, description, and locale
+3. List cards one per line
+4. The deck will automatically appear in the game
 
 ## 🎯 How to Play
 
