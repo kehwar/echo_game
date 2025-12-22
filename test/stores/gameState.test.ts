@@ -159,6 +159,24 @@ describe('Game State Store', () => {
     }
   })
 
+  it('should show tap feedback overlay for 300ms', () => {
+    const store = useGameStateStore()
+    
+    // Show feedback overlay
+    store.showTapFeedbackOverlay('correct')
+    
+    // Should be visible immediately
+    expect(store.showTapFeedback).toBe(true)
+    expect(store.tapFeedbackAction).toBe('correct')
+    
+    // Fast-forward time by 300ms
+    vi.advanceTimersByTime(300)
+    
+    // Should be hidden after 300ms
+    expect(store.showTapFeedback).toBe(false)
+    expect(store.tapFeedbackAction).toBeNull()
+  })
+
   it('should initialize game with shuffled cards', () => {
     const store = useGameStateStore()
     const decksStore = useDecksStore()

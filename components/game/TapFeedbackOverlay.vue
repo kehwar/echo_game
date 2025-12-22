@@ -63,10 +63,10 @@ const { t } = useI18n()
 }
 
 .animate-flash-fade {
-  animation: flash-fade 600ms ease-out;
+  animation: flash-fade 300ms ease-out;
 }
 
 .animate-flash-scale {
-  animation: flash-scale 600ms ease-out;
+  animation: flash-scale 300ms ease-out;
 }
 </style>
