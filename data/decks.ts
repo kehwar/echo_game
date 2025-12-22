@@ -24,7 +24,7 @@ function parseFrontmatter(content: string): { data: Record<string, string>, cont
   // Parse simple YAML key-value pairs
   frontmatter.split('\n').forEach(line => {
     const colonIndex = line.indexOf(':')
-    if (colonIndex > 0) {
+    if (colonIndex >= 0) {
       const key = line.substring(0, colonIndex).trim()
       const value = line.substring(colonIndex + 1).trim()
       data[key] = value
