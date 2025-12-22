@@ -1,25 +1,15 @@
 <template>
   <div class="h-screen flex flex-col p-4 max-w-7xl mx-auto overflow-y-auto">
     <header class="text-center my-8">
+      <div class="flex justify-end mb-4">
+        <NuxtLink to="/settings">
+          <Button variant="outline" size="sm">
+            ⚙️ {{ t('home.settingsButton') }}
+          </Button>
+        </NuxtLink>
+      </div>
       <h1 class="text-5xl md:text-6xl font-bold mb-2 text-foreground">🎭 {{ t('app.title') }}</h1>
       <p class="text-xl text-muted-foreground">{{ t('app.subtitle') }}</p>
-      
-      <!-- Language Switcher -->
-      <div class="mt-4 flex justify-center gap-2">
-        <button
-          v-for="loc in availableLocales"
-          :key="loc.code"
-          :class="[
-            'px-4 py-2 rounded-lg font-medium transition-colors',
-            locale === loc.code
-              ? 'bg-primary text-primary-foreground'
-              : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
-          ]"
-          @click="setLocale(loc.code)"
-        >
-          {{ loc.name }}
-        </button>
-      </div>
     </header>
 
     <main class="flex-1">
@@ -68,12 +58,10 @@
 
 <script setup lang="ts">
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { decks } from '@/data/decks'
 
-const { t, locale, locales, setLocale } = useI18n()
-
-// Get available locales
-const availableLocales = computed(() => locales.value)
+const { t, locale } = useI18n()
 
 // Sort decks: current locale first, then other locales
 const displayedDecks = computed(() => {
