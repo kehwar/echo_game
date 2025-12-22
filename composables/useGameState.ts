@@ -8,6 +8,8 @@ export function useGameState(deckId: Ref<string>) {
   const gameStarted = ref(false)
   const gameEnded = ref(false)
   const gamePaused = ref(false)
+  const showCountdown = ref(false)
+  const countdownValue = ref(3)
   const durationOptions = [60, 90, 120]
   const selectedDuration = ref(120) // Default to 120 seconds
   const timeRemaining = ref(selectedDuration.value)
@@ -20,6 +22,7 @@ export function useGameState(deckId: Ref<string>) {
   const availableCards = ref<string[]>([])
 
   let timerInterval: number | null = null
+  let countdownInterval: number | null = null
 
   // Shuffle array helper
   function shuffleArray<T>(array: T[]): void {
@@ -69,6 +72,25 @@ export function useGameState(deckId: Ref<string>) {
     nextCard()
   }
 
+  // Start countdown and then execute callback
+  function startCountdown(callback: () => void) {
+    showCountdown.value = true
+    countdownValue.value = 3
+    
+    countdownInterval = setInterval(() => {
+      countdownValue.value--
+      
+      if (countdownValue.value <= 0) {
+        if (countdownInterval) {
+          clearInterval(countdownInterval)
+          countdownInterval = null
+        }
+        showCountdown.value = false
+        callback()
+      }
+    }, 1000)
+  }
+
   // Start/restart the timer
   function startTimer() {
     timerInterval = setInterval(() => {
@@ -84,7 +106,9 @@ export function useGameState(deckId: Ref<string>) {
   function startGame() {
     gameStarted.value = true
     initializeGame()
-    startTimer()
+    startCountdown(() => {
+      startTimer()
+    })
   }
 
   // End the game
@@ -150,7 +174,9 @@ export function useGameState(deckId: Ref<string>) {
     if (!gameStarted.value || gameEnded.value) return
     
     gamePaused.value = false
-    startTimer()
+    startCountdown(() => {
+      startTimer()
+    })
   }
 
   // Play again with same deck
@@ -170,6 +196,10 @@ export function useGameState(deckId: Ref<string>) {
       clearInterval(timerInterval)
       timerInterval = null
     }
+    if (countdownInterval) {
+      clearInterval(countdownInterval)
+      countdownInterval = null
+    }
   }
 
   return {
@@ -178,6 +208,8 @@ export function useGameState(deckId: Ref<string>) {
     gameStarted,
     gameEnded,
     gamePaused,
+    showCountdown,
+    countdownValue,
     durationOptions,
     selectedDuration,
     timeRemaining,
