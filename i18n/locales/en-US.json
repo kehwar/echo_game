@@ -14,7 +14,26 @@
       "step6": "You have 2 minutes to guess as many cards as possible!"
     },
     "chooseDeck": "Choose a Deck",
+    "settingsButton": "Settings",
     "footer": "Built with Nuxt 4 | Deployed on GitHub Pages"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Customize your game experience",
+    "backToHome": "← Back to Home",
+    "backButton": "Back to Home",
+    "timerDuration": {
+      "title": "Round Timer",
+      "description": "Choose how long each game round lasts"
+    },
+    "language": {
+      "title": "Language",
+      "description": "Select your preferred language"
+    },
+    "info": {
+      "line1": "These settings apply to all game rounds.",
+      "line2": "Changes are saved automatically."
+    }
   },
   "game": {
     "backToDecks": "← Back to Deck Selection",

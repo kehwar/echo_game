@@ -6,10 +6,8 @@
       :deck-id="deckId"
       :deck-name="gameState.selectedDeck.value?.name || ''"
       :deck-description="gameState.selectedDeck.value?.description || ''"
-      :duration-options="gameState.durationOptions"
-      :selected-duration="gameState.selectedDuration.value"
+      :timer-duration="gameState.timerDuration.value"
       @start="gameState.startGame"
-      @update:selected-duration="gameState.selectedDuration.value = $event"
     />
 
     <!-- Active game screen with tap zones -->

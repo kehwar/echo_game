@@ -14,7 +14,26 @@
       "step6": "¡Tienes 2 minutos para adivinar tantas tarjetas como sea posible!"
     },
     "chooseDeck": "Elige un Mazo",
+    "settingsButton": "Configuración",
     "footer": "Construido con Nuxt 4 | Desplegado en GitHub Pages"
+  },
+  "settings": {
+    "title": "Configuración",
+    "subtitle": "Personaliza tu experiencia de juego",
+    "backToHome": "← Volver al Inicio",
+    "backButton": "Volver al Inicio",
+    "timerDuration": {
+      "title": "Temporizador de Ronda",
+      "description": "Elige cuánto dura cada ronda del juego"
+    },
+    "language": {
+      "title": "Idioma",
+      "description": "Selecciona tu idioma preferido"
+    },
+    "info": {
+      "line1": "Estas configuraciones se aplican a todas las rondas del juego.",
+      "line2": "Los cambios se guardan automáticamente."
+    }
   },
   "game": {
     "backToDecks": "← Volver a Selección de Mazos",
