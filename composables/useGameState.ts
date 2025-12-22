@@ -1,6 +1,9 @@
 import { decks } from '@/data/decks'
 
 export function useGameState(deckId: Ref<string>) {
+  // Get global settings
+  const settings = useSettings()
+  
   // Find the selected deck
   const selectedDeck = computed(() => decks.find(d => d.id === deckId.value))
 
@@ -8,9 +11,7 @@ export function useGameState(deckId: Ref<string>) {
   const gameStarted = ref(false)
   const gameEnded = ref(false)
   const gamePaused = ref(false)
-  const durationOptions = [60, 90, 120]
-  const selectedDuration = ref(120) // Default to 120 seconds
-  const timeRemaining = ref(selectedDuration.value)
+  const timeRemaining = ref(settings.timerDuration.value)
   const currentCard = ref('')
   const correctCount = ref(0)
   const wrongCount = ref(0)
@@ -64,7 +65,7 @@ export function useGameState(deckId: Ref<string>) {
     skippedCards.value = []
     correctCount.value = 0
     wrongCount.value = 0
-    timeRemaining.value = selectedDuration.value
+    timeRemaining.value = settings.timerDuration.value
     gameEnded.value = false
     nextCard()
   }
@@ -178,8 +179,7 @@ export function useGameState(deckId: Ref<string>) {
     gameStarted,
     gameEnded,
     gamePaused,
-    durationOptions,
-    selectedDuration,
+    timerDuration: settings.timerDuration,
     timeRemaining,
     currentCard,
     correctCount,
