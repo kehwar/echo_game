@@ -1,6 +1,6 @@
 ---
 name: Pokémon
-description: ¡Actúa como los Pokémon icónicos de la 1ª generación - hazte con todos!
+description: ¡Actúa como los Pokémon icónicos de la 1ª generación - atrápalos a todos!
 locale: es-ES
 ---
 
