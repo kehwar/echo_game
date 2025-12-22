@@ -21,6 +21,13 @@
         @pause="gameState.pauseGame"
       />
 
+      <!-- Countdown overlay -->
+      <CountdownOverlay
+        :is-visible="gameState.showCountdown.value"
+        :count="gameState.countdownValue.value"
+        :message="$t('game.countdown.getReady')"
+      />
+
       <!-- Pause overlay -->
       <PauseModal
         :is-visible="gameState.gamePaused.value"
@@ -45,6 +52,7 @@
 <script setup lang="ts">
 import GameStartScreen from '@/components/game/GameStartScreen.vue'
 import GamePlayScreen from '@/components/game/GamePlayScreen.vue'
+import CountdownOverlay from '@/components/game/CountdownOverlay.vue'
 import PauseModal from '@/components/game/PauseModal.vue'
 import GameScoreScreen from '@/components/game/GameScoreScreen.vue'
 

@@ -29,6 +29,9 @@
       "durationLabel": "Round Duration",
       "startButton": "START GAME"
     },
+    "countdown": {
+      "getReady": "Get Ready!"
+    },
     "pause": {
       "title": "PAUSED",
       "subtitle": "Game timer is paused",
