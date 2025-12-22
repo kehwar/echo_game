@@ -48,6 +48,9 @@
       "durationLabel": "Duración de la Ronda",
       "startButton": "INICIAR JUEGO"
     },
+    "countdown": {
+      "getReady": "¡Prepárate!"
+    },
     "pause": {
       "title": "PAUSADO",
       "subtitle": "El temporizador del juego está en pausa",
