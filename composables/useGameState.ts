@@ -29,7 +29,7 @@ export function useGameState(deckId: Ref<string>) {
   async function lockOrientation() {
     try {
       // Check if the Screen Orientation API is supported
-      if (screen.orientation && screen.orientation.lock) {
+      if (screen.orientation && typeof screen.orientation.lock === 'function') {
         await screen.orientation.lock('landscape')
       }
     } catch (error) {
@@ -41,7 +41,7 @@ export function useGameState(deckId: Ref<string>) {
   // Unlock screen orientation
   function unlockOrientation() {
     try {
-      if (screen.orientation && screen.orientation.unlock) {
+      if (screen.orientation && typeof screen.orientation.unlock === 'function') {
         screen.orientation.unlock()
       }
     } catch (error) {
