@@ -4,6 +4,7 @@ import { useScreenOrientation } from '@vueuse/core'
 export function useGameState(deckId: Ref<string>) {
   // Get global settings
   const settings = useSettings()
+  const gameHistory = useGameHistory()
   
   // Find the selected deck
   const selectedDeck = computed(() => decks.find(d => d.id === deckId.value))
@@ -25,6 +26,9 @@ export function useGameState(deckId: Ref<string>) {
   const correctCards = ref<string[]>([])
   const skippedCards = ref<string[]>([])
   const availableCards = ref<string[]>([])
+  
+  // Track game start time for history
+  let gameStartTime: Date | null = null
 
   let timerInterval: number | null = null
   let countdownInterval: number | null = null
@@ -110,6 +114,7 @@ export function useGameState(deckId: Ref<string>) {
   // Start the game
   async function startGame() {
     gameStarted.value = true
+    gameStartTime = new Date() // Record start time
     initializeGame()
     // Lock to landscape when game starts
     if (isSupported.value) {
@@ -135,6 +140,20 @@ export function useGameState(deckId: Ref<string>) {
       clearInterval(timerInterval)
       timerInterval = null
     }
+    
+    // Save game to history
+    if (gameStartTime && selectedDeck.value) {
+      const gameDuration = settings.timerDuration.value - timeRemaining.value
+      gameHistory.addGameToHistory({
+        deckId: selectedDeck.value.id,
+        deckName: selectedDeck.value.name,
+        startDateTime: gameStartTime.toISOString(),
+        duration: gameDuration,
+        correctWords: [...correctCards.value],
+        skippedWords: [...skippedCards.value]
+      })
+    }
+    
     // Unlock orientation when game ends
     if (isSupported.value) {
       unlockOrientation()

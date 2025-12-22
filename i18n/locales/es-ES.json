@@ -15,6 +15,7 @@
     },
     "chooseDeck": "Elige un Mazo",
     "settingsButton": "Configuración",
+    "historyButton": "Historial",
     "footer": "Construido con Nuxt 4 | Desplegado en GitHub Pages"
   },
   "settings": {
@@ -100,6 +101,28 @@
     "movies": {
       "name": "Películas y Entretenimiento",
       "description": "¡Actúa escenas famosas de películas y temas de entretenimiento!"
+    }
+  },
+  "history": {
+    "title": "Historial de Juegos",
+    "subtitle": "Ver tus rondas de juego anteriores",
+    "clearButton": "Borrar Historial",
+    "accuracy": "Precisión",
+    "duration": "Duración",
+    "correctWords": "Correctas",
+    "skippedWords": "Saltadas",
+    "correctWordsList": "Palabras correctas",
+    "skippedWordsList": "Palabras saltadas",
+    "empty": {
+      "title": "Aún No Hay Juegos",
+      "description": "Tu historial de juegos aparecerá aquí después de jugar tu primera ronda.",
+      "playButton": "Juega Tu Primer Juego"
+    },
+    "clearConfirm": {
+      "title": "¿Borrar Historial de Juegos?",
+      "description": "Esto eliminará permanentemente todo tu historial de juegos. Esta acción no se puede deshacer.",
+      "cancel": "Cancelar",
+      "confirm": "Borrar Historial"
     }
   }
 }

@@ -15,6 +15,7 @@
     },
     "chooseDeck": "Choose a Deck",
     "settingsButton": "Settings",
+    "historyButton": "History",
     "footer": "Built with Nuxt 4 | Deployed on GitHub Pages"
   },
   "settings": {
@@ -100,6 +101,28 @@
     "movies": {
       "name": "Movies & Entertainment",
       "description": "Act out famous movie scenes and entertainment themes!"
+    }
+  },
+  "history": {
+    "title": "Game History",
+    "subtitle": "View your previous game rounds",
+    "clearButton": "Clear History",
+    "accuracy": "Accuracy",
+    "duration": "Duration",
+    "correctWords": "Correct",
+    "skippedWords": "Skipped",
+    "correctWordsList": "Correct words",
+    "skippedWordsList": "Skipped words",
+    "empty": {
+      "title": "No Games Yet",
+      "description": "Your game history will appear here after you play your first round.",
+      "playButton": "Play Your First Game"
+    },
+    "clearConfirm": {
+      "title": "Clear Game History?",
+      "description": "This will permanently delete all your game history. This action cannot be undone.",
+      "cancel": "Cancel",
+      "confirm": "Clear History"
     }
   }
 }

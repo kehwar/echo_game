@@ -1,7 +1,12 @@
 <template>
   <div class="h-screen flex flex-col p-4 max-w-7xl mx-auto overflow-y-auto">
     <header class="text-center my-8">
-      <div class="flex justify-end mb-4">
+      <div class="flex justify-end gap-2 mb-4">
+        <NuxtLink to="/history">
+          <Button variant="outline" size="sm">
+            📜 {{ t('home.historyButton') }}
+          </Button>
+        </NuxtLink>
         <NuxtLink to="/settings">
           <Button variant="outline" size="sm">
             ⚙️ {{ t('home.settingsButton') }}
