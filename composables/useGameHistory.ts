@@ -84,7 +84,7 @@ export function useGameHistory() {
     // Create new entry with unique ID and calculated accuracy
     const newEntry: GameHistoryEntry = {
       ...entry,
-      id: `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`,
+      id: `${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
       accuracy
     }
     

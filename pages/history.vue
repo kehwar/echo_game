@@ -166,7 +166,7 @@ function formatDateTime(isoString: string): string {
 // Format duration in MM:SS format
 function formatDuration(seconds: number): string {
   const mins = Math.floor(seconds / 60)
-  const secs = seconds % 60
+  const secs = Math.floor(seconds % 60)
   return `${mins}:${secs.toString().padStart(2, '0')}`
 }
 
