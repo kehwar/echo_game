@@ -9,17 +9,20 @@ const SETTINGS_STORAGE_KEY = 'echo-game-settings'
 interface GameSettings {
   timerDuration: number
   locale: string
+  deckLocale: string
 }
 
 const defaultSettings: GameSettings = {
   timerDuration: 120, // 2 minutes default
-  locale: 'en-US'
+  locale: 'en-US',
+  deckLocale: 'auto' // 'auto' means use UI locale
 }
 
 export const useSettingsStore = defineStore('settings', {
   state: () => ({
     timerDuration: defaultSettings.timerDuration,
     locale: defaultSettings.locale,
+    deckLocale: defaultSettings.deckLocale,
     durationOptions: [60, 90, 120] as const,
   }),
 
@@ -36,6 +39,7 @@ export const useSettingsStore = defineStore('settings', {
           const settings: GameSettings = JSON.parse(stored)
           this.timerDuration = settings.timerDuration ?? defaultSettings.timerDuration
           this.locale = settings.locale ?? defaultSettings.locale
+          this.deckLocale = settings.deckLocale ?? defaultSettings.deckLocale
         }
       } catch (error) {
         console.error('Failed to load settings from localStorage:', error)
@@ -51,7 +55,8 @@ export const useSettingsStore = defineStore('settings', {
       try {
         const settings: GameSettings = {
           timerDuration: this.timerDuration,
-          locale: this.locale
+          locale: this.locale,
+          deckLocale: this.deckLocale
         }
         localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings))
       } catch (error) {
@@ -76,11 +81,20 @@ export const useSettingsStore = defineStore('settings', {
     },
 
     /**
+     * Set deck locale and save
+     */
+    setDeckLocale(deckLocale: string) {
+      this.deckLocale = deckLocale
+      this.saveSettings()
+    },
+
+    /**
      * Reset to default settings
      */
     resetToDefaults() {
       this.timerDuration = defaultSettings.timerDuration
       this.locale = defaultSettings.locale
+      this.deckLocale = defaultSettings.deckLocale
       this.saveSettings()
     }
   }

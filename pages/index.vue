@@ -35,7 +35,27 @@
       </Card>
 
       <div class="my-8">
-        <h2 class="text-3xl font-bold mb-6 text-center">{{ t('home.chooseDeck') }}</h2>
+        <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+          <h2 class="text-3xl font-bold">{{ t('home.chooseDeck') }}</h2>
+          <div class="w-full md:w-64">
+            <Select v-model="selectedDeckLocale" @update:model-value="changeDeckLocale">
+              <SelectTrigger>
+                <SelectValue :placeholder="t('settings.deckLocale.auto')" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="auto">
+                  {{ t('settings.deckLocale.auto') }}
+                </SelectItem>
+                <SelectItem value="en-US">
+                  {{ t('settings.deckLocale.en-US') }}
+                </SelectItem>
+                <SelectItem value="es-ES">
+                  {{ t('settings.deckLocale.es-ES') }}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <NuxtLink 
             v-for="deck in displayedDecks" 
@@ -64,13 +84,30 @@
 <script setup lang="ts">
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { useDecksStore } from '@/stores/decks'
+import { useSettingsStore } from '@/stores/settings'
 
 const { t, locale } = useI18n()
 const decksStore = useDecksStore()
+const settingsStore = useSettingsStore()
+
+// Selected deck locale from settings
+const selectedDeckLocale = ref(settingsStore.deckLocale)
 
 // Sort decks: current locale first, then other locales, and filter out hidden decks
 const displayedDecks = computed(() => {
-  return decksStore.getDisplayedDecks(locale.value)
+  return decksStore.getDisplayedDecks(locale.value, selectedDeckLocale.value)
+})
+
+// Change deck locale and update settings
+function changeDeckLocale(newDeckLocale: string) {
+  selectedDeckLocale.value = newDeckLocale
+  settingsStore.setDeckLocale(newDeckLocale)
+}
+
+// Watch for changes in store
+watch(() => settingsStore.deckLocale, (newValue) => {
+  selectedDeckLocale.value = newValue
 })
 </script>

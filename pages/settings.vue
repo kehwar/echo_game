@@ -59,6 +59,32 @@
         </CardContent>
       </Card>
 
+      <!-- Deck Locale Setting -->
+      <Card>
+        <CardHeader>
+          <CardTitle class="text-2xl">{{ t('settings.deckLocale.title') }}</CardTitle>
+          <CardDescription>{{ t('settings.deckLocale.description') }}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Select v-model="selectedDeckLocale" @update:model-value="changeDeckLocale">
+            <SelectTrigger class="w-full">
+              <SelectValue :placeholder="t('settings.deckLocale.auto')" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="auto">
+                {{ t('settings.deckLocale.auto') }}
+              </SelectItem>
+              <SelectItem value="en-US">
+                {{ t('settings.deckLocale.en-US') }}
+              </SelectItem>
+              <SelectItem value="es-ES">
+                {{ t('settings.deckLocale.es-ES') }}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </CardContent>
+      </Card>
+
       <!-- Info Card -->
       <Card class="border-primary/20">
         <CardContent class="py-6">
@@ -81,6 +107,7 @@
 <script setup lang="ts">
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { useSettingsStore } from '@/stores/settings'
 
 const { t, locale, locales, setLocale } = useI18n()
@@ -89,9 +116,23 @@ const settingsStore = useSettingsStore()
 // Get available locales
 const availableLocales = computed(() => locales.value)
 
+// Selected deck locale
+const selectedDeckLocale = ref(settingsStore.deckLocale)
+
 // Change locale and update settings
 function changeLocale(newLocale: string) {
   setLocale(newLocale)
   settingsStore.setLocale(newLocale)
 }
+
+// Change deck locale and update settings
+function changeDeckLocale(newDeckLocale: string) {
+  selectedDeckLocale.value = newDeckLocale
+  settingsStore.setDeckLocale(newDeckLocale)
+}
+
+// Watch for changes in store
+watch(() => settingsStore.deckLocale, (newValue) => {
+  selectedDeckLocale.value = newValue
+})
 </script>
