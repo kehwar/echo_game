@@ -129,10 +129,11 @@ export function useGameState(deckId: Ref<string>) {
   }
 
   // Start the game
-  function startGame() {
+  async function startGame() {
     gameStarted.value = true
     initializeGame()
-    lockOrientation() // Lock to landscape when game starts
+    // Lock to landscape when game starts (non-blocking)
+    await lockOrientation()
     startCountdown(() => {
       startTimer()
     })
