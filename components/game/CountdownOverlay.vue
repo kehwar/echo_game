@@ -6,7 +6,7 @@
     <div class="text-center">
       <div 
         :key="count"
-        class="text-[20rem] font-bold text-white animate-pulse leading-none"
+        class="text-[20rem] font-bold text-white animate-countdown-pulse leading-none"
       >
         {{ count }}
       </div>
@@ -26,7 +26,7 @@ defineProps<Props>()
 </script>
 
 <style scoped>
-@keyframes pulse {
+@keyframes countdown-pulse {
   0%, 100% {
     transform: scale(1);
     opacity: 1;
@@ -37,7 +37,7 @@ defineProps<Props>()
   }
 }
 
-.animate-pulse {
-  animation: pulse 1s ease-in-out;
+.animate-countdown-pulse {
+  animation: countdown-pulse 1s ease-in-out;
 }
 </style>

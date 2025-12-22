@@ -80,7 +80,7 @@ export function useGameState(deckId: Ref<string>) {
     countdownInterval = setInterval(() => {
       countdownValue.value--
       
-      if (countdownValue.value <= 0) {
+      if (countdownValue.value < 1) {
         if (countdownInterval) {
           clearInterval(countdownInterval)
           countdownInterval = null
