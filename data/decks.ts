@@ -57,11 +57,11 @@ function loadDecksFromMarkdown(): Deck[] {
     const id = `${locale}-${baseName}`
     const altId = `${locale}/${baseName}` // Alternative format for extends
     
-    // Parse cards from content (one card per line, filter empty lines)
+    // Parse cards from content (one card per line, filter empty lines and comments)
     const cards = content
       .split('\n')
       .map(line => line.trim())
-      .filter(line => line.length > 0)
+      .filter(line => line.length > 0 && !line.startsWith('# '))
     
     // Parse extends property
     let extendsValue: string | string[] | undefined

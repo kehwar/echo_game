@@ -56,4 +56,52 @@ PENGUIN`
     expect(match?.[1]).toContain('name: Animals')
     expect(match?.[2]).toContain('ELEPHANT')
   })
+
+  it('should filter out comment lines when parsing deck cards', () => {
+    const content = `# Water sports
+SWIMMING
+SURFING
+
+# Winter sports
+SKIING
+SNOWBOARDING`
+
+    // Simulate the card parsing logic
+    const cards = content
+      .split('\n')
+      .map(line => line.trim())
+      .filter(line => line.length > 0 && !line.startsWith('# '))
+    
+    expect(cards).toHaveLength(4)
+    expect(cards).toContain('SWIMMING')
+    expect(cards).toContain('SURFING')
+    expect(cards).toContain('SKIING')
+    expect(cards).toContain('SNOWBOARDING')
+    expect(cards).not.toContain('# Water sports')
+    expect(cards).not.toContain('# Winter sports')
+  })
+
+  it('should only filter comments with hash-space pattern when parsing deck cards', () => {
+    const content = `#NoSpace
+# With space
+#Another
+CARD1
+# Comment
+CARD2`
+
+    // Simulate the card parsing logic
+    const cards = content
+      .split('\n')
+      .map(line => line.trim())
+      .filter(line => line.length > 0 && !line.startsWith('# '))
+    
+    // Lines with # but no space should be included as cards
+    expect(cards).toContain('#NoSpace')
+    expect(cards).toContain('#Another')
+    expect(cards).toContain('CARD1')
+    expect(cards).toContain('CARD2')
+    // Lines with "# " should be filtered out
+    expect(cards).not.toContain('# With space')
+    expect(cards).not.toContain('# Comment')
+  })
 })
