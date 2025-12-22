@@ -18,7 +18,7 @@ export default defineNuxtConfig({
   },
   
   // ESLint module
-  modules: ['@nuxt/eslint', '@nuxtjs/tailwindcss', 'shadcn-nuxt', '@nuxtjs/i18n'],
+  modules: ['@nuxt/eslint', '@nuxtjs/tailwindcss', 'shadcn-nuxt', '@nuxtjs/i18n', '@pinia/nuxt'],
 
   // Global CSS
   css: ['~/assets/css/main.css'],

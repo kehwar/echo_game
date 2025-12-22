@@ -179,19 +179,17 @@
 <script setup lang="ts">
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { useGameHistoryStore } from '@/stores/gameHistory'
 
 const { t, locale } = useI18n()
-const gameHistory = useGameHistory()
+const gameHistoryStore = useGameHistoryStore()
 
 // Reactive state
-const history = ref(gameHistory.getHistory())
 const showClearConfirm = ref(false)
 const expandedRecords = ref(new Set<string>())
 
-// Update history when component is mounted
-onMounted(() => {
-  history.value = gameHistory.getHistory()
-})
+// Computed history from store
+const history = computed(() => gameHistoryStore.allRecords)
 
 /**
  * Format date and time for display
@@ -243,8 +241,7 @@ function toggleExpanded(recordId: string) {
  * Clear all history
  */
 function clearAllHistory() {
-  gameHistory.clearHistory()
-  history.value = []
+  gameHistoryStore.clearHistory()
   showClearConfirm.value = false
 }
 </script>

@@ -64,19 +64,13 @@
 <script setup lang="ts">
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { decks } from '@/data/decks'
+import { useDecksStore } from '@/stores/decks'
 
 const { t, locale } = useI18n()
+const decksStore = useDecksStore()
 
 // Sort decks: current locale first, then other locales, and filter out hidden decks
 const displayedDecks = computed(() => {
-  const currentLocale = locale.value
-  
-  // Separate decks by locale and filter out hidden decks
-  const currentLocaleDecks = decks.filter(d => d.locale === currentLocale && !d.hidden)
-  const otherLocaleDecks = decks.filter(d => d.locale !== currentLocale && !d.hidden)
-  
-  // Return current locale decks first, followed by other locales
-  return [...currentLocaleDecks, ...otherLocaleDecks]
+  return decksStore.getDisplayedDecks(locale.value)
 })
 </script>
