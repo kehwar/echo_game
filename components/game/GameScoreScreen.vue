@@ -60,6 +60,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
@@ -79,6 +80,7 @@ defineEmits<{
 const { t } = useI18n()
 
 // Calculate accuracy percentage
+// Note: wrongCount represents skipped cards (cards that were skipped/passed)
 const accuracy = computed(() => {
   const total = props.correctCount + props.wrongCount
   if (total === 0) return 0
