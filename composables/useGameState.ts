@@ -1,4 +1,5 @@
 import { decks } from '@/data/decks'
+import { useScreenOrientation } from '@vueuse/core'
 
 export function useGameState(deckId: Ref<string>) {
   // Get global settings
@@ -6,6 +7,9 @@ export function useGameState(deckId: Ref<string>) {
   
   // Find the selected deck
   const selectedDeck = computed(() => decks.find(d => d.id === deckId.value))
+
+  // Screen orientation control using VueUse
+  const { isSupported, lockOrientation, unlockOrientation } = useScreenOrientation()
 
   // Game state
   const gameStarted = ref(false)
@@ -24,31 +28,6 @@ export function useGameState(deckId: Ref<string>) {
 
   let timerInterval: number | null = null
   let countdownInterval: number | null = null
-
-  // Lock screen orientation to landscape
-  async function lockOrientation() {
-    try {
-      // Check if the Screen Orientation API is supported
-      if (typeof screen !== 'undefined' && screen.orientation && typeof screen.orientation.lock === 'function') {
-        await screen.orientation.lock('landscape')
-      }
-    } catch (error) {
-      // Silently fail if orientation lock is not supported or denied
-      console.warn('Could not lock screen orientation:', error)
-    }
-  }
-
-  // Unlock screen orientation
-  function unlockOrientation() {
-    try {
-      if (typeof screen !== 'undefined' && screen.orientation && typeof screen.orientation.unlock === 'function') {
-        screen.orientation.unlock()
-      }
-    } catch (error) {
-      // Silently fail if orientation unlock is not supported
-      console.warn('Could not unlock screen orientation:', error)
-    }
-  }
 
   // Shuffle array helper
   function shuffleArray<T>(array: T[]): void {
@@ -133,7 +112,14 @@ export function useGameState(deckId: Ref<string>) {
     gameStarted.value = true
     initializeGame()
     // Lock to landscape when game starts
-    await lockOrientation()
+    if (isSupported.value) {
+      try {
+        await lockOrientation('landscape')
+      } catch (error) {
+        // Silently fail if orientation lock is not supported or denied
+        console.warn('Could not lock screen orientation:', error)
+      }
+    }
     startCountdown(() => {
       startTimer()
     })
@@ -149,7 +135,10 @@ export function useGameState(deckId: Ref<string>) {
       clearInterval(timerInterval)
       timerInterval = null
     }
-    unlockOrientation() // Unlock orientation when game ends
+    // Unlock orientation when game ends
+    if (isSupported.value) {
+      unlockOrientation()
+    }
   }
 
   // Handle tap without double-tap detection
@@ -216,7 +205,10 @@ export function useGameState(deckId: Ref<string>) {
 
   // Choose a new deck
   function chooseNewDeck() {
-    unlockOrientation() // Unlock orientation when leaving game
+    // Unlock orientation when leaving game
+    if (isSupported.value) {
+      unlockOrientation()
+    }
     navigateTo('/')
   }
 
@@ -230,7 +222,10 @@ export function useGameState(deckId: Ref<string>) {
       clearInterval(countdownInterval)
       countdownInterval = null
     }
-    unlockOrientation() // Unlock orientation on cleanup
+    // Unlock orientation on cleanup
+    if (isSupported.value) {
+      unlockOrientation()
+    }
   }
 
   return {
