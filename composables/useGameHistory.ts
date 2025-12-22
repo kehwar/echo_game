@@ -62,7 +62,7 @@ export function useGameHistory() {
     // Create complete record with ID and accuracy
     const completeRecord: GameRecord = {
       ...record,
-      id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      id: `${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
       accuracy,
     }
     

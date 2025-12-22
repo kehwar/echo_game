@@ -180,7 +180,7 @@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const gameHistory = useGameHistory()
 
 // Reactive state
@@ -198,7 +198,7 @@ onMounted(() => {
  */
 function formatDateTime(isoString: string): string {
   const date = new Date(isoString)
-  return new Intl.DateTimeFormat(undefined, {
+  return new Intl.DateTimeFormat(locale.value, {
     dateStyle: 'medium',
     timeStyle: 'short',
   }).format(date)
