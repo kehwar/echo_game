@@ -153,7 +153,7 @@ function formatDateTime(isoString: string): string {
   try {
     const date = new Date(isoString)
     // Check if date is valid
-    if (isNaN(date.getTime())) {
+    if (Number.isNaN(date.getTime())) {
       return isoString // Return original string if invalid
     }
     return d(date, 'long')
