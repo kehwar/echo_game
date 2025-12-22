@@ -18,15 +18,15 @@
         <CardContent>
           <div class="flex gap-3 justify-center flex-wrap">
             <button
-              v-for="duration in settings.durationOptions"
+              v-for="duration in settingsStore.durationOptions"
               :key="duration"
               :class="[
                 'px-8 py-4 rounded-lg font-medium transition-all text-lg',
-                settings.timerDuration.value === duration
+                settingsStore.timerDuration === duration
                   ? 'bg-primary text-primary-foreground shadow-lg scale-105'
                   : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
               ]"
-              @click="settings.setTimerDuration(duration)"
+              @click="settingsStore.setTimerDuration(duration)"
             >
               {{ duration }}s
             </button>
@@ -81,9 +81,10 @@
 <script setup lang="ts">
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { useSettingsStore } from '@/stores/settings'
 
 const { t, locale, locales, setLocale } = useI18n()
-const settings = useSettings()
+const settingsStore = useSettingsStore()
 
 // Get available locales
 const availableLocales = computed(() => locales.value)
@@ -91,6 +92,6 @@ const availableLocales = computed(() => locales.value)
 // Change locale and update settings
 function changeLocale(newLocale: string) {
   setLocale(newLocale)
-  settings.setLocale(newLocale)
+  settingsStore.setLocale(newLocale)
 }
 </script>
