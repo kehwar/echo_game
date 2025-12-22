@@ -4,13 +4,15 @@ export interface Deck {
   description: string
   locale: string
   cards: string[]
+  extends?: string | string[]
 }
 
 /**
  * Simple frontmatter parser that doesn't require gray-matter
  * Parses YAML frontmatter between --- markers
+ * Supports both single values and arrays (YAML list format with -)
  */
-function parseFrontmatter(content: string): { data: Record<string, string>, content: string } {
+function parseFrontmatter(content: string): { data: Record<string, string | string[]>, content: string } {
   const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/
   const match = content.match(frontmatterRegex)
   
@@ -19,17 +21,51 @@ function parseFrontmatter(content: string): { data: Record<string, string>, cont
   }
   
   const [, frontmatter, body] = match
-  const data: Record<string, string> = {}
+  const data: Record<string, string | string[]> = {}
   
-  // Parse simple YAML key-value pairs
-  frontmatter.split('\n').forEach(line => {
+  const lines = frontmatter.split('\n')
+  let currentKey: string | null = null
+  let currentArray: string[] = []
+  
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i]
+    const trimmedLine = line.trim()
+    
+    // Check if this is an array item (starts with -)
+    if (trimmedLine.startsWith('-')) {
+      const value = trimmedLine.substring(1).trim()
+      currentArray.push(value)
+      continue
+    }
+    
+    // If we were building an array and this line isn't an array item, save it
+    if (currentKey && currentArray.length > 0) {
+      data[currentKey] = currentArray
+      currentArray = []
+      currentKey = null
+    }
+    
+    // Parse key-value pair
     const colonIndex = line.indexOf(':')
     if (colonIndex >= 0) {
       const key = line.substring(0, colonIndex).trim()
       const value = line.substring(colonIndex + 1).trim()
-      data[key] = value
+      
+      if (value) {
+        // Single value on same line
+        data[key] = value
+      } else {
+        // Value might be on next lines (array format)
+        currentKey = key
+        currentArray = []
+      }
     }
-  })
+  }
+  
+  // Save any remaining array
+  if (currentKey && currentArray.length > 0) {
+    data[currentKey] = currentArray
+  }
   
   return { data, content: body }
 }
@@ -46,7 +82,9 @@ function loadDecksFromMarkdown(): Deck[] {
     import: 'default'
   })
   
-  const decks: Deck[] = []
+  // First pass: Load all decks without resolving extends
+  const rawDecks: Map<string, Deck> = new Map()
+  const deckIdMap: Map<string, string> = new Map() // Maps both formats to canonical ID
   
   for (const [filePath, fileContent] of Object.entries(deckFiles)) {
     // Parse frontmatter
@@ -59,6 +97,7 @@ function loadDecksFromMarkdown(): Deck[] {
     const fileName = pathParts[pathParts.length - 1] // Get filename
     const baseName = fileName?.replace('.md', '') || ''
     const id = `${locale}-${baseName}`
+    const altId = `${locale}/${baseName}` // Alternative format for extends
     
     // Parse cards from content (one card per line, filter empty lines)
     const cards = content
@@ -66,17 +105,108 @@ function loadDecksFromMarkdown(): Deck[] {
       .map(line => line.trim())
       .filter(line => line.length > 0)
     
-    decks.push({
+    // Parse extends property
+    let extendsValue: string | string[] | undefined
+    if (data.extends) {
+      extendsValue = data.extends
+    }
+    
+    const deck: Deck = {
       id,
-      name: data.name || baseName,
-      description: data.description || '',
-      locale: data.locale || locale,
-      cards
-    })
+      name: (typeof data.name === 'string' ? data.name : '') || baseName,
+      description: (typeof data.description === 'string' ? data.description : '') || '',
+      locale: (typeof data.locale === 'string' ? data.locale : '') || locale,
+      cards,
+      extends: extendsValue
+    }
+    
+    rawDecks.set(id, deck)
+    // Map both formats to the canonical ID
+    deckIdMap.set(id, id)
+    deckIdMap.set(altId, id)
+  }
+  
+  // Second pass: Resolve extends and merge cards
+  const resolvedDecks: Deck[] = []
+  const visitedDecks = new Set<string>()
+  
+  /**
+   * Normalize deck ID to canonical format
+   * @param deckId - The ID to normalize (can be locale-name or locale/name)
+   * @returns Canonical deck ID or null if not found
+   */
+  function normalizeDeckId(deckId: string): string | null {
+    return deckIdMap.get(deckId) || null
+  }
+  
+  /**
+   * Recursively resolve deck extensions and merge cards
+   * @param deckId - The ID of the deck to resolve (in canonical format)
+   * @param path - Current path for circular dependency detection
+   * @returns Array of cards from this deck and all extended decks
+   */
+  function resolveExtends(deckId: string, path: string[] = []): string[] {
+    // Check for circular dependency
+    if (path.includes(deckId)) {
+      console.warn(`Circular dependency detected: ${path.join(' -> ')} -> ${deckId}`)
+      return []
+    }
+    
+    const deck = rawDecks.get(deckId)
+    if (!deck) {
+      console.warn(`Deck not found: ${deckId}`)
+      return []
+    }
+    
+    const newPath = [...path, deckId]
+    let allCards: string[] = []
+    
+    // Resolve extended decks first
+    if (deck.extends) {
+      const extendsArray = Array.isArray(deck.extends) ? deck.extends : [deck.extends]
+      
+      for (const extendedDeckId of extendsArray) {
+        // Normalize the extended deck ID
+        const normalizedId = normalizeDeckId(extendedDeckId)
+        if (normalizedId) {
+          const extendedCards = resolveExtends(normalizedId, newPath)
+          allCards = allCards.concat(extendedCards)
+        } else {
+          console.warn(`Extended deck not found: ${extendedDeckId}`)
+        }
+      }
+    }
+    
+    // Add this deck's own cards
+    allCards = allCards.concat(deck.cards)
+    
+    return allCards
+  }
+  
+  // Process all decks
+  for (const [id, deck] of rawDecks.entries()) {
+    if (!visitedDecks.has(id)) {
+      visitedDecks.add(id)
+      
+      // Resolve all cards including extended decks
+      const allCards = resolveExtends(id)
+      
+      // Remove duplicates while preserving order
+      const uniqueCards = Array.from(new Set(allCards))
+      
+      resolvedDecks.push({
+        id,
+        name: deck.name,
+        description: deck.description,
+        locale: deck.locale,
+        cards: uniqueCards,
+        extends: deck.extends
+      })
+    }
   }
   
   // Sort by ID for consistent ordering
-  return decks.sort((a, b) => a.id.localeCompare(b.id))
+  return resolvedDecks.sort((a, b) => a.id.localeCompare(b.id))
 }
 
 export const decks: Deck[] = loadDecksFromMarkdown()

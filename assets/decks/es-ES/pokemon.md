@@ -2,30 +2,5 @@
 name: Pokémon
 description: ¡Actúa como los Pokémon icónicos de la 1ª generación - atrápalos a todos!
 locale: es-ES
+extends: en-US/pokemon
 ---
-
-PIKACHU
-CHARIZARD
-BLASTOISE
-VENUSAUR
-MEWTWO
-MEW
-SNORLAX
-JIGGLYPUFF
-PSYDUCK
-SQUIRTLE
-BULBASAUR
-CHARMANDER
-EEVEE
-GYARADOS
-DRAGONITE
-GENGAR
-ALAKAZAM
-MACHAMP
-LAPRAS
-ARTICUNO
-ZAPDOS
-MOLTRES
-PIDGEOT
-BUTTERFREE
-MEOWTH
