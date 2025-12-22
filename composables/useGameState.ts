@@ -5,6 +5,9 @@ export function useGameState(deckId: Ref<string>) {
   // Get global settings
   const settings = useSettings()
   
+  // Get game history composable
+  const gameHistory = useGameHistory()
+  
   // Find the selected deck
   const selectedDeck = computed(() => decks.find(d => d.id === deckId.value))
 
@@ -27,6 +30,7 @@ export function useGameState(deckId: Ref<string>) {
   const correctCards = ref<string[]>([])
   const skippedCards = ref<string[]>([])
   const availableCards = ref<string[]>([])
+  const gameStartTime = ref<string | null>(null)
 
   let timerInterval: number | null = null
   let countdownInterval: number | null = null
@@ -114,6 +118,8 @@ export function useGameState(deckId: Ref<string>) {
   async function startGame() {
     gameStarted.value = true
     initializeGame()
+    // Record game start time
+    gameStartTime.value = new Date().toISOString()
     // Lock to landscape when game starts
     if (isSupported.value) {
       try {
@@ -138,6 +144,20 @@ export function useGameState(deckId: Ref<string>) {
       clearInterval(timerInterval)
       timerInterval = null
     }
+    
+    // Save game record to history
+    if (gameStartTime.value && selectedDeck.value) {
+      const duration = settings.timerDuration.value - timeRemaining.value
+      gameHistory.addGameRecord({
+        deckId: selectedDeck.value.id,
+        deckName: selectedDeck.value.name,
+        startDateTime: gameStartTime.value,
+        duration,
+        correctWords: [...correctCards.value],
+        skippedWords: [...skippedCards.value],
+      })
+    }
+    
     // Unlock orientation when game ends
     if (isSupported.value) {
       unlockOrientation()

@@ -15,6 +15,7 @@
     },
     "chooseDeck": "Elige un Mazo",
     "settingsButton": "Configuración",
+    "historyButton": "Historial",
     "footer": "Construido con Nuxt 4 | Desplegado en GitHub Pages"
   },
   "settings": {
@@ -74,6 +75,30 @@
       "pauseGame": "Pausar juego",
       "markCorrect": "Marcar respuesta como correcta",
       "markSkip": "Saltar o marcar respuesta como incorrecta"
+    }
+  },
+  "history": {
+    "title": "Historial de Juegos",
+    "subtitle": "Ver tus rondas de juego anteriores",
+    "backButton": "Volver al Inicio",
+    "clearButton": "Borrar Historial",
+    "emptyState": {
+      "title": "No Hay Juegos Todavía",
+      "description": "¡Comienza a jugar para ver tu historial aquí!",
+      "playButton": "Jugar un Juego"
+    },
+    "duration": "Duración",
+    "correctWords": "Correctos",
+    "skippedWords": "Saltados",
+    "correctWordsList": "Palabras correctas:",
+    "skippedWordsList": "Palabras saltadas:",
+    "showDetails": "Mostrar Detalles",
+    "hideDetails": "Ocultar Detalles",
+    "clearConfirm": {
+      "title": "¿Borrar Todo el Historial?",
+      "description": "Esto eliminará permanentemente todos tus registros de juego. Esta acción no se puede deshacer.",
+      "cancel": "Cancelar",
+      "confirm": "Borrar Todo"
     }
   },
   "decks": {

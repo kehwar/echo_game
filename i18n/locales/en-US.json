@@ -15,6 +15,7 @@
     },
     "chooseDeck": "Choose a Deck",
     "settingsButton": "Settings",
+    "historyButton": "History",
     "footer": "Built with Nuxt 4 | Deployed on GitHub Pages"
   },
   "settings": {
@@ -74,6 +75,30 @@
       "pauseGame": "Pause game",
       "markCorrect": "Mark answer as correct",
       "markSkip": "Skip or mark answer as wrong"
+    }
+  },
+  "history": {
+    "title": "Game History",
+    "subtitle": "View your previous game rounds",
+    "backButton": "Back to Home",
+    "clearButton": "Clear History",
+    "emptyState": {
+      "title": "No Games Played Yet",
+      "description": "Start playing to see your game history here!",
+      "playButton": "Play a Game"
+    },
+    "duration": "Duration",
+    "correctWords": "Correct",
+    "skippedWords": "Skipped",
+    "correctWordsList": "Correct words:",
+    "skippedWordsList": "Skipped words:",
+    "showDetails": "Show Details",
+    "hideDetails": "Hide Details",
+    "clearConfirm": {
+      "title": "Clear All History?",
+      "description": "This will permanently delete all your game records. This action cannot be undone.",
+      "cancel": "Cancel",
+      "confirm": "Clear All"
     }
   },
   "decks": {
