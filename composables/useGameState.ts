@@ -132,7 +132,7 @@ export function useGameState(deckId: Ref<string>) {
   async function startGame() {
     gameStarted.value = true
     initializeGame()
-    // Lock to landscape when game starts (non-blocking)
+    // Lock to landscape when game starts
     await lockOrientation()
     startCountdown(() => {
       startTimer()
@@ -149,7 +149,6 @@ export function useGameState(deckId: Ref<string>) {
       clearInterval(timerInterval)
       timerInterval = null
     }
-    
     unlockOrientation() // Unlock orientation when game ends
   }
 
