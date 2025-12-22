@@ -23,6 +23,11 @@
             </div>
           </div>
           
+          <div class="bg-primary/10 dark:bg-primary/20 p-6 rounded-lg border-2 border-primary">
+            <div class="text-5xl font-bold text-primary">{{ accuracy }}%</div>
+            <div class="text-xl text-primary mt-2">{{ t('game.results.accuracy') }}</div>
+          </div>
+          
           <div class="bg-red-100 dark:bg-red-900/20 p-6 rounded-lg">
             <div class="text-3xl font-bold text-red-600 dark:text-red-400">{{ wrongCount }}</div>
             <div class="text-lg text-red-700 dark:text-red-300 mt-2">{{ t('game.results.skippedCards') }}</div>
@@ -65,11 +70,18 @@ interface Props {
   skippedCards: string[]
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 defineEmits<{
   playAgain: []
   chooseNewDeck: []
 }>()
 
 const { t } = useI18n()
+
+// Calculate accuracy percentage
+const accuracy = computed(() => {
+  const total = props.correctCount + props.wrongCount
+  if (total === 0) return 0
+  return Math.round((props.correctCount / total) * 100)
+})
 </script>
