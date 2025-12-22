@@ -25,6 +25,31 @@ export function useGameState(deckId: Ref<string>) {
   let timerInterval: number | null = null
   let countdownInterval: number | null = null
 
+  // Lock screen orientation to landscape
+  async function lockOrientation() {
+    try {
+      // Check if the Screen Orientation API is supported
+      if (screen.orientation && screen.orientation.lock) {
+        await screen.orientation.lock('landscape')
+      }
+    } catch (error) {
+      // Silently fail if orientation lock is not supported or denied
+      console.warn('Could not lock screen orientation:', error)
+    }
+  }
+
+  // Unlock screen orientation
+  function unlockOrientation() {
+    try {
+      if (screen.orientation && screen.orientation.unlock) {
+        screen.orientation.unlock()
+      }
+    } catch (error) {
+      // Silently fail if orientation unlock is not supported
+      console.warn('Could not unlock screen orientation:', error)
+    }
+  }
+
   // Shuffle array helper
   function shuffleArray<T>(array: T[]): void {
     for (let i = array.length - 1; i > 0; i--) {
@@ -107,6 +132,7 @@ export function useGameState(deckId: Ref<string>) {
   function startGame() {
     gameStarted.value = true
     initializeGame()
+    lockOrientation() // Lock to landscape when game starts
     startCountdown(() => {
       startTimer()
     })
@@ -122,6 +148,8 @@ export function useGameState(deckId: Ref<string>) {
       clearInterval(timerInterval)
       timerInterval = null
     }
+    
+    unlockOrientation() // Unlock orientation when game ends
   }
 
   // Handle tap without double-tap detection
@@ -188,6 +216,7 @@ export function useGameState(deckId: Ref<string>) {
 
   // Choose a new deck
   function chooseNewDeck() {
+    unlockOrientation() // Unlock orientation when leaving game
     navigateTo('/')
   }
 
@@ -201,6 +230,7 @@ export function useGameState(deckId: Ref<string>) {
       clearInterval(countdownInterval)
       countdownInterval = null
     }
+    unlockOrientation() // Unlock orientation on cleanup
   }
 
   return {
