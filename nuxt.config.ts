@@ -1,4 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { nodePolyfills } from 'vite-plugin-node-polyfills'
+
 export default defineNuxtConfig({
   devtools: { enabled: true },
   
@@ -52,5 +54,14 @@ export default defineNuxtConfig({
   // Nitro configuration for static generation
   nitro: {
     preset: 'static',
+  },
+  
+  // Vite configuration for Buffer polyfill
+  vite: {
+    plugins: [
+      nodePolyfills({
+        include: ['buffer'],
+      }),
+    ],
   },
 })
