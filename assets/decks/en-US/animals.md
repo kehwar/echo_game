@@ -1,0 +1,31 @@
+---
+name: Animals
+description: Act out your favorite animals - from tiny insects to giant elephants!
+locale: en-US
+---
+
+ELEPHANT
+KANGAROO
+PENGUIN
+GIRAFFE
+MONKEY
+DOLPHIN
+BUTTERFLY
+SNAKE
+EAGLE
+TIGER
+RABBIT
+OCTOPUS
+FLAMINGO
+CROCODILE
+KOALA
+CHEETAH
+PEACOCK
+SEAL
+GORILLA
+PARROT
+SLOTH
+ZEBRA
+OWL
+WHALE
+BEAR

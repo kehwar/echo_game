@@ -32,9 +32,9 @@
           >
             <Card class="h-full bg-gradient-to-br from-primary to-purple-600 text-primary-foreground border-0 hover:-translate-y-1 transition-transform duration-300 cursor-pointer">
               <CardHeader>
-                <CardTitle class="text-2xl text-primary-foreground">{{ t(`decks.${deck.id}.name`) }}</CardTitle>
+                <CardTitle class="text-2xl text-primary-foreground">{{ deck.name }}</CardTitle>
                 <CardDescription class="text-primary-foreground/90">
-                  {{ t(`decks.${deck.id}.description`) }}
+                  {{ deck.description }}
                 </CardDescription>
               </CardHeader>
             </Card>
