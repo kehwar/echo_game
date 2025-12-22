@@ -1,3 +1,5 @@
+import matter from 'gray-matter'
+
 export interface Deck {
   id: string
   name: string
@@ -5,69 +7,7 @@ export interface Deck {
   locale: string
   cards: string[]
   extends?: string | string[]
-}
-
-/**
- * Simple frontmatter parser that doesn't require gray-matter
- * Parses YAML frontmatter between --- markers
- * Supports both single values and arrays (YAML list format with -)
- */
-function parseFrontmatter(content: string): { data: Record<string, string | string[]>, content: string } {
-  const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/
-  const match = content.match(frontmatterRegex)
-  
-  if (!match) {
-    return { data: {}, content }
-  }
-  
-  const [, frontmatter, body] = match
-  const data: Record<string, string | string[]> = {}
-  
-  const lines = frontmatter.split('\n')
-  let currentKey: string | null = null
-  let currentArray: string[] = []
-  
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i]
-    const trimmedLine = line.trim()
-    
-    // Check if this is an array item (starts with -)
-    if (trimmedLine.startsWith('-')) {
-      const value = trimmedLine.substring(1).trim()
-      currentArray.push(value)
-      continue
-    }
-    
-    // If we were building an array and this line isn't an array item, save it
-    if (currentKey && currentArray.length > 0) {
-      data[currentKey] = currentArray
-      currentArray = []
-      currentKey = null
-    }
-    
-    // Parse key-value pair
-    const colonIndex = line.indexOf(':')
-    if (colonIndex >= 0) {
-      const key = line.substring(0, colonIndex).trim()
-      const value = line.substring(colonIndex + 1).trim()
-      
-      if (value) {
-        // Single value on same line
-        data[key] = value
-      } else {
-        // Value might be on next lines (array format)
-        currentKey = key
-        currentArray = []
-      }
-    }
-  }
-  
-  // Save any remaining array
-  if (currentKey && currentArray.length > 0) {
-    data[currentKey] = currentArray
-  }
-  
-  return { data, content: body }
+  hidden?: boolean
 }
 
 /**
@@ -75,8 +15,17 @@ function parseFrontmatter(content: string): { data: Record<string, string | stri
  * @param value - The frontmatter value to convert
  * @returns String value or empty string if not a string
  */
-function getStringValue(value: string | string[] | undefined): string {
+function getStringValue(value: unknown): string {
   return typeof value === 'string' ? value : ''
+}
+
+/**
+ * Helper function to safely extract boolean values from frontmatter data
+ * @param value - The frontmatter value to convert
+ * @returns Boolean value or false if not a boolean
+ */
+function getBooleanValue(value: unknown): boolean {
+  return typeof value === 'boolean' ? value : false
 }
 
 /**
@@ -96,8 +45,8 @@ function loadDecksFromMarkdown(): Deck[] {
   const deckIdMap: Map<string, string> = new Map() // Maps both formats to canonical ID
   
   for (const [filePath, fileContent] of Object.entries(deckFiles)) {
-    // Parse frontmatter
-    const { data, content } = parseFrontmatter(fileContent as string)
+    // Parse frontmatter using gray-matter
+    const { data, content } = matter(fileContent as string)
     
     // Extract deck ID from file path including locale
     // e.g., /assets/decks/en-US/animals.md -> en-US-animals
@@ -126,7 +75,8 @@ function loadDecksFromMarkdown(): Deck[] {
       description: getStringValue(data.description) || '',
       locale: getStringValue(data.locale) || locale,
       cards,
-      extends: extendsValue
+      extends: extendsValue,
+      hidden: getBooleanValue(data.hidden)
     }
     
     rawDecks.set(id, deck)
@@ -209,7 +159,8 @@ function loadDecksFromMarkdown(): Deck[] {
         description: deck.description,
         locale: deck.locale,
         cards: uniqueCards,
-        extends: deck.extends
+        extends: deck.extends,
+        hidden: deck.hidden
       })
     }
   }

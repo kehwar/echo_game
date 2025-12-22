@@ -10,6 +10,25 @@ The `extends` property in deck frontmatter allows a deck to inherit cards from o
 - Building combined decks from multiple source decks
 - Creating custom decks based on existing ones
 
+Additionally, the `hidden` property allows you to hide decks from the UI while keeping them parsed and available for extension.
+
+## Frontmatter Properties
+
+### `extends`
+
+Inherit cards from one or more decks.
+
+### `hidden`
+
+Hide the deck from the UI. The deck is still loaded and can be extended by other decks.
+
+```yaml
+---
+name: Test Deck
+hidden: true
+---
+```
+
 ## Usage
 
 ### Single Deck Extension
@@ -46,6 +65,23 @@ extends:
 # Optional: Add your own unique cards
 CUSTOM_CARD_1
 CUSTOM_CARD_2
+```
+
+### Hidden Test Decks
+
+Test decks can be hidden from the UI while still being available for extension:
+
+```yaml
+---
+name: Test Deck
+description: A test deck for development
+locale: en-US
+hidden: true
+extends: en-US/pokemon
+---
+
+TEST_CARD_1
+TEST_CARD_2
 ```
 
 ### Nested Extension
@@ -161,11 +197,18 @@ This deck will have:
 
 ## Technical Details
 
+### Frontmatter Parsing
+
+The deck loader uses the [gray-matter](https://github.com/jonschlinkert/gray-matter) library to parse YAML frontmatter, which provides:
+- Robust YAML parsing
+- Support for complex data types (arrays, objects, booleans)
+- Proper handling of edge cases
+
 ### Implementation
 
 The deck loading system works in two passes:
 
-1. **First Pass**: Load all deck files and parse their frontmatter
+1. **First Pass**: Load all deck files and parse their frontmatter using gray-matter
 2. **Second Pass**: Resolve `extends` relationships and merge cards
 
 ### Circular Dependency Handling
@@ -180,6 +223,14 @@ If a circular dependency is detected (e.g., A → B → A), the system:
 - All deck loading happens at build time using Vite's `import.meta.glob`
 - No runtime overhead for resolving extensions
 - Cards are deduplicated efficiently using Set data structures
+
+### Hidden Decks
+
+Decks with `hidden: true` are:
+- Fully loaded and parsed at build time
+- Available for extension by other decks
+- Filtered out in the UI layer (pages/index.vue)
+- Still accessible via direct URL if needed
 
 ## Best Practices
 

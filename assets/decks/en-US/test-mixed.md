@@ -2,6 +2,7 @@
 name: Mixed Test
 description: A test deck that extends from multiple decks
 locale: en-US
+hidden: true
 extends:
   - en-US/pokemon
   - en-US/animals
