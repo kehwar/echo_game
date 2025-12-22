@@ -1,0 +1,83 @@
+{
+  "app": {
+    "title": "Echo Game",
+    "subtitle": "¡El juego de charadas con el teléfono en la frente!"
+  },
+  "home": {
+    "howToPlay": {
+      "title": "Cómo Jugar",
+      "step1": "Elige un tema a continuación",
+      "step2": "Coloca tu teléfono en tu frente mirando hacia los demás",
+      "step3": "Tus amigos te dan pistas sobre la palabra en la pantalla",
+      "step4": "Toca el lado izquierdo de la pantalla cuando adivines correctamente",
+      "step5": "Toca el lado derecho para saltar una palabra",
+      "step6": "¡Tienes 2 minutos para adivinar tantas palabras como sea posible!"
+    },
+    "chooseTheme": "Elige un Tema",
+    "footer": "Construido con Nuxt 4 | Desplegado en GitHub Pages"
+  },
+  "game": {
+    "backToThemes": "← Volver a Selección de Temas",
+    "preGame": {
+      "readyToPlay": "¿Listo para Jugar?",
+      "step1": "1. Presiona INICIAR abajo",
+      "step2": "2. Coloca tu teléfono en tu frente mirando hacia los demás",
+      "step3": "3. Toca el lado IZQUIERDO = Adivinanza correcta ✓",
+      "step4": "4. Toca el lado DERECHO = Saltar palabra ✗",
+      "step5": "5. Toca el botón de pausa en las esquinas para PAUSAR ⏸️",
+      "step6": "6. ¡Tienes {duration} segundos!",
+      "durationLabel": "Duración de la Ronda",
+      "startButton": "INICIAR JUEGO"
+    },
+    "pause": {
+      "title": "PAUSADO",
+      "subtitle": "El temporizador del juego está pausado",
+      "resumeButton": "Reanudar Juego",
+      "endButton": "Terminar Ronda Antes"
+    },
+    "results": {
+      "title": "¡Se Acabó el Tiempo!",
+      "correctGuesses": "Adivinanzas Correctas ✓",
+      "skippedWords": "Palabras Saltadas ✗",
+      "wordsGuessed": "Palabras adivinadas:",
+      "wordsSkipped": "Palabras saltadas:",
+      "playAgainButton": "Jugar de Nuevo",
+      "chooseDifferentButton": "Elegir Tema Diferente"
+    },
+    "ariaLabels": {
+      "pauseGame": "Pausar juego",
+      "markCorrect": "Marcar respuesta como correcta",
+      "markSkip": "Saltar o marcar respuesta como incorrecta"
+    }
+  },
+  "themes": {
+    "animals": {
+      "name": "Animales",
+      "description": "¡Representa tus animales favoritos - desde insectos pequeños hasta elefantes gigantes!"
+    },
+    "actions": {
+      "name": "Acciones y Actividades",
+      "description": "¡Realiza actividades cotidianas y acciones divertidas!"
+    },
+    "food": {
+      "name": "Comida y Bebidas",
+      "description": "¡Muestra tu amor por la comida deliciosa y bebidas sabrosas!"
+    },
+    "professions": {
+      "name": "Profesiones",
+      "description": "¡Representa diferentes trabajos y carreras!"
+    },
+    "sports": {
+      "name": "Deportes y Juegos",
+      "description": "¡Muestra tus movimientos atléticos y habilidades de juego!"
+    },
+    "objects": {
+      "name": "Objetos y Cosas",
+      "description": "¡Representa objetos cotidianos y artículos especiales!"
+    },
+    "movies": {
+      "name": "Películas y Entretenimiento",
+      "description": "¡Representa escenas famosas de películas y temas de entretenimiento!"
+    }
+  }
+}

@@ -2,6 +2,9 @@
   <div class="h-screen bg-background overflow-hidden">
     <!-- Pre-game screen -->
     <div v-if="!gameStarted && !gameEnded" class="h-screen flex flex-col p-4 max-w-2xl mx-auto justify-center overflow-y-auto">
+      <div class="flex justify-end mb-4">
+        <LanguageSwitcher />
+      </div>
       <header class="text-center mb-8">
         <NuxtLink to="/" class="inline-block mb-4 text-primary hover:underline">
           {{ t('game.backToThemes') }}
@@ -186,12 +189,18 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { themes } from '@/data/themes'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const route = useRoute()
 const themeId = computed(() => route.params.id as string)
 
 // Find the selected theme
 const selectedTheme = computed(() => themes.find(t => t.id === themeId.value))
+
+// Get words for current locale
+const currentWords = computed(() => {
+  if (!selectedTheme.value) return []
+  return selectedTheme.value.words[locale.value] || selectedTheme.value.words['en-US'] || []
+})
 
 // Game state
 const gameStarted = ref(false)
@@ -217,7 +226,7 @@ function initializeGame() {
     return
   }
   
-  availableWords.value = [...selectedTheme.value.words]
+  availableWords.value = [...currentWords.value]
   shuffleArray(availableWords.value)
   usedWords.value = []
   correctWords.value = []
@@ -241,15 +250,15 @@ function shuffleArray<T>(array: T[]): void {
 function nextWord() {
   if (availableWords.value.length === 0) {
     // Refill with unused words first, or all words if all have been used
-    const unusedWords = selectedTheme.value?.words.filter(
+    const unusedWords = currentWords.value.filter(
       word => !usedWords.value.includes(word)
-    ) || []
+    )
     
     if (unusedWords.length > 0) {
       availableWords.value = [...unusedWords]
     } else {
       // All words used, reset and start over
-      availableWords.value = [...(selectedTheme.value?.words || [])]
+      availableWords.value = [...currentWords.value]
       usedWords.value = []
     }
     shuffleArray(availableWords.value)

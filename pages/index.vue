@@ -1,6 +1,9 @@
 <template>
   <div class="h-screen flex flex-col p-4 max-w-7xl mx-auto overflow-y-auto">
     <header class="text-center my-8">
+      <div class="flex justify-end mb-4">
+        <LanguageSwitcher />
+      </div>
       <h1 class="text-5xl md:text-6xl font-bold mb-2 text-foreground">🎭 {{ t('app.title') }}</h1>
       <p class="text-xl text-muted-foreground">{{ t('app.subtitle') }}</p>
     </header>
