@@ -306,6 +306,14 @@ export const useGameStateStore = defineStore('gameState', {
      * Play again with same deck
      */
     playAgain() {
+      // Reset game state before changing gameEnded flag to prevent
+      // old score data from being visible during transition
+      this.correctCount = 0
+      this.wrongCount = 0
+      this.correctCards = []
+      this.skippedCards = []
+      this.usedCards = []
+      
       this.gameEnded = false
       this.startGame()
     },
