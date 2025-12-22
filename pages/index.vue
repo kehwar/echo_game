@@ -63,13 +63,13 @@ import { decks } from '@/data/decks'
 
 const { t, locale } = useI18n()
 
-// Sort decks: current locale first, then other locales
+// Sort decks: current locale first, then other locales, and filter out hidden decks
 const displayedDecks = computed(() => {
   const currentLocale = locale.value
   
-  // Separate decks by locale
-  const currentLocaleDecks = decks.filter(d => d.locale === currentLocale)
-  const otherLocaleDecks = decks.filter(d => d.locale !== currentLocale)
+  // Separate decks by locale and filter out hidden decks
+  const currentLocaleDecks = decks.filter(d => d.locale === currentLocale && !d.hidden)
+  const otherLocaleDecks = decks.filter(d => d.locale !== currentLocale && !d.hidden)
   
   // Return current locale decks first, followed by other locales
   return [...currentLocaleDecks, ...otherLocaleDecks]

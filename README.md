@@ -103,6 +103,8 @@ Decks are stored as markdown files with YAML frontmatter in `assets/decks/{local
 - `name`: Display name of the deck
 - `description`: Brief description shown on deck selection
 - `locale`: Language/locale code (e.g., `en-US`)
+- `extends` (optional): Inherit cards from other deck(s)
+- `hidden` (optional): Set to `true` to hide deck from UI (still available for extension)
 
 **Content** (cards):
 - One card per line
@@ -124,11 +126,24 @@ GIRAFFE
 ...
 ```
 
+**Example with Extension** (`assets/decks/es-ES/pokemon.md`):
+```markdown
+---
+name: Pokémon
+description: ¡Actúa como los Pokémon icónicos!
+locale: es-ES
+extends: en-US/pokemon
+---
+# Inherits all cards from en-US/pokemon deck
+```
+
 To add a new deck:
-1. Create a new `.md` file in `assets/decks/en-US/`
+1. Create a new `.md` file in `assets/decks/{locale}/`
 2. Add frontmatter with name, description, and locale
-3. List cards one per line
-4. The deck will automatically appear in the game
+3. Optionally add `extends` to inherit cards from existing deck(s)
+4. Optionally add `hidden: true` to hide from UI
+5. List cards one per line (or omit if only using extends)
+6. The deck will automatically appear in the game (unless hidden)
 
 ## 🎯 How to Play
 
