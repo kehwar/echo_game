@@ -37,6 +37,10 @@
   },
   "game": {
     "backToDecks": "← Volver a Selección de Mazos",
+    "feedback": {
+      "correct": "¡Correcto!",
+      "skip": "Saltado"
+    },
     "preGame": {
       "readyToPlay": "¿Listo para Jugar?",
       "step1": "1. Presiona INICIAR abajo",
