@@ -59,11 +59,6 @@ export default defineNuxtConfig({
     define: {
       'global': 'globalThis',
     },
-    resolve: {
-      alias: {
-        'buffer': 'buffer',
-      }
-    },
     optimizeDeps: {
       include: ['buffer']
     }
