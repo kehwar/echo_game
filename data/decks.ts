@@ -1,12 +1,12 @@
-export interface Theme {
+export interface Deck {
   id: string
-  words: string[]
+  cards: string[]
 }
 
-export const themes: Theme[] = [
+export const decks: Deck[] = [
   {
     id: 'animals',
-    words: [
+    cards: [
       'ELEPHANT', 'KANGAROO', 'PENGUIN', 'GIRAFFE', 'MONKEY',
       'DOLPHIN', 'BUTTERFLY', 'SNAKE', 'EAGLE', 'TIGER',
       'RABBIT', 'OCTOPUS', 'FLAMINGO', 'CROCODILE', 'KOALA',
@@ -16,7 +16,7 @@ export const themes: Theme[] = [
   },
   {
     id: 'actions',
-    words: [
+    cards: [
       'DANCING', 'SWIMMING', 'COOKING', 'PAINTING', 'SINGING',
       'JUMPING', 'RUNNING', 'SLEEPING', 'READING', 'WRITING',
       'CLIMBING', 'SURFING', 'SKIING', 'FISHING', 'GARDENING',
@@ -26,7 +26,7 @@ export const themes: Theme[] = [
   },
   {
     id: 'food',
-    words: [
+    cards: [
       'PIZZA', 'HAMBURGER', 'SPAGHETTI', 'TACO', 'SUSHI',
       'ICE CREAM', 'PANCAKES', 'POPCORN', 'SANDWICH', 'HOTDOG',
       'DONUT', 'CHOCOLATE', 'COFFEE', 'SMOOTHIE', 'COOKIE',
@@ -36,7 +36,7 @@ export const themes: Theme[] = [
   },
   {
     id: 'professions',
-    words: [
+    cards: [
       'DOCTOR', 'TEACHER', 'FIREFIGHTER', 'CHEF', 'ASTRONAUT',
       'PILOT', 'DENTIST', 'MUSICIAN', 'ARTIST', 'SCIENTIST',
       'POLICE OFFICER', 'NURSE', 'FARMER', 'MAGICIAN', 'DETECTIVE',
@@ -46,7 +46,7 @@ export const themes: Theme[] = [
   },
   {
     id: 'sports',
-    words: [
+    cards: [
       'BASKETBALL', 'SOCCER', 'TENNIS', 'BASEBALL', 'GOLF',
       'VOLLEYBALL', 'BOWLING', 'BOXING', 'WRESTLING', 'HOCKEY',
       'BADMINTON', 'TABLE TENNIS', 'ARCHERY', 'FENCING', 'RUGBY',
@@ -56,7 +56,7 @@ export const themes: Theme[] = [
   },
   {
     id: 'objects',
-    words: [
+    cards: [
       'GUITAR', 'PIANO', 'CAMERA', 'UMBRELLA', 'BICYCLE',
       'LAMP', 'CLOCK', 'MIRROR', 'TELEPHONE', 'COMPUTER',
       'TOOTHBRUSH', 'SCISSORS', 'HAMMER', 'PAINTBRUSH', 'VACUUM',
@@ -66,7 +66,7 @@ export const themes: Theme[] = [
   },
   {
     id: 'movies',
-    words: [
+    cards: [
       'SUPERHERO', 'WIZARD', 'PIRATE', 'NINJA', 'COWBOY',
       'PRINCESS', 'ROBOT', 'ZOMBIE', 'VAMPIRE', 'ALIEN',
       'DINOSAUR', 'DRAGON', 'MERMAID', 'KNIGHT', 'SPY',

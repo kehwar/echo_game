@@ -2,10 +2,10 @@
   <div class="h-screen flex flex-col p-4 max-w-2xl mx-auto justify-center overflow-y-auto">
     <header class="text-center mb-8">
       <NuxtLink to="/" class="inline-block mb-4 text-primary hover:underline">
-        {{ t('game.backToThemes') }}
+        {{ t('game.backToDecks') }}
       </NuxtLink>
-      <h1 class="text-4xl font-bold text-foreground mb-4">{{ t(`themes.${themeId}.name`) }}</h1>
-      <p class="text-xl text-muted-foreground">{{ t(`themes.${themeId}.description`) }}</p>
+      <h1 class="text-4xl font-bold text-foreground mb-4">{{ t(`decks.${deckId}.name`) }}</h1>
+      <p class="text-xl text-muted-foreground">{{ t(`decks.${deckId}.description`) }}</p>
     </header>
 
     <Card class="mb-8">
@@ -53,7 +53,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
 interface Props {
-  themeId: string
+  deckId: string
   durationOptions: number[]
   selectedDuration: number
 }

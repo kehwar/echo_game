@@ -31,11 +31,11 @@
         @click="$emit('tap', 'correct')"
       />
 
-      <!-- Center word display -->
+      <!-- Center card display -->
       <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div class="bg-white/95 rounded-2xl p-12 shadow-2xl max-w-2xl mx-4 text-center">
           <div class="text-6xl md:text-8xl font-bold text-primary break-words">
-            {{ currentWord }}
+            {{ currentCard }}
           </div>
         </div>
       </div>
@@ -53,7 +53,7 @@
 
 <script setup lang="ts">
 interface Props {
-  currentWord: string
+  currentCard: string
   timeRemaining: number
 }
 

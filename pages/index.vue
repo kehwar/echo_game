@@ -23,18 +23,18 @@
       </Card>
 
       <div class="my-8">
-        <h2 class="text-3xl font-bold mb-6 text-center">{{ t('home.chooseTheme') }}</h2>
+        <h2 class="text-3xl font-bold mb-6 text-center">{{ t('home.chooseDeck') }}</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <NuxtLink 
-            v-for="theme in themes" 
-            :key="theme.id" 
-            :to="`/game/${theme.id}`"
+            v-for="deck in decks" 
+            :key="deck.id" 
+            :to="`/game/${deck.id}`"
           >
             <Card class="h-full bg-gradient-to-br from-primary to-purple-600 text-primary-foreground border-0 hover:-translate-y-1 transition-transform duration-300 cursor-pointer">
               <CardHeader>
-                <CardTitle class="text-2xl text-primary-foreground">{{ t(`themes.${theme.id}.name`) }}</CardTitle>
+                <CardTitle class="text-2xl text-primary-foreground">{{ t(`decks.${deck.id}.name`) }}</CardTitle>
                 <CardDescription class="text-primary-foreground/90">
-                  {{ t(`themes.${theme.id}.description`) }}
+                  {{ t(`decks.${deck.id}.description`) }}
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -51,7 +51,7 @@
 
 <script setup lang="ts">
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
-import { themes } from '@/data/themes'
+import { decks } from '@/data/decks'
 
 const { t } = useI18n()
 </script>

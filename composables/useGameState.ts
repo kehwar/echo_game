@@ -1,8 +1,8 @@
-import { themes } from '@/data/themes'
+import { decks } from '@/data/decks'
 
-export function useGameState(themeId: Ref<string>) {
-  // Find the selected theme
-  const selectedTheme = computed(() => themes.find(t => t.id === themeId.value))
+export function useGameState(deckId: Ref<string>) {
+  // Find the selected deck
+  const selectedDeck = computed(() => decks.find(d => d.id === deckId.value))
 
   // Game state
   const gameStarted = ref(false)
@@ -11,13 +11,13 @@ export function useGameState(themeId: Ref<string>) {
   const durationOptions = [60, 90, 120]
   const selectedDuration = ref(120) // Default to 120 seconds
   const timeRemaining = ref(selectedDuration.value)
-  const currentWord = ref('')
+  const currentCard = ref('')
   const correctCount = ref(0)
   const wrongCount = ref(0)
-  const usedWords = ref<string[]>([])
-  const correctWords = ref<string[]>([])
-  const skippedWords = ref<string[]>([])
-  const availableWords = ref<string[]>([])
+  const usedCards = ref<string[]>([])
+  const correctCards = ref<string[]>([])
+  const skippedCards = ref<string[]>([])
+  const availableCards = ref<string[]>([])
 
   let timerInterval: number | null = null
 
@@ -29,44 +29,44 @@ export function useGameState(themeId: Ref<string>) {
     }
   }
 
-  // Get next word
-  function nextWord() {
-    if (availableWords.value.length === 0) {
-      // Refill with unused words first, or all words if all have been used
-      const unusedWords = selectedTheme.value?.words.filter(
-        word => !usedWords.value.includes(word)
+  // Get next card
+  function nextCard() {
+    if (availableCards.value.length === 0) {
+      // Refill with unused cards first, or all cards if all have been used
+      const unusedCards = selectedDeck.value?.cards.filter(
+        card => !usedCards.value.includes(card)
       ) || []
       
-      if (unusedWords.length > 0) {
-        availableWords.value = [...unusedWords]
+      if (unusedCards.length > 0) {
+        availableCards.value = [...unusedCards]
       } else {
-        // All words used, reset and start over
-        availableWords.value = [...(selectedTheme.value?.words || [])]
-        usedWords.value = []
+        // All cards used, reset and start over
+        availableCards.value = [...(selectedDeck.value?.cards || [])]
+        usedCards.value = []
       }
-      shuffleArray(availableWords.value)
+      shuffleArray(availableCards.value)
     }
     
-    currentWord.value = availableWords.value.pop() || ''
+    currentCard.value = availableCards.value.pop() || ''
   }
 
   // Initialize game
   function initializeGame() {
-    if (!selectedTheme.value) {
+    if (!selectedDeck.value) {
       navigateTo('/')
       return
     }
     
-    availableWords.value = [...selectedTheme.value.words]
-    shuffleArray(availableWords.value)
-    usedWords.value = []
-    correctWords.value = []
-    skippedWords.value = []
+    availableCards.value = [...selectedDeck.value.cards]
+    shuffleArray(availableCards.value)
+    usedCards.value = []
+    correctCards.value = []
+    skippedCards.value = []
     correctCount.value = 0
     wrongCount.value = 0
     timeRemaining.value = selectedDuration.value
     gameEnded.value = false
-    nextWord()
+    nextCard()
   }
 
   // Start/restart the timer
@@ -111,26 +111,26 @@ export function useGameState(themeId: Ref<string>) {
     }
   }
 
-  // Mark word as correct
+  // Mark card as correct
   function markCorrect() {
     if (gamePaused.value) return
     correctCount.value++
-    if (!correctWords.value.includes(currentWord.value)) {
-      correctWords.value.push(currentWord.value)
+    if (!correctCards.value.includes(currentCard.value)) {
+      correctCards.value.push(currentCard.value)
     }
-    usedWords.value.push(currentWord.value)
-    nextWord()
+    usedCards.value.push(currentCard.value)
+    nextCard()
   }
 
-  // Mark word as wrong/skip
+  // Mark card as wrong/skip
   function markWrong() {
     if (gamePaused.value) return
     wrongCount.value++
-    if (!skippedWords.value.includes(currentWord.value)) {
-      skippedWords.value.push(currentWord.value)
+    if (!skippedCards.value.includes(currentCard.value)) {
+      skippedCards.value.push(currentCard.value)
     }
-    usedWords.value.push(currentWord.value)
-    nextWord()
+    usedCards.value.push(currentCard.value)
+    nextCard()
   }
 
   // Pause the game
@@ -159,8 +159,8 @@ export function useGameState(themeId: Ref<string>) {
     startGame()
   }
 
-  // Choose a new theme
-  function chooseNewTheme() {
+  // Choose a new deck
+  function chooseNewDeck() {
     navigateTo('/')
   }
 
@@ -174,18 +174,18 @@ export function useGameState(themeId: Ref<string>) {
 
   return {
     // State
-    selectedTheme,
+    selectedDeck,
     gameStarted,
     gameEnded,
     gamePaused,
     durationOptions,
     selectedDuration,
     timeRemaining,
-    currentWord,
+    currentCard,
     correctCount,
     wrongCount,
-    correctWords,
-    skippedWords,
+    correctCards,
+    skippedCards,
     // Methods
     startGame,
     endGame,
@@ -193,7 +193,7 @@ export function useGameState(themeId: Ref<string>) {
     pauseGame,
     resumeGame,
     playAgain,
-    chooseNewTheme,
+    chooseNewDeck,
     cleanup,
   }
 }

@@ -3,7 +3,7 @@
     <!-- Pre-game screen -->
     <GameStartScreen
       v-if="!gameState.gameStarted.value && !gameState.gameEnded.value"
-      :theme-id="themeId"
+      :deck-id="deckId"
       :duration-options="gameState.durationOptions"
       :selected-duration="gameState.selectedDuration.value"
       @start="gameState.startGame"
@@ -13,7 +13,7 @@
     <!-- Active game screen with tap zones -->
     <div v-else-if="gameState.gameStarted.value && !gameState.gameEnded.value" class="h-screen flex flex-col">
       <GamePlayScreen
-        :current-word="gameState.currentWord.value"
+        :current-card="gameState.currentCard.value"
         :time-remaining="gameState.timeRemaining.value"
         @tap="gameState.handleTap"
         @pause="gameState.pauseGame"
@@ -32,10 +32,10 @@
       v-else-if="gameState.gameEnded.value"
       :correct-count="gameState.correctCount.value"
       :wrong-count="gameState.wrongCount.value"
-      :correct-words="gameState.correctWords.value"
-      :skipped-words="gameState.skippedWords.value"
+      :correct-cards="gameState.correctCards.value"
+      :skipped-cards="gameState.skippedCards.value"
       @play-again="gameState.playAgain"
-      @choose-new-theme="gameState.chooseNewTheme"
+      @choose-new-deck="gameState.chooseNewDeck"
     />
   </div>
 </template>
@@ -47,14 +47,14 @@ import PauseModal from '@/components/game/PauseModal.vue'
 import GameScoreScreen from '@/components/game/GameScoreScreen.vue'
 
 const route = useRoute()
-const themeId = computed(() => route.params.id as string)
+const deckId = computed(() => route.params.id as string)
 
 // Initialize game state
-const gameState = useGameState(themeId)
+const gameState = useGameState(deckId)
 
-// Redirect if theme not found
+// Redirect if deck not found
 onMounted(() => {
-  if (!gameState.selectedTheme.value) {
+  if (!gameState.selectedDeck.value) {
     navigateTo('/')
   }
 })
