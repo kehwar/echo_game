@@ -150,8 +150,17 @@ const showClearConfirm = ref(false)
 
 // Format date and time
 function formatDateTime(isoString: string): string {
-  const date = new Date(isoString)
-  return d(date, 'long')
+  try {
+    const date = new Date(isoString)
+    // Check if date is valid
+    if (isNaN(date.getTime())) {
+      return isoString // Return original string if invalid
+    }
+    return d(date, 'long')
+  } catch (error) {
+    console.error('Failed to format date:', error)
+    return isoString
+  }
 }
 
 // Format duration in MM:SS format

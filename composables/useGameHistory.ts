@@ -27,8 +27,26 @@ export function useGameHistory() {
     try {
       const stored = localStorage.getItem(GAME_HISTORY_STORAGE_KEY)
       if (stored) {
-        const history: GameHistoryEntry[] = JSON.parse(stored)
-        return history
+        const parsed = JSON.parse(stored)
+        // Validate that it's an array
+        if (Array.isArray(parsed)) {
+          // Filter out any invalid entries
+          const validHistory = parsed.filter((entry: unknown): entry is GameHistoryEntry => {
+            if (!entry || typeof entry !== 'object') return false
+            const e = entry as Record<string, unknown>
+            return (
+              typeof e.id === 'string' &&
+              typeof e.deckId === 'string' &&
+              typeof e.deckName === 'string' &&
+              typeof e.startDateTime === 'string' &&
+              typeof e.duration === 'number' &&
+              Array.isArray(e.correctWords) &&
+              Array.isArray(e.skippedWords) &&
+              typeof e.accuracy === 'number'
+            )
+          })
+          return validHistory
+        }
       }
     } catch (error) {
       console.error('Failed to load game history from localStorage:', error)
@@ -66,7 +84,7 @@ export function useGameHistory() {
     // Create new entry with unique ID and calculated accuracy
     const newEntry: GameHistoryEntry = {
       ...entry,
-      id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`,
       accuracy
     }
     
