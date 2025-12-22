@@ -66,6 +66,7 @@
       "title": "¡Se Acabó el Tiempo!",
       "correctGuesses": "Adivinanzas Correctas ✓",
       "skippedCards": "Tarjetas Saltadas ✗",
+      "accuracy": "Precisión",
       "cardsGuessed": "Tarjetas adivinadas:",
       "cardsSkipped": "Tarjetas saltadas:",
       "playAgainButton": "Jugar de Nuevo",

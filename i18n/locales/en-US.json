@@ -66,6 +66,7 @@
       "title": "Time's Up!",
       "correctGuesses": "Correct Guesses ✓",
       "skippedCards": "Skipped Cards ✗",
+      "accuracy": "Accuracy",
       "cardsGuessed": "Cards guessed:",
       "cardsSkipped": "Cards skipped:",
       "playAgainButton": "Play Again",
