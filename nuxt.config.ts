@@ -31,11 +31,17 @@ export default defineNuxtConfig({
 
   // i18n configuration
   i18n: {
+    langDir: 'locales',
     locales: [
       {
         code: 'en-US',
         name: 'English (US)',
         file: 'en-US.json'
+      },
+      {
+        code: 'es-ES',
+        name: 'Español',
+        file: 'es-ES.json'
       }
     ],
     defaultLocale: 'en-US',

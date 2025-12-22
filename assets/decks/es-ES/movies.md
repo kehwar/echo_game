@@ -1,0 +1,31 @@
+---
+name: Películas y Entretenimiento
+description: ¡Actúa escenas famosas de películas y temas de entretenimiento!
+locale: es-ES
+---
+
+SUPERHÉROE
+VAMPIRO
+ZOMBI
+PIRATA
+NINJA
+VAQUERO
+PRINCESA
+CABALLERO
+MAGO
+BRUJA
+ROBOT
+ALIENÍGENA
+ASTRONAUTA
+DETECTIVE
+ESPÍA
+FANTASMA
+PAYASO
+CIRCO
+MAGIA
+CONCIERTO
+TEATRO
+ÓPERA
+COMEDIA
+ACCIÓN
+ROMANCE

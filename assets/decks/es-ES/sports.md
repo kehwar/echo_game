@@ -1,0 +1,31 @@
+---
+name: Deportes y Juegos
+description: ¡Muestra tus movimientos atléticos y habilidades de juego!
+locale: es-ES
+---
+
+FÚTBOL
+BALONCESTO
+TENIS
+BÉISBOL
+GOLF
+NATACIÓN
+VOLEIBOL
+BOXEO
+KARATE
+YOGA
+GIMNASIA
+PATINAJE
+ESQUÍ
+SNOWBOARD
+SURF
+CICLISMO
+CORRER
+ESCALADA
+BOWLING
+DARDOS
+AJEDREZ
+PÓKER
+MONOPOLY
+JENGA
+DOMINÓ

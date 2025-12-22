@@ -52,9 +52,13 @@ function loadDecksFromMarkdown(): Deck[] {
     // Parse frontmatter
     const { data, content } = parseFrontmatter(fileContent as string)
     
-    // Extract deck ID from filename
-    const fileName = filePath.split('/').pop()
-    const id = fileName?.replace('.md', '') || ''
+    // Extract deck ID from file path including locale
+    // e.g., /assets/decks/en-US/animals.md -> en-US-animals
+    const pathParts = filePath.split('/')
+    const locale = pathParts[pathParts.length - 2] // Get locale directory name
+    const fileName = pathParts[pathParts.length - 1] // Get filename
+    const baseName = fileName?.replace('.md', '') || ''
+    const id = `${locale}-${baseName}`
     
     // Parse cards from content (one card per line, filter empty lines)
     const cards = content
@@ -64,9 +68,9 @@ function loadDecksFromMarkdown(): Deck[] {
     
     decks.push({
       id,
-      name: data.name || id,
+      name: data.name || baseName,
       description: data.description || '',
-      locale: data.locale || 'en-US',
+      locale: data.locale || locale,
       cards
     })
   }

@@ -1,0 +1,31 @@
+---
+name: Acciones y Actividades
+description: ¡Realiza actividades cotidianas y acciones divertidas!
+locale: es-ES
+---
+
+BAILAR
+COCINAR
+SALTAR
+NADAR
+CANTAR
+CORRER
+PINTAR
+LEER
+ESCRIBIR
+DIBUJAR
+DORMIR
+COMER
+BEBER
+REÍR
+LLORAR
+GRITAR
+CAMINAR
+VOLAR
+ESCALAR
+ESQUIAR
+SURFEAR
+PATINAR
+JUGAR
+ESTUDIAR
+TRABAJAR
