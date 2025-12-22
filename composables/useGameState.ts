@@ -17,6 +17,8 @@ export function useGameState(deckId: Ref<string>) {
   const gamePaused = ref(false)
   const showCountdown = ref(false)
   const countdownValue = ref(3)
+  const showTapFeedback = ref(false)
+  const tapFeedbackAction = ref<'correct' | 'wrong' | null>(null)
   const timeRemaining = ref(settings.timerDuration.value)
   const currentCard = ref('')
   const correctCount = ref(0)
@@ -28,6 +30,7 @@ export function useGameState(deckId: Ref<string>) {
 
   let timerInterval: number | null = null
   let countdownInterval: number | null = null
+  let feedbackTimeout: number | null = null
 
   // Shuffle array helper
   function shuffleArray<T>(array: T[]): void {
@@ -141,10 +144,32 @@ export function useGameState(deckId: Ref<string>) {
     }
   }
 
+  // Show tap feedback overlay
+  function showTapFeedbackOverlay(action: 'correct' | 'wrong') {
+    // Clear any existing feedback timeout
+    if (feedbackTimeout) {
+      clearTimeout(feedbackTimeout)
+    }
+    
+    // Show the feedback overlay
+    tapFeedbackAction.value = action
+    showTapFeedback.value = true
+    
+    // Hide after 600ms (matches animation duration)
+    feedbackTimeout = setTimeout(() => {
+      showTapFeedback.value = false
+      tapFeedbackAction.value = null
+      feedbackTimeout = null
+    }, 600)
+  }
+
   // Handle tap without double-tap detection
   function handleTap(action: 'correct' | 'wrong') {
     // Ignore taps while game is paused
     if (gamePaused.value) return
+    
+    // Show feedback overlay
+    showTapFeedbackOverlay(action)
     
     if (action === 'correct') {
       markCorrect()
@@ -222,6 +247,10 @@ export function useGameState(deckId: Ref<string>) {
       clearInterval(countdownInterval)
       countdownInterval = null
     }
+    if (feedbackTimeout) {
+      clearTimeout(feedbackTimeout)
+      feedbackTimeout = null
+    }
     // Unlock orientation on cleanup
     if (isSupported.value) {
       unlockOrientation()
@@ -236,6 +265,8 @@ export function useGameState(deckId: Ref<string>) {
     gamePaused,
     showCountdown,
     countdownValue,
+    showTapFeedback,
+    tapFeedbackAction,
     timerDuration: settings.timerDuration,
     timeRemaining,
     currentCard,

@@ -19,6 +19,12 @@
         @pause="gameState.pauseGame"
       />
 
+      <!-- Tap feedback overlay -->
+      <TapFeedbackOverlay
+        :is-visible="gameState.showTapFeedback.value"
+        :action="gameState.tapFeedbackAction.value"
+      />
+
       <!-- Countdown overlay -->
       <CountdownOverlay
         :is-visible="gameState.showCountdown.value"
@@ -50,6 +56,7 @@
 <script setup lang="ts">
 import GameStartScreen from '@/components/game/GameStartScreen.vue'
 import GamePlayScreen from '@/components/game/GamePlayScreen.vue'
+import TapFeedbackOverlay from '@/components/game/TapFeedbackOverlay.vue'
 import CountdownOverlay from '@/components/game/CountdownOverlay.vue'
 import PauseModal from '@/components/game/PauseModal.vue'
 import GameScoreScreen from '@/components/game/GameScoreScreen.vue'

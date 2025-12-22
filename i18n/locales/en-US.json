@@ -37,6 +37,10 @@
   },
   "game": {
     "backToDecks": "← Back to Deck Selection",
+    "feedback": {
+      "correct": "Correct!",
+      "skip": "Skipped"
+    },
     "preGame": {
       "readyToPlay": "Ready to Play?",
       "step1": "1. Press START below",
