@@ -1,0 +1,83 @@
+{
+  "app": {
+    "title": "Echo Game",
+    "subtitle": "¡El juego de mímica con el teléfono en la frente!"
+  },
+  "home": {
+    "howToPlay": {
+      "title": "Cómo Jugar",
+      "step1": "Elige un mazo a continuación",
+      "step2": "Coloca tu teléfono en tu frente mirando hacia los demás",
+      "step3": "Tus amigos te dan pistas sobre la tarjeta en la pantalla",
+      "step4": "Toca el lado izquierdo de la pantalla cuando adivines correctamente",
+      "step5": "Toca el lado derecho para saltar una tarjeta",
+      "step6": "¡Tienes 2 minutos para adivinar tantas tarjetas como sea posible!"
+    },
+    "chooseDeck": "Elige un Mazo",
+    "footer": "Construido con Nuxt 4 | Desplegado en GitHub Pages"
+  },
+  "game": {
+    "backToDecks": "← Volver a Selección de Mazos",
+    "preGame": {
+      "readyToPlay": "¿Listo para Jugar?",
+      "step1": "1. Presiona INICIAR abajo",
+      "step2": "2. Coloca tu teléfono en tu frente mirando hacia los demás",
+      "step3": "3. Toca lado IZQUIERDO = Adivinaste correctamente ✓",
+      "step4": "4. Toca lado DERECHO = Saltar tarjeta ✗",
+      "step5": "5. Toca el botón de pausa en las esquinas para PAUSAR ⏸️",
+      "step6": "6. ¡Tienes {duration} segundos!",
+      "durationLabel": "Duración de la Ronda",
+      "startButton": "INICIAR JUEGO"
+    },
+    "pause": {
+      "title": "PAUSADO",
+      "subtitle": "El temporizador del juego está en pausa",
+      "resumeButton": "Reanudar Juego",
+      "endButton": "Terminar Ronda Anticipadamente"
+    },
+    "results": {
+      "title": "¡Se Acabó el Tiempo!",
+      "correctGuesses": "Adivinanzas Correctas ✓",
+      "skippedCards": "Tarjetas Saltadas ✗",
+      "cardsGuessed": "Tarjetas adivinadas:",
+      "cardsSkipped": "Tarjetas saltadas:",
+      "playAgainButton": "Jugar de Nuevo",
+      "chooseDifferentButton": "Elegir Mazo Diferente"
+    },
+    "ariaLabels": {
+      "pauseGame": "Pausar juego",
+      "markCorrect": "Marcar respuesta como correcta",
+      "markSkip": "Saltar o marcar respuesta como incorrecta"
+    }
+  },
+  "decks": {
+    "animals": {
+      "name": "Animales",
+      "description": "¡Actúa como tus animales favoritos - desde pequeños insectos hasta elefantes gigantes!"
+    },
+    "actions": {
+      "name": "Acciones y Actividades",
+      "description": "¡Realiza actividades cotidianas y acciones divertidas!"
+    },
+    "food": {
+      "name": "Comida y Bebidas",
+      "description": "¡Muestra tu amor por la deliciosa comida y bebidas sabrosas!"
+    },
+    "professions": {
+      "name": "Profesiones",
+      "description": "¡Actúa como diferentes trabajos y carreras!"
+    },
+    "sports": {
+      "name": "Deportes y Juegos",
+      "description": "¡Muestra tus movimientos atléticos y habilidades de juego!"
+    },
+    "objects": {
+      "name": "Objetos y Cosas",
+      "description": "¡Actúa como objetos cotidianos e artículos especiales!"
+    },
+    "movies": {
+      "name": "Películas y Entretenimiento",
+      "description": "¡Actúa escenas famosas de películas y temas de entretenimiento!"
+    }
+  }
+}

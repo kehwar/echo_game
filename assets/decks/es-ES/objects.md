@@ -1,0 +1,31 @@
+---
+name: Objetos y Cosas
+description: ¡Actúa como objetos cotidianos e artículos especiales!
+locale: es-ES
+---
+
+TELÉFONO
+COMPUTADORA
+RELOJ
+LIBRO
+LÁPIZ
+TIJERAS
+MARTILLO
+GUITARRA
+PIANO
+CÁMARA
+TELEVISOR
+RADIO
+PARAGUAS
+GAFAS
+SOMBRERO
+ZAPATO
+CEPILLO
+PEINE
+ESPEJO
+LINTERNA
+LLAVE
+MOCHILA
+MALETA
+ALMOHADA
+MANTA

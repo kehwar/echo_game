@@ -4,8 +4,8 @@
       <NuxtLink to="/" class="inline-block mb-4 text-primary hover:underline">
         {{ t('game.backToDecks') }}
       </NuxtLink>
-      <h1 class="text-4xl font-bold text-foreground mb-4">{{ t(`decks.${deckId}.name`) }}</h1>
-      <p class="text-xl text-muted-foreground">{{ t(`decks.${deckId}.description`) }}</p>
+      <h1 class="text-4xl font-bold text-foreground mb-4">{{ deckName }}</h1>
+      <p class="text-xl text-muted-foreground">{{ deckDescription }}</p>
     </header>
 
     <Card class="mb-8">
@@ -54,6 +54,8 @@ import { Button } from '@/components/ui/button'
 
 interface Props {
   deckId: string
+  deckName: string
+  deckDescription: string
   durationOptions: number[]
   selectedDuration: number
 }

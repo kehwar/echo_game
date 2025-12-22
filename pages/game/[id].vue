@@ -4,6 +4,8 @@
     <GameStartScreen
       v-if="!gameState.gameStarted.value && !gameState.gameEnded.value"
       :deck-id="deckId"
+      :deck-name="gameState.selectedDeck.value?.name || ''"
+      :deck-description="gameState.selectedDeck.value?.description || ''"
       :duration-options="gameState.durationOptions"
       :selected-duration="gameState.selectedDuration.value"
       @start="gameState.startGame"

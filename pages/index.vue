@@ -3,6 +3,23 @@
     <header class="text-center my-8">
       <h1 class="text-5xl md:text-6xl font-bold mb-2 text-foreground">🎭 {{ t('app.title') }}</h1>
       <p class="text-xl text-muted-foreground">{{ t('app.subtitle') }}</p>
+      
+      <!-- Language Switcher -->
+      <div class="mt-4 flex justify-center gap-2">
+        <button
+          v-for="loc in availableLocales"
+          :key="loc.code"
+          :class="[
+            'px-4 py-2 rounded-lg font-medium transition-colors',
+            locale === loc.code
+              ? 'bg-primary text-primary-foreground'
+              : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+          ]"
+          @click="setLocale(loc.code)"
+        >
+          {{ loc.name }}
+        </button>
+      </div>
     </header>
 
     <main class="flex-1">
@@ -26,7 +43,7 @@
         <h2 class="text-3xl font-bold mb-6 text-center">{{ t('home.chooseDeck') }}</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <NuxtLink 
-            v-for="deck in decks" 
+            v-for="deck in displayedDecks" 
             :key="deck.id" 
             :to="`/game/${deck.id}`"
           >
@@ -53,5 +70,20 @@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { decks } from '@/data/decks'
 
-const { t } = useI18n()
+const { t, locale, locales, setLocale } = useI18n()
+
+// Get available locales
+const availableLocales = computed(() => locales.value)
+
+// Sort decks: current locale first, then other locales
+const displayedDecks = computed(() => {
+  const currentLocale = locale.value
+  
+  // Separate decks by locale
+  const currentLocaleDecks = decks.filter(d => d.locale === currentLocale)
+  const otherLocaleDecks = decks.filter(d => d.locale !== currentLocale)
+  
+  // Return current locale decks first, followed by other locales
+  return [...currentLocaleDecks, ...otherLocaleDecks]
+})
 </script>
