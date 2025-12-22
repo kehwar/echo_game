@@ -34,6 +34,31 @@
         </CardContent>
       </Card>
 
+      <!-- Start Countdown Setting -->
+      <Card>
+        <CardHeader>
+          <CardTitle class="text-2xl">{{ t('settings.startCountdown.title') }}</CardTitle>
+          <CardDescription>{{ t('settings.startCountdown.description') }}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div class="flex gap-3 justify-center flex-wrap">
+            <button
+              v-for="countdown in settingsStore.countdownOptions"
+              :key="countdown"
+              :class="[
+                'px-8 py-4 rounded-lg font-medium transition-all text-lg',
+                settingsStore.startCountdownDuration === countdown
+                  ? 'bg-primary text-primary-foreground shadow-lg scale-105'
+                  : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+              ]"
+              @click="settingsStore.setStartCountdownDuration(countdown)"
+            >
+              {{ countdown }}s
+            </button>
+          </div>
+        </CardContent>
+      </Card>
+
       <!-- Language Setting -->
       <Card>
         <CardHeader>
