@@ -48,17 +48,36 @@ export const useDecksStore = defineStore('decks', {
     /**
      * Get decks sorted by locale priority
      */
-    getDisplayedDecks: (state) => (currentLocale: string) => {
-      // Separate decks by locale and filter out hidden decks
-      const currentLocaleDecks = state.decks.filter(
-        d => d.locale === currentLocale && !d.hidden
-      )
-      const otherLocaleDecks = state.decks.filter(
-        d => d.locale !== currentLocale && !d.hidden
-      )
+    getDisplayedDecks: (state) => (currentLocale: string, deckLocaleFilter = 'auto') => {
+      // Determine which locale to use for filtering
+      const filterLocale = deckLocaleFilter === 'auto' ? currentLocale : deckLocaleFilter
 
-      // Return current locale decks first, followed by other locales
-      return [...currentLocaleDecks, ...otherLocaleDecks]
+      // If deckLocaleFilter is 'auto', show current locale first, then others
+      if (deckLocaleFilter === 'auto') {
+        // Separate decks by locale and filter out hidden decks
+        const currentLocaleDecks = state.decks.filter(
+          d => d.locale === currentLocale && !d.hidden
+        )
+        const otherLocaleDecks = state.decks.filter(
+          d => d.locale !== currentLocale && !d.hidden
+        )
+
+        // Return current locale decks first, followed by other locales
+        return [...currentLocaleDecks, ...otherLocaleDecks]
+      } else {
+        // Only show decks matching the selected locale
+        return state.decks.filter(
+          d => d.locale === filterLocale && !d.hidden
+        )
+      }
+    },
+
+    /**
+     * Get available deck locales
+     */
+    availableDeckLocales: (state) => {
+      const locales = new Set(state.decks.filter(d => !d.hidden).map(d => d.locale))
+      return Array.from(locales).sort()
     },
   },
 })

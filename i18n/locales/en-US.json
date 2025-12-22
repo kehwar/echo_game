@@ -31,6 +31,13 @@
       "title": "Language",
       "description": "Select your preferred language"
     },
+    "deckLocale": {
+      "title": "Deck Language",
+      "description": "Choose which language decks to show",
+      "auto": "Auto (Use UI Language)",
+      "en-US": "English (US)",
+      "es-ES": "Spanish"
+    },
     "info": {
       "line1": "These settings apply to all game rounds.",
       "line2": "Changes are saved automatically."
