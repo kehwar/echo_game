@@ -27,6 +27,10 @@
       "title": "Temporizador de Ronda",
       "description": "Elige cuánto dura cada ronda del juego"
     },
+    "startCountdown": {
+      "title": "Cuenta Regresiva de Inicio",
+      "description": "Elige la duración de la cuenta regresiva antes de que comience cada ronda"
+    },
     "language": {
       "title": "Idioma",
       "description": "Selecciona tu idioma preferido"

@@ -27,6 +27,10 @@
       "title": "Round Timer",
       "description": "Choose how long each game round lasts"
     },
+    "startCountdown": {
+      "title": "Start Countdown",
+      "description": "Choose countdown duration before each round starts"
+    },
     "language": {
       "title": "Language",
       "description": "Select your preferred language"

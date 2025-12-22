@@ -117,8 +117,10 @@ export const useGameStateStore = defineStore('gameState', {
      * Start countdown and then execute callback
      */
     startCountdown(callback: () => void) {
+      const settingsStore = useSettingsStore()
+      
       this.showCountdown = true
-      this.countdownValue = 3
+      this.countdownValue = settingsStore.startCountdownDuration
 
       this.countdownInterval = setInterval(() => {
         this.countdownValue--

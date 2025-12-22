@@ -8,12 +8,14 @@ const SETTINGS_STORAGE_KEY = 'echo-game-settings'
 
 interface GameSettings {
   timerDuration: number
+  startCountdownDuration: number
   locale: string
   deckLocale: string
 }
 
 const defaultSettings: GameSettings = {
   timerDuration: 120, // 2 minutes default
+  startCountdownDuration: 2, // 2 seconds default countdown
   locale: 'en-US',
   deckLocale: 'auto' // 'auto' means use UI locale
 }
@@ -21,9 +23,11 @@ const defaultSettings: GameSettings = {
 export const useSettingsStore = defineStore('settings', {
   state: () => ({
     timerDuration: defaultSettings.timerDuration,
+    startCountdownDuration: defaultSettings.startCountdownDuration,
     locale: defaultSettings.locale,
     deckLocale: defaultSettings.deckLocale,
     durationOptions: [60, 90, 120] as const,
+    countdownOptions: [1, 2, 3] as const,
   }),
 
   actions: {
@@ -38,6 +42,7 @@ export const useSettingsStore = defineStore('settings', {
         if (stored) {
           const settings: GameSettings = JSON.parse(stored)
           this.timerDuration = settings.timerDuration ?? defaultSettings.timerDuration
+          this.startCountdownDuration = settings.startCountdownDuration ?? defaultSettings.startCountdownDuration
           this.locale = settings.locale ?? defaultSettings.locale
           this.deckLocale = settings.deckLocale ?? defaultSettings.deckLocale
         }
@@ -55,6 +60,7 @@ export const useSettingsStore = defineStore('settings', {
       try {
         const settings: GameSettings = {
           timerDuration: this.timerDuration,
+          startCountdownDuration: this.startCountdownDuration,
           locale: this.locale,
           deckLocale: this.deckLocale
         }
@@ -69,6 +75,14 @@ export const useSettingsStore = defineStore('settings', {
      */
     setTimerDuration(duration: number) {
       this.timerDuration = duration
+      this.saveSettings()
+    },
+
+    /**
+     * Set start countdown duration and save
+     */
+    setStartCountdownDuration(duration: number) {
+      this.startCountdownDuration = duration
       this.saveSettings()
     },
 
@@ -93,6 +107,7 @@ export const useSettingsStore = defineStore('settings', {
      */
     resetToDefaults() {
       this.timerDuration = defaultSettings.timerDuration
+      this.startCountdownDuration = defaultSettings.startCountdownDuration
       this.locale = defaultSettings.locale
       this.deckLocale = defaultSettings.deckLocale
       this.saveSettings()
