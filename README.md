@@ -8,11 +8,11 @@ A phone-on-forehead charades game built with Nuxt 4, designed for local group pl
 
 ## 🎮 Features
 
-- **Theme Selection**: Choose from 7 different themes (Animals, Food, Sports, etc.)
+- **Deck Selection**: Choose from 7 different decks (Animals, Food, Sports, etc.)
 - **Phone-on-Forehead Gameplay**: Place your phone on your forehead while friends give you clues
 - **Simple Tap Controls**: Tap left for correct, right to skip - no need to look at the screen!
 - **2-Minute Timer**: Fast-paced rounds with automatic timing
-- **Score Tracking**: See your correct guesses and skipped words at the end
+- **Score Tracking**: See your correct guesses and skipped cards at the end
 - **Responsive Design**: Optimized for mobile devices
 - **No Network Required**: Fully local gameplay, no server or multiplayer needed
 
@@ -77,9 +77,9 @@ echo_game/
 │   ├── workflows/           # CI/CD workflows
 │   └── copilot-instructions.md  # Coding agent instructions
 ├── data/
-│   └── themes.ts           # Game themes and word lists
+│   └── decks.ts             # Game decks and card lists
 ├── pages/                   # Nuxt pages (file-based routing)
-│   ├── index.vue           # Home page with theme selection
+│   ├── index.vue           # Home page with deck selection
 │   └── game/
 │       └── [id].vue        # Game play page
 ├── components/              # Vue components (shadcn-vue UI components)
@@ -92,15 +92,15 @@ echo_game/
 
 ## 🎯 How to Play
 
-1. **Choose a Theme**: Select from Animals, Food, Sports, Professions, and more
+1. **Choose a Deck**: Select from Animals, Food, Sports, Professions, and more
 2. **Start the Game**: Press the START GAME button
 3. **Place Phone on Forehead**: Hold the phone against your forehead facing outward so others can see the screen
-4. **Get Clues**: Your friends give you hints about the word displayed
+4. **Get Clues**: Your friends give you hints about the card displayed
 5. **Tap to Score**: 
    - Tap the **LEFT** side of the screen when you guess correctly ✓
-   - Tap the **RIGHT** side to skip a difficult word ✗
-6. **Beat the Clock**: You have 2 minutes to guess as many words as possible!
-7. **See Your Score**: After time runs out, view your correct and skipped words
+   - Tap the **RIGHT** side to skip a difficult card ✗
+6. **Beat the Clock**: You have 2 minutes to guess as many cards as possible!
+7. **See Your Score**: After time runs out, view your correct and skipped cards
 
 ## 🔧 Configuration
 

@@ -6,24 +6,24 @@
   "home": {
     "howToPlay": {
       "title": "How to Play",
-      "step1": "Choose a theme below",
+      "step1": "Choose a deck below",
       "step2": "Place your phone on your forehead facing others",
-      "step3": "Your friends give you clues about the word on the screen",
+      "step3": "Your friends give you clues about the card on the screen",
       "step4": "Tap the left side of the screen when you guess correctly",
-      "step5": "Tap the right side to skip a word",
-      "step6": "You have 2 minutes to guess as many words as possible!"
+      "step5": "Tap the right side to skip a card",
+      "step6": "You have 2 minutes to guess as many cards as possible!"
     },
-    "chooseTheme": "Choose a Theme",
+    "chooseDeck": "Choose a Deck",
     "footer": "Built with Nuxt 4 | Deployed on GitHub Pages"
   },
   "game": {
-    "backToThemes": "← Back to Theme Selection",
+    "backToDecks": "← Back to Deck Selection",
     "preGame": {
       "readyToPlay": "Ready to Play?",
       "step1": "1. Press START below",
       "step2": "2. Place your phone on your forehead facing others",
       "step3": "3. Tap LEFT side = Correct guess ✓",
-      "step4": "4. Tap RIGHT side = Skip word ✗",
+      "step4": "4. Tap RIGHT side = Skip card ✗",
       "step5": "5. Tap pause button in corners to PAUSE ⏸️",
       "step6": "6. You have {duration} seconds!",
       "durationLabel": "Round Duration",
@@ -38,11 +38,11 @@
     "results": {
       "title": "Time's Up!",
       "correctGuesses": "Correct Guesses ✓",
-      "skippedWords": "Skipped Words ✗",
-      "wordsGuessed": "Words guessed:",
-      "wordsSkipped": "Words skipped:",
+      "skippedCards": "Skipped Cards ✗",
+      "cardsGuessed": "Cards guessed:",
+      "cardsSkipped": "Cards skipped:",
       "playAgainButton": "Play Again",
-      "chooseDifferentButton": "Choose Different Theme"
+      "chooseDifferentButton": "Choose Different Deck"
     },
     "ariaLabels": {
       "pauseGame": "Pause game",
@@ -50,7 +50,7 @@
       "markSkip": "Skip or mark answer as wrong"
     }
   },
-  "themes": {
+  "decks": {
     "animals": {
       "name": "Animals",
       "description": "Act out your favorite animals - from tiny insects to giant elephants!"
