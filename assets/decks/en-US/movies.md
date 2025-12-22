@@ -1,0 +1,31 @@
+---
+name: Movies & Entertainment
+description: Act out famous movie scenes and entertainment themes!
+locale: en-US
+---
+
+SUPERHERO
+WIZARD
+PIRATE
+NINJA
+COWBOY
+PRINCESS
+ROBOT
+ZOMBIE
+VAMPIRE
+ALIEN
+DINOSAUR
+DRAGON
+MERMAID
+KNIGHT
+SPY
+MONSTER
+CLOWN
+MIME
+BALLERINA
+ROCKSTAR
+DJ
+COMEDIAN
+STUNT DOUBLE
+BODYBUILDER
+EXPLORER
