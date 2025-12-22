@@ -57,7 +57,7 @@ PENGUIN`
     expect(match?.[2]).toContain('ELEPHANT')
   })
 
-  it('should filter out comment lines starting with "# "', () => {
+  it('should filter out comment lines when parsing deck cards', () => {
     const content = `# Water sports
 SWIMMING
 SURFING
@@ -81,7 +81,7 @@ SNOWBOARDING`
     expect(cards).not.toContain('# Winter sports')
   })
 
-  it('should only filter lines with "# " (hash followed by space)', () => {
+  it('should only filter comments with hash-space pattern when parsing deck cards', () => {
     const content = `#NoSpace
 # With space
 #Another
