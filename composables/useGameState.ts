@@ -153,7 +153,7 @@ export function useGameState(deckId: Ref<string>) {
     startTimer()
   }
 
-  // Play again with same theme
+  // Play again with same deck
   function playAgain() {
     gameEnded.value = false
     startGame()
