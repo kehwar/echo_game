@@ -70,4 +70,3 @@ const updateDuration = (value: number) => {
   emit('update:selectedDuration', value)
 }
 </script>
-
