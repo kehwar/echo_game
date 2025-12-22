@@ -1,369 +1,66 @@
 <template>
   <div class="h-screen bg-background overflow-hidden">
     <!-- Pre-game screen -->
-    <div v-if="!gameStarted && !gameEnded" class="h-screen flex flex-col p-4 max-w-2xl mx-auto justify-center overflow-y-auto">
-      <header class="text-center mb-8">
-        <NuxtLink to="/" class="inline-block mb-4 text-primary hover:underline">
-          {{ t('game.backToThemes') }}
-        </NuxtLink>
-        <h1 class="text-4xl font-bold text-foreground mb-4">{{ t(`themes.${themeId}.name`) }}</h1>
-        <p class="text-xl text-muted-foreground">{{ t(`themes.${themeId}.description`) }}</p>
-      </header>
-
-      <Card class="mb-8">
-        <CardContent class="py-12 text-center space-y-6">
-          <div class="text-6xl mb-4">📱</div>
-          <h2 class="text-2xl font-bold">{{ t('game.preGame.readyToPlay') }}</h2>
-          <div class="text-left max-w-md mx-auto space-y-3 text-muted-foreground">
-            <p>{{ t('game.preGame.step1') }}</p>
-            <p>{{ t('game.preGame.step2') }}</p>
-            <p>{{ t('game.preGame.step3') }}</p>
-            <p>{{ t('game.preGame.step4') }}</p>
-            <p>{{ t('game.preGame.step5') }}</p>
-            <p>{{ t('game.preGame.step6', { duration: selectedDuration }) }}</p>
-          </div>
-          
-          <div class="max-w-md mx-auto mt-6">
-            <label class="block text-sm font-medium mb-3">{{ t('game.preGame.durationLabel') }}</label>
-            <div class="flex gap-3 justify-center">
-              <button
-                v-for="duration in durationOptions"
-                :key="duration"
-                :class="[
-                  'px-6 py-3 rounded-lg font-medium transition-all',
-                  selectedDuration === duration
-                    ? 'bg-primary text-primary-foreground shadow-lg scale-105'
-                    : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
-                ]"
-                @click="selectedDuration = duration"
-              >
-                {{ duration }}s
-              </button>
-            </div>
-          </div>
-          
-          <Button size="lg" class="w-full max-w-md mt-8" @click="startGame">
-            {{ t('game.preGame.startButton') }}
-          </Button>
-        </CardContent>
-      </Card>
-    </div>
+    <GameStartScreen
+      v-if="!gameState.gameStarted.value && !gameState.gameEnded.value"
+      :theme-id="themeId"
+      :duration-options="gameState.durationOptions"
+      :selected-duration="gameState.selectedDuration.value"
+      @start="gameState.startGame"
+      @update:selected-duration="gameState.selectedDuration.value = $event"
+    />
 
     <!-- Active game screen with tap zones -->
-    <div v-else-if="gameStarted && !gameEnded" class="h-screen flex flex-col">
-      <!-- Timer and pause bar -->
-      <div class="bg-gradient-to-br from-primary to-purple-600 text-primary-foreground p-4">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-          <button 
-            class="text-2xl font-bold p-2 hover:bg-white/20 rounded-lg transition-colors"
-            :aria-label="t('game.ariaLabels.pauseGame')"
-            @click="pauseGame"
-          >
-            ⏸️
-          </button>
-          <div class="text-3xl font-bold">⏱️ {{ timeRemaining }}s</div>
-          <button 
-            class="text-2xl font-bold p-2 hover:bg-white/20 rounded-lg transition-colors"
-            :aria-label="t('game.ariaLabels.pauseGame')"
-            @click="pauseGame"
-          >
-            ⏸️
-          </button>
-        </div>
-      </div>
+    <div v-else-if="gameState.gameStarted.value && !gameState.gameEnded.value" class="h-screen flex flex-col">
+      <GamePlayScreen
+        :current-word="gameState.currentWord.value"
+        :time-remaining="gameState.timeRemaining.value"
+        @tap="gameState.handleTap"
+        @pause="gameState.pauseGame"
+      />
 
-      <!-- Main game area with left/right tap zones -->
-      <div class="flex-1 flex relative">
-        <!-- Left tap zone (Correct) -->
-        <div 
-          class="flex-1 cursor-pointer"
-          role="button"
-          :aria-label="t('game.ariaLabels.markCorrect')"
-          @click="handleTap('correct')"
-        />
-
-        <!-- Center word display -->
-        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div class="bg-white/95 rounded-2xl p-12 shadow-2xl max-w-2xl mx-4 text-center">
-            <div class="text-6xl md:text-8xl font-bold text-primary break-words">
-              {{ currentWord }}
-            </div>
-          </div>
-        </div>
-
-        <!-- Pause overlay -->
-        <div 
-          v-if="gamePaused" 
-          class="absolute inset-0 bg-black/80 flex items-center justify-center z-50 pointer-events-auto"
-        >
-          <Card class="max-w-md mx-4 w-full">
-            <CardContent class="py-12 text-center space-y-6">
-              <div class="text-6xl mb-4">⏸️</div>
-              <h2 class="text-4xl font-bold">{{ t('game.pause.title') }}</h2>
-              <p class="text-muted-foreground">{{ t('game.pause.subtitle') }}</p>
-              
-              <div class="space-y-3 pt-4">
-                <Button size="lg" class="w-full" @click="resumeGame">
-                  {{ t('game.pause.resumeButton') }}
-                </Button>
-                <Button variant="outline" size="lg" class="w-full" @click="endGame">
-                  {{ t('game.pause.endButton') }}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <!-- Right tap zone (Skip/Wrong) -->
-        <div 
-          class="flex-1 cursor-pointer"
-          role="button"
-          :aria-label="t('game.ariaLabels.markSkip')"
-          @click="handleTap('wrong')"
-        />
-      </div>
+      <!-- Pause overlay -->
+      <PauseModal
+        :is-visible="gameState.gamePaused.value"
+        @resume="gameState.resumeGame"
+        @end="gameState.endGame"
+      />
     </div>
 
     <!-- End game screen -->
-    <div v-else-if="gameEnded" class="h-screen flex flex-col p-4 max-w-2xl mx-auto justify-center overflow-y-auto">
-      <Card>
-        <CardContent class="py-12 text-center space-y-6">
-          <div class="text-6xl mb-4">🎉</div>
-          <h2 class="text-4xl font-bold">{{ t('game.results.title') }}</h2>
-          
-          <div class="my-8 space-y-4">
-            <div class="bg-green-100 dark:bg-green-900/20 p-6 rounded-lg">
-              <div class="text-5xl font-bold text-green-600 dark:text-green-400">{{ correctCount }}</div>
-              <div class="text-xl text-green-700 dark:text-green-300 mt-2">{{ t('game.results.correctGuesses') }}</div>
-              <div v-if="correctWords.length > 0" class="mt-4 text-left max-h-48 overflow-y-auto">
-                <div class="text-sm font-semibold text-green-700 dark:text-green-300 mb-2">{{ t('game.results.wordsGuessed') }}</div>
-                <div class="flex flex-wrap gap-2">
-                  <span 
-                    v-for="word in correctWords" 
-                    :key="word"
-                    class="inline-block bg-green-200 dark:bg-green-800 text-green-800 dark:text-green-200 px-3 py-1 rounded-full text-sm"
-                  >
-                    {{ word }}
-                  </span>
-                </div>
-              </div>
-            </div>
-            
-            <div class="bg-red-100 dark:bg-red-900/20 p-6 rounded-lg">
-              <div class="text-3xl font-bold text-red-600 dark:text-red-400">{{ wrongCount }}</div>
-              <div class="text-lg text-red-700 dark:text-red-300 mt-2">{{ t('game.results.skippedWords') }}</div>
-              <div v-if="skippedWords.length > 0" class="mt-4 text-left max-h-48 overflow-y-auto">
-                <div class="text-sm font-semibold text-red-700 dark:text-red-300 mb-2">{{ t('game.results.wordsSkipped') }}</div>
-                <div class="flex flex-wrap gap-2">
-                  <span 
-                    v-for="word in skippedWords" 
-                    :key="word"
-                    class="inline-block bg-red-200 dark:bg-red-800 text-red-800 dark:text-red-200 px-3 py-1 rounded-full text-sm"
-                  >
-                    {{ word }}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="space-y-3">
-            <Button size="lg" class="w-full" @click="playAgain">
-              {{ t('game.results.playAgainButton') }}
-            </Button>
-            <Button variant="outline" size="lg" class="w-full" @click="chooseNewTheme">
-              {{ t('game.results.chooseDifferentButton') }}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+    <GameScoreScreen
+      v-else-if="gameState.gameEnded.value"
+      :correct-count="gameState.correctCount.value"
+      :wrong-count="gameState.wrongCount.value"
+      :correct-words="gameState.correctWords.value"
+      :skipped-words="gameState.skippedWords.value"
+      @play-again="gameState.playAgain"
+      @choose-new-theme="gameState.chooseNewTheme"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { themes } from '@/data/themes'
+import GameStartScreen from '@/components/game/GameStartScreen.vue'
+import GamePlayScreen from '@/components/game/GamePlayScreen.vue'
+import PauseModal from '@/components/game/PauseModal.vue'
+import GameScoreScreen from '@/components/game/GameScoreScreen.vue'
 
-const { t } = useI18n()
 const route = useRoute()
 const themeId = computed(() => route.params.id as string)
 
-// Find the selected theme
-const selectedTheme = computed(() => themes.find(t => t.id === themeId.value))
-
-// Game state
-const gameStarted = ref(false)
-const gameEnded = ref(false)
-const gamePaused = ref(false)
-const durationOptions = [60, 90, 120]
-const selectedDuration = ref(120) // Default to 120 seconds
-const timeRemaining = ref(selectedDuration.value)
-const currentWord = ref('')
-const correctCount = ref(0)
-const wrongCount = ref(0)
-const usedWords = ref<string[]>([])
-const correctWords = ref<string[]>([])
-const skippedWords = ref<string[]>([])
-const availableWords = ref<string[]>([])
-
-let timerInterval: number | null = null
-
-// Initialize game
-function initializeGame() {
-  if (!selectedTheme.value) {
-    navigateTo('/')
-    return
-  }
-  
-  availableWords.value = [...selectedTheme.value.words]
-  shuffleArray(availableWords.value)
-  usedWords.value = []
-  correctWords.value = []
-  skippedWords.value = []
-  correctCount.value = 0
-  wrongCount.value = 0
-  timeRemaining.value = selectedDuration.value
-  gameEnded.value = false
-  nextWord()
-}
-
-// Shuffle array helper
-function shuffleArray<T>(array: T[]): void {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]]
-  }
-}
-
-// Get next word
-function nextWord() {
-  if (availableWords.value.length === 0) {
-    // Refill with unused words first, or all words if all have been used
-    const unusedWords = selectedTheme.value?.words.filter(
-      word => !usedWords.value.includes(word)
-    ) || []
-    
-    if (unusedWords.length > 0) {
-      availableWords.value = [...unusedWords]
-    } else {
-      // All words used, reset and start over
-      availableWords.value = [...(selectedTheme.value?.words || [])]
-      usedWords.value = []
-    }
-    shuffleArray(availableWords.value)
-  }
-  
-  currentWord.value = availableWords.value.pop() || ''
-}
-
-// Start the game
-function startGame() {
-  gameStarted.value = true
-  initializeGame()
-  startTimer()
-}
-
-// Start/restart the timer
-function startTimer() {
-  timerInterval = setInterval(() => {
-    timeRemaining.value--
-    
-    if (timeRemaining.value <= 0) {
-      endGame()
-    }
-  }, 1000)
-}
-
-// End the game
-function endGame() {
-  gameStarted.value = false
-  gameEnded.value = true
-  gamePaused.value = false
-  
-  if (timerInterval) {
-    clearInterval(timerInterval)
-    timerInterval = null
-  }
-}
-
-// Handle tap without double-tap detection
-function handleTap(action: 'correct' | 'wrong') {
-  // Ignore taps while game is paused
-  if (gamePaused.value) return
-  
-  if (action === 'correct') {
-    markCorrect()
-  } else {
-    markWrong()
-  }
-}
-
-// Mark word as correct
-function markCorrect() {
-  if (gamePaused.value) return
-  correctCount.value++
-  if (!correctWords.value.includes(currentWord.value)) {
-    correctWords.value.push(currentWord.value)
-  }
-  usedWords.value.push(currentWord.value)
-  nextWord()
-}
-
-// Mark word as wrong/skip
-function markWrong() {
-  if (gamePaused.value) return
-  wrongCount.value++
-  if (!skippedWords.value.includes(currentWord.value)) {
-    skippedWords.value.push(currentWord.value)
-  }
-  usedWords.value.push(currentWord.value)
-  nextWord()
-}
-
-// Pause the game
-function pauseGame() {
-  if (!gameStarted.value || gameEnded.value) return
-  
-  gamePaused.value = true
-  
-  if (timerInterval) {
-    clearInterval(timerInterval)
-    timerInterval = null
-  }
-}
-
-// Resume the game
-function resumeGame() {
-  if (!gameStarted.value || gameEnded.value) return
-  
-  gamePaused.value = false
-  startTimer()
-}
-
-// Play again with same theme
-function playAgain() {
-  gameEnded.value = false
-  startGame()
-}
-
-// Choose a new theme
-function chooseNewTheme() {
-  navigateTo('/')
-}
-
-// Cleanup on unmount
-onUnmounted(() => {
-  if (timerInterval) {
-    clearInterval(timerInterval)
-  }
-})
+// Initialize game state
+const gameState = useGameState(themeId)
 
 // Redirect if theme not found
 onMounted(() => {
-  if (!selectedTheme.value) {
+  if (!gameState.selectedTheme.value) {
     navigateTo('/')
   }
+})
+
+// Cleanup on unmount
+onUnmounted(() => {
+  gameState.cleanup()
 })
 </script>
