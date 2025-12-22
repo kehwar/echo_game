@@ -1,8 +1,9 @@
 import { describe, it, expect } from 'vitest'
+import matter from 'gray-matter'
 
 describe('Deck Extension Feature', () => {
   
-  describe('Frontmatter Parser - Array Support', () => {
+  describe('Frontmatter Parser - gray-matter', () => {
     it('should parse single string value', () => {
       const content = `---
 name: Test Deck
@@ -13,12 +14,13 @@ extends: en-US/pokemon
 CARD1
 CARD2`
       
-      // Simple parser simulation
-      const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/
-      const match = content.match(frontmatterRegex)
+      const { data, content: body } = matter(content)
       
-      expect(match).toBeTruthy()
-      expect(match?.[1]).toContain('extends: en-US/pokemon')
+      expect(data.name).toBe('Test Deck')
+      expect(data.description).toBe('A test deck')
+      expect(data.extends).toBe('en-US/pokemon')
+      expect(body.trim()).toContain('CARD1')
+      expect(body.trim()).toContain('CARD2')
     })
     
     it('should parse array values with YAML list format', () => {
@@ -32,12 +34,14 @@ extends:
 CARD1
 CARD2`
       
-      const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/
-      const match = content.match(frontmatterRegex)
+      const { data, content: body } = matter(content)
       
-      expect(match).toBeTruthy()
-      expect(match?.[1]).toContain('- en-US/pokemon')
-      expect(match?.[1]).toContain('- en-US/animals')
+      expect(data.name).toBe('Test Deck')
+      expect(Array.isArray(data.extends)).toBe(true)
+      expect(data.extends).toHaveLength(2)
+      expect(data.extends[0]).toBe('en-US/pokemon')
+      expect(data.extends[1]).toBe('en-US/animals')
+      expect(body.trim()).toContain('CARD1')
     })
     
     it('should parse mixed single and array values', () => {
@@ -52,14 +56,30 @@ locale: es-ES
 
 CARD1`
       
-      const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/
-      const match = content.match(frontmatterRegex)
+      const { data, content: body } = matter(content)
       
-      expect(match).toBeTruthy()
-      expect(match?.[1]).toContain('name: Test Deck')
-      expect(match?.[1]).toContain('description: A test deck')
-      expect(match?.[1]).toContain('- en-US/pokemon')
-      expect(match?.[1]).toContain('locale: es-ES')
+      expect(data.name).toBe('Test Deck')
+      expect(data.description).toBe('A test deck')
+      expect(Array.isArray(data.extends)).toBe(true)
+      expect(data.extends).toContain('en-US/pokemon')
+      expect(data.extends).toContain('en-US/animals')
+      expect(data.locale).toBe('es-ES')
+      expect(body.trim()).toContain('CARD1')
+    })
+    
+    it('should parse boolean values', () => {
+      const content = `---
+name: Test Deck
+hidden: true
+---
+
+CARD1`
+      
+      const { data } = matter(content)
+      
+      expect(data.name).toBe('Test Deck')
+      expect(data.hidden).toBe(true)
+      expect(typeof data.hidden).toBe('boolean')
     })
   })
   

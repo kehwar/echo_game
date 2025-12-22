@@ -103,7 +103,8 @@ Decks are stored as markdown files with YAML frontmatter in `assets/decks/{local
 - `name`: Display name of the deck
 - `description`: Brief description shown on deck selection
 - `locale`: Language/locale code (e.g., `en-US`)
-- `extends` (optional): Inherit cards from other deck(s) - see [Deck Extension Feature](DECK_EXTENSION.md)
+- `extends` (optional): Inherit cards from other deck(s)
+- `hidden` (optional): Set to `true` to hide deck from UI (still available for extension)
 
 **Content** (cards):
 - One card per line
@@ -140,10 +141,9 @@ To add a new deck:
 1. Create a new `.md` file in `assets/decks/{locale}/`
 2. Add frontmatter with name, description, and locale
 3. Optionally add `extends` to inherit cards from existing deck(s)
-4. List cards one per line (or omit if only using extends)
-5. The deck will automatically appear in the game
-
-For more details on the deck extension feature, see [DECK_EXTENSION.md](DECK_EXTENSION.md).
+4. Optionally add `hidden: true` to hide from UI
+5. List cards one per line (or omit if only using extends)
+6. The deck will automatically appear in the game (unless hidden)
 
 ## 🎯 How to Play
 
