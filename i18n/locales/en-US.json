@@ -23,7 +23,7 @@
       "step1": "1. Press START below",
       "step2": "2. Place your phone on your forehead facing others",
       "step3": "3. Tap LEFT side = Correct guess ✓",
-      "step4": "4. Tap RIGHT side = Skip word ✗",
+      "step4": "4. Tap RIGHT side = Skip card ✗",
       "step5": "5. Tap pause button in corners to PAUSE ⏸️",
       "step6": "6. You have {duration} seconds!",
       "durationLabel": "Round Duration",
