@@ -71,6 +71,15 @@ function parseFrontmatter(content: string): { data: Record<string, string | stri
 }
 
 /**
+ * Helper function to safely extract string values from frontmatter data
+ * @param value - The frontmatter value to convert
+ * @returns String value or empty string if not a string
+ */
+function getStringValue(value: string | string[] | undefined): string {
+  return typeof value === 'string' ? value : ''
+}
+
+/**
  * Load decks from markdown files using Vite's import.meta.glob
  * This works at build time and doesn't require Node.js modules in the browser
  */
@@ -113,9 +122,9 @@ function loadDecksFromMarkdown(): Deck[] {
     
     const deck: Deck = {
       id,
-      name: (typeof data.name === 'string' ? data.name : '') || baseName,
-      description: (typeof data.description === 'string' ? data.description : '') || '',
-      locale: (typeof data.locale === 'string' ? data.locale : '') || locale,
+      name: getStringValue(data.name) || baseName,
+      description: getStringValue(data.description) || '',
+      locale: getStringValue(data.locale) || locale,
       cards,
       extends: extendsValue
     }
@@ -159,7 +168,7 @@ function loadDecksFromMarkdown(): Deck[] {
     }
     
     const newPath = [...path, deckId]
-    let allCards: string[] = []
+    const allCards: string[] = []
     
     // Resolve extended decks first
     if (deck.extends) {
@@ -170,7 +179,7 @@ function loadDecksFromMarkdown(): Deck[] {
         const normalizedId = normalizeDeckId(extendedDeckId)
         if (normalizedId) {
           const extendedCards = resolveExtends(normalizedId, newPath)
-          allCards = allCards.concat(extendedCards)
+          allCards.push(...extendedCards)
         } else {
           console.warn(`Extended deck not found: ${extendedDeckId}`)
         }
@@ -178,7 +187,7 @@ function loadDecksFromMarkdown(): Deck[] {
     }
     
     // Add this deck's own cards
-    allCards = allCards.concat(deck.cards)
+    allCards.push(...deck.cards)
     
     return allCards
   }
