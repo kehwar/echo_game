@@ -53,14 +53,4 @@ export default defineNuxtConfig({
   nitro: {
     preset: 'static',
   },
-
-  // Vite configuration for Buffer polyfill
-  vite: {
-    define: {
-      'global': 'globalThis',
-    },
-    optimizeDeps: {
-      include: ['buffer']
-    }
-  }
 })
