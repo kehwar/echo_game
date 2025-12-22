@@ -37,3 +37,6 @@ coverage
 
 # Local development
 *.local
+
+# Generated files
+data/decks.json
