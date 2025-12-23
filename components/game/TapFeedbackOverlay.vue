@@ -7,15 +7,10 @@
       'animate-flash-fade'
     ]"
   >
-    <div class="text-center">
-      <div 
-        class="text-[10rem] md:text-[15rem] font-bold text-white animate-flash-scale leading-none"
-      >
-        {{ action === 'correct' ? '✓' : '✗' }}
-      </div>
-      <p class="text-3xl md:text-5xl text-white font-semibold mt-4">
-        {{ action === 'correct' ? t('game.feedback.correct') : t('game.feedback.skip') }}
-      </p>
+    <div 
+      class="text-[10rem] md:text-[15rem] font-bold text-white animate-flash-scale leading-none"
+    >
+      {{ action === 'correct' ? '✓' : '✗' }}
     </div>
   </div>
 </template>
@@ -27,8 +22,6 @@ interface Props {
 }
 
 defineProps<Props>()
-
-const { t } = useI18n()
 </script>
 
 <style scoped>
@@ -63,10 +56,10 @@ const { t } = useI18n()
 }
 
 .animate-flash-fade {
-  animation: flash-fade 300ms ease-out;
+  animation: flash-fade 150ms ease-out;
 }
 
 .animate-flash-scale {
-  animation: flash-scale 300ms ease-out;
+  animation: flash-scale 150ms ease-out;
 }
 </style>

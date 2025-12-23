@@ -232,12 +232,12 @@ export const useGameStateStore = defineStore('gameState', {
       this.tapFeedbackAction = action
       this.showTapFeedback = true
 
-      // Hide after 300ms (matches animation duration)
+      // Hide after 150ms (matches animation duration)
       this.feedbackTimeout = setTimeout(() => {
         this.showTapFeedback = false
         this.tapFeedbackAction = null
         this.feedbackTimeout = null
-      }, 300)
+      }, 150)
     },
 
     /**

@@ -162,7 +162,7 @@ describe('Game State Store', () => {
     }
   })
 
-  it('should show tap feedback overlay for 300ms', () => {
+  it('should show tap feedback overlay for 150ms', () => {
     const store = useGameStateStore()
     
     // Show feedback overlay
@@ -172,10 +172,10 @@ describe('Game State Store', () => {
     expect(store.showTapFeedback).toBe(true)
     expect(store.tapFeedbackAction).toBe('correct')
     
-    // Fast-forward time by 300ms
-    vi.advanceTimersByTime(300)
+    // Fast-forward time by 150ms
+    vi.advanceTimersByTime(150)
     
-    // Should be hidden after 300ms
+    // Should be hidden after 150ms
     expect(store.showTapFeedback).toBe(false)
     expect(store.tapFeedbackAction).toBeNull()
   })
