@@ -4,6 +4,7 @@
  */
 import { defineStore } from 'pinia'
 import { decks as decksData } from '@/data/decks'
+import { useUserDecksStore } from './userDecks'
 
 export interface Deck {
   id: string
@@ -13,6 +14,7 @@ export interface Deck {
   cards: string[]
   extends?: string | string[]
   hidden?: boolean
+  isUserDeck?: boolean
 }
 
 export const useDecksStore = defineStore('decks', {
@@ -22,61 +24,82 @@ export const useDecksStore = defineStore('decks', {
 
   getters: {
     /**
-     * Get all decks
+     * Get all decks (system + user decks)
      */
-    allDecks: (state) => state.decks,
-
-    /**
-     * Get visible decks (not hidden)
-     */
-    visibleDecks: (state) => state.decks.filter(d => !d.hidden),
-
-    /**
-     * Find a deck by ID
-     */
-    getDeckById: (state) => (id: string) => {
-      return state.decks.find(d => d.id === id)
+    allDecks: (state) => {
+      const userDecksStore = useUserDecksStore()
+      return [...state.decks, ...userDecksStore.decks]
     },
 
     /**
-     * Get decks for a specific locale
+     * Get visible decks (not hidden, including user decks)
      */
-    getDecksByLocale: (state) => (locale: string) => {
-      return state.decks.filter(d => d.locale === locale && !d.hidden)
+    visibleDecks() {
+      const userDecksStore = useUserDecksStore()
+      return [...this.decks.filter(d => !d.hidden), ...userDecksStore.decks]
     },
 
     /**
-     * Get decks sorted by locale priority
+     * Find a deck by ID (checks both system and user decks)
      */
-    getDisplayedDecks: (state) => (currentLocale: string, deckLocaleFilter = 'auto') => {
-      // Determine which locale to use for filtering
-      const filterLocale = deckLocaleFilter === 'auto' ? currentLocale : deckLocaleFilter
-
-      // If deckLocaleFilter is 'auto', show current locale first, then others
-      if (deckLocaleFilter === 'auto') {
-        // Separate decks by locale and filter out hidden decks
-        const currentLocaleDecks = state.decks.filter(
-          d => d.locale === currentLocale && !d.hidden
-        )
-        const otherLocaleDecks = state.decks.filter(
-          d => d.locale !== currentLocale && !d.hidden
-        )
-
-        // Return current locale decks first, followed by other locales
-        return [...currentLocaleDecks, ...otherLocaleDecks]
-      } else {
-        // Only show decks matching the selected locale
-        return state.decks.filter(
-          d => d.locale === filterLocale && !d.hidden
-        )
+    getDeckById() {
+      return (id: string) => {
+        const userDecksStore = useUserDecksStore()
+        return this.decks.find(d => d.id === id) || userDecksStore.getDeckById(id)
       }
     },
 
     /**
-     * Get available deck locales
+     * Get decks for a specific locale (including user decks)
      */
-    availableDeckLocales: (state) => {
-      const locales = new Set(state.decks.filter(d => !d.hidden).map(d => d.locale))
+    getDecksByLocale() {
+      return (locale: string) => {
+        const userDecksStore = useUserDecksStore()
+        const systemDecks = this.decks.filter(d => d.locale === locale && !d.hidden)
+        const userDecks = userDecksStore.decks.filter(d => d.locale === locale)
+        return [...systemDecks, ...userDecks]
+      }
+    },
+
+    /**
+     * Get decks sorted by locale priority (including user decks)
+     */
+    getDisplayedDecks() {
+      return (currentLocale: string, deckLocaleFilter = 'auto') => {
+        const userDecksStore = useUserDecksStore()
+        const allDecks = [...this.decks, ...userDecksStore.decks]
+        
+        // Determine which locale to use for filtering
+        const filterLocale = deckLocaleFilter === 'auto' ? currentLocale : deckLocaleFilter
+
+        // If deckLocaleFilter is 'auto', show current locale first, then others
+        if (deckLocaleFilter === 'auto') {
+          // Separate decks by locale and filter out hidden decks
+          const currentLocaleDecks = allDecks.filter(
+            d => d.locale === currentLocale && !d.hidden
+          )
+          const otherLocaleDecks = allDecks.filter(
+            d => d.locale !== currentLocale && !d.hidden
+          )
+
+          // Return current locale decks first, followed by other locales
+          return [...currentLocaleDecks, ...otherLocaleDecks]
+        } else {
+          // Only show decks matching the selected locale
+          return allDecks.filter(
+            d => d.locale === filterLocale && !d.hidden
+          )
+        }
+      }
+    },
+
+    /**
+     * Get available deck locales (including user decks)
+     */
+    availableDeckLocales() {
+      const userDecksStore = useUserDecksStore()
+      const allDecks = [...this.decks, ...userDecksStore.decks]
+      const locales = new Set(allDecks.filter(d => !d.hidden).map(d => d.locale))
       return Array.from(locales).sort()
     },
   },

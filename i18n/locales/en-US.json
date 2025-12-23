@@ -142,5 +142,66 @@
       "name": "Movies & Entertainment",
       "description": "Act out famous movie scenes and entertainment themes!"
     }
+  },
+  "customDecks": {
+    "title": "Custom Decks",
+    "subtitle": "Create and manage your own decks",
+    "backButton": "Back to Home",
+    "createButton": "Create New Deck",
+    "editButton": "Edit",
+    "deleteButton": "Delete",
+    "cloneButton": "Clone",
+    "exportButton": "Export",
+    "importButton": "Import",
+    "playButton": "Play",
+    "emptyState": {
+      "title": "No Custom Decks Yet",
+      "description": "Create your own decks or clone existing ones to customize them!",
+      "createButton": "Create Your First Deck"
+    },
+    "form": {
+      "createTitle": "Create New Deck",
+      "editTitle": "Edit Deck",
+      "nameLabel": "Deck Name",
+      "namePlaceholder": "e.g., My Custom Deck",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Describe what this deck is about...",
+      "localeLabel": "Language",
+      "cardsLabel": "Cards",
+      "cardsPlaceholder": "Enter one card per line\nUse // at the end of a line to continue on the next line\nUse # at the start of a line for comments",
+      "cardsHelp": "Tips: One card per line • Use // for multiline cards • Use # for comments",
+      "saveButton": "Save Deck",
+      "cancelButton": "Cancel"
+    },
+    "import": {
+      "title": "Import Deck",
+      "description": "Paste your deck YAML below",
+      "yamlPlaceholder": "---\nname: My Deck\ndescription: Description here\nlocale: en-US\n---\n\nCARD 1\nCARD 2\nCARD 3",
+      "importButton": "Import",
+      "cancelButton": "Cancel",
+      "success": "Deck imported successfully!",
+      "error": "Failed to import deck. Please check the YAML format."
+    },
+    "export": {
+      "success": "Deck exported to clipboard!",
+      "error": "Failed to export deck."
+    },
+    "delete": {
+      "title": "Delete Deck?",
+      "description": "Are you sure you want to delete this deck? This action cannot be undone.",
+      "cancelButton": "Cancel",
+      "confirmButton": "Delete"
+    },
+    "clone": {
+      "success": "Deck cloned successfully!",
+      "error": "Failed to clone deck."
+    },
+    "validation": {
+      "nameRequired": "Deck name is required",
+      "cardsRequired": "At least one card is required",
+      "cardsMinimum": "Deck must have at least 5 cards"
+    },
+    "systemDecksTitle": "Official Decks",
+    "userDecksTitle": "My Custom Decks"
   }
 }

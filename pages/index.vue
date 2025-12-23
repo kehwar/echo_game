@@ -2,6 +2,11 @@
   <div class="h-screen flex flex-col p-4 max-w-7xl mx-auto overflow-y-auto">
     <header class="text-center my-8">
       <div class="flex justify-end gap-2 mb-4">
+        <NuxtLink to="/decks/manage">
+          <Button variant="outline" size="sm">
+            📝 {{ t('customDecks.title') }}
+          </Button>
+        </NuxtLink>
         <NuxtLink to="/history">
           <Button variant="outline" size="sm">
             📊 {{ t('home.historyButton') }}
@@ -57,20 +62,37 @@
           </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <NuxtLink 
+          <div 
             v-for="deck in displayedDecks" 
-            :key="deck.id" 
-            :to="`/game/${deck.id}`"
+            :key="deck.id"
+            class="relative"
           >
-            <Card class="h-full bg-gradient-to-br from-primary to-purple-600 text-primary-foreground border-0 hover:-translate-y-1 transition-transform duration-300 cursor-pointer">
-              <CardHeader>
-                <CardTitle class="text-2xl text-primary-foreground">{{ deck.name }}</CardTitle>
-                <CardDescription class="text-primary-foreground/90">
-                  {{ deck.description }}
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          </NuxtLink>
+            <NuxtLink :to="`/game/${deck.id}`">
+              <Card 
+                class="h-full border-0 hover:-translate-y-1 transition-transform duration-300 cursor-pointer"
+                :class="deck.isUserDeck ? 'bg-gradient-to-br from-green-500 to-teal-600 text-white' : 'bg-gradient-to-br from-primary to-purple-600 text-primary-foreground'"
+              >
+                <CardHeader>
+                  <CardTitle class="text-2xl" :class="deck.isUserDeck ? 'text-white' : 'text-primary-foreground'">
+                    {{ deck.name }}
+                  </CardTitle>
+                  <CardDescription :class="deck.isUserDeck ? 'text-white/90' : 'text-primary-foreground/90'">
+                    {{ deck.description }}
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </NuxtLink>
+            <!-- Clone button for system decks -->
+            <Button 
+              v-if="!deck.isUserDeck"
+              variant="secondary"
+              size="sm"
+              class="absolute bottom-2 right-2"
+              @click.prevent="cloneDeck(deck)"
+            >
+              {{ t('customDecks.cloneButton') }}
+            </Button>
+          </div>
         </div>
       </div>
     </main>
@@ -87,10 +109,18 @@ import { Button } from '@/components/ui/button'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { useDecksStore } from '@/stores/decks'
 import { useSettingsStore } from '@/stores/settings'
+import { useUserDecksStore } from '@/stores/userDecks'
 
 const { t, locale } = useI18n()
 const decksStore = useDecksStore()
 const settingsStore = useSettingsStore()
+const userDecksStore = useUserDecksStore()
+const router = useRouter()
+
+// Load user decks on mount
+onMounted(() => {
+  userDecksStore.loadDecks()
+})
 
 // Selected deck locale from settings
 const selectedDeckLocale = ref(settingsStore.deckLocale)
@@ -104,6 +134,13 @@ const displayedDecks = computed(() => {
 function changeDeckLocale(newDeckLocale: string) {
   selectedDeckLocale.value = newDeckLocale
   settingsStore.setDeckLocale(newDeckLocale)
+}
+
+// Clone a deck to user decks
+function cloneDeck(deck: any) {
+  const clonedDeck = userDecksStore.cloneDeck(deck)
+  alert(t('customDecks.clone.success'))
+  router.push('/decks/manage')
 }
 
 // Watch for changes in store
