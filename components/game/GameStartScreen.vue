@@ -21,9 +21,22 @@
           <p>{{ t('game.preGame.step6', { duration: timerDuration }) }}</p>
         </div>
         
-        <Button size="lg" class="w-full max-w-md mt-8" @click="$emit('start')">
-          {{ t('game.preGame.startButton') }}
-        </Button>
+        <div class="flex flex-col gap-3 w-full max-w-md mx-auto mt-8">
+          <Button size="lg" class="w-full" @click="$emit('start')">
+            {{ t('game.preGame.startButton') }}
+          </Button>
+          
+          <!-- Clone button for system decks -->
+          <Button 
+            v-if="!isUserDeck"
+            variant="outline" 
+            size="lg" 
+            class="w-full"
+            @click="handleClone"
+          >
+            {{ t('customDecks.cloneButton') }}
+          </Button>
+        </div>
       </CardContent>
     </Card>
   </div>
@@ -32,6 +45,8 @@
 <script setup lang="ts">
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { useUserDecksStore } from '@/stores/userDecks'
+import { useDecksStore } from '@/stores/decks'
 
 interface Props {
   deckId: string
@@ -40,10 +55,29 @@ interface Props {
   timerDuration: number
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 defineEmits<{
   start: []
 }>()
 
 const { t } = useI18n()
+const router = useRouter()
+const userDecksStore = useUserDecksStore()
+const decksStore = useDecksStore()
+
+// Check if this is a user deck
+const isUserDeck = computed(() => {
+  const deck = decksStore.getDeckById(props.deckId)
+  return deck?.isUserDeck || false
+})
+
+// Handle cloning the deck
+function handleClone() {
+  const deck = decksStore.getDeckById(props.deckId)
+  if (deck) {
+    userDecksStore.cloneDeck(deck)
+    alert(t('customDecks.clone.success'))
+    router.push('/decks/manage')
+  }
+}
 </script>

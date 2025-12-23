@@ -14,6 +14,11 @@
       "step6": "¡Tienes 2 minutos para adivinar tantas tarjetas como sea posible!"
     },
     "chooseDeck": "Elige un Mazo",
+    "deckType": {
+      "both": "Todos los Mazos",
+      "system": "Mazos Oficiales",
+      "user": "Mis Mazos Personalizados"
+    },
     "settingsButton": "Configuración",
     "historyButton": "Historial",
     "footer": "Construido con Nuxt 4 | Desplegado en GitHub Pages"
@@ -142,5 +147,66 @@
       "name": "Películas y Entretenimiento",
       "description": "¡Actúa escenas famosas de películas y temas de entretenimiento!"
     }
+  },
+  "customDecks": {
+    "title": "Mazos Personalizados",
+    "subtitle": "Crea y gestiona tus propios mazos",
+    "backButton": "Volver al Inicio",
+    "createButton": "Crear Nuevo Mazo",
+    "editButton": "Editar",
+    "deleteButton": "Eliminar",
+    "cloneButton": "Clonar",
+    "exportButton": "Exportar",
+    "importButton": "Importar",
+    "playButton": "Jugar",
+    "emptyState": {
+      "title": "Aún No Hay Mazos Personalizados",
+      "description": "¡Crea tus propios mazos o clona los existentes para personalizarlos!",
+      "createButton": "Crear Tu Primer Mazo"
+    },
+    "form": {
+      "createTitle": "Crear Nuevo Mazo",
+      "editTitle": "Editar Mazo",
+      "nameLabel": "Nombre del Mazo",
+      "namePlaceholder": "ej., Mi Mazo Personalizado",
+      "descriptionLabel": "Descripción",
+      "descriptionPlaceholder": "Describe de qué trata este mazo...",
+      "localeLabel": "Idioma",
+      "cardsLabel": "Cartas",
+      "cardsPlaceholder": "Ingresa una carta por línea\nUsa // al final de una línea para continuar en la siguiente\nUsa # al inicio de una línea para comentarios",
+      "cardsHelp": "Consejos: Una carta por línea • Usa // para cartas de múltiples líneas • Usa # para comentarios",
+      "saveButton": "Guardar Mazo",
+      "cancelButton": "Cancelar"
+    },
+    "import": {
+      "title": "Importar Mazo",
+      "description": "Pega el YAML de tu mazo abajo",
+      "yamlPlaceholder": "---\nname: Mi Mazo\ndescription: Descripción aquí\nlocale: es-ES\n---\n\nCARTA 1\nCARTA 2\nCARTA 3",
+      "importButton": "Importar",
+      "cancelButton": "Cancelar",
+      "success": "¡Mazo importado exitosamente!",
+      "error": "Error al importar el mazo. Por favor verifica el formato YAML."
+    },
+    "export": {
+      "success": "¡Mazo exportado al portapapeles!",
+      "error": "Error al exportar el mazo."
+    },
+    "delete": {
+      "title": "¿Eliminar Mazo?",
+      "description": "¿Estás seguro de que quieres eliminar este mazo? Esta acción no se puede deshacer.",
+      "cancelButton": "Cancelar",
+      "confirmButton": "Eliminar"
+    },
+    "clone": {
+      "success": "¡Mazo clonado exitosamente!",
+      "error": "Error al clonar el mazo."
+    },
+    "validation": {
+      "nameRequired": "El nombre del mazo es obligatorio",
+      "cardsRequired": "Se requiere al menos una carta",
+      "cardsMinimum": "El mazo debe tener al menos 5 cartas"
+    },
+    "systemDecksTitle": "Mazos Oficiales",
+    "userDecksTitle": "Mis Mazos Personalizados"
   }
 }
