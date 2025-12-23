@@ -123,7 +123,7 @@ export const useUserDecksStore = defineStore('userDecks', {
      */
     createDeck(input: UserDeckInput): UserDeck {
       const now = new Date().toISOString()
-      const id = `user-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+      const id = `user-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`
 
       const deck: UserDeck = {
         id,
@@ -183,7 +183,7 @@ export const useUserDecksStore = defineStore('userDecks', {
      */
     cloneDeck(sourceDeck: { name: string; description: string; locale: string; cards: string[] }): UserDeck {
       const now = new Date().toISOString()
-      const id = `user-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+      const id = `user-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`
 
       const deck: UserDeck = {
         id,
