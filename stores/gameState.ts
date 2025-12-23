@@ -64,6 +64,17 @@ export const useGameStateStore = defineStore('gameState', {
     },
 
     /**
+     * Reset score state
+     */
+    resetScoreState() {
+      this.correctCount = 0
+      this.wrongCount = 0
+      this.correctCards = []
+      this.skippedCards = []
+      this.usedCards = []
+    },
+
+    /**
      * Get next card
      */
     nextCard() {
@@ -103,11 +114,7 @@ export const useGameStateStore = defineStore('gameState', {
 
       this.availableCards = [...deck.cards]
       this.shuffleArray(this.availableCards)
-      this.usedCards = []
-      this.correctCards = []
-      this.skippedCards = []
-      this.correctCount = 0
-      this.wrongCount = 0
+      this.resetScoreState()
       this.timeRemaining = settingsStore.timerDuration
       this.gameEnded = false
       this.nextCard()
@@ -306,6 +313,10 @@ export const useGameStateStore = defineStore('gameState', {
      * Play again with same deck
      */
     playAgain() {
+      // Reset score state before changing gameEnded flag to prevent
+      // old score data from being visible during transition
+      this.resetScoreState()
+      
       this.gameEnded = false
       this.startGame()
     },
@@ -314,6 +325,12 @@ export const useGameStateStore = defineStore('gameState', {
      * Choose a new deck
      */
     chooseNewDeck() {
+      // Reset game state before navigating to prevent old score data
+      // from appearing when selecting a new deck
+      this.resetScoreState()
+      this.gameEnded = false
+      this.gameStarted = false
+      
       // Unlock orientation when leaving game
       const { isSupported, unlockOrientation } = useScreenOrientation()
       if (isSupported.value) {

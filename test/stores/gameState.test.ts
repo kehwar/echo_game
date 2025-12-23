@@ -12,6 +12,9 @@ vi.mock('@vueuse/core', () => ({
   })
 }))
 
+// Mock navigateTo globally
+global.navigateTo = vi.fn()
+
 describe('Game State Store', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
@@ -213,5 +216,80 @@ describe('Game State Store', () => {
     expect(store.timerInterval).toBeNull()
     expect(store.countdownInterval).toBeNull()
     expect(store.feedbackTimeout).toBeNull()
+  })
+
+  it('should reset scores when playing again', () => {
+    const store = useGameStateStore()
+    const decksStore = useDecksStore()
+    
+    const firstDeck = decksStore.decks[0]
+    if (firstDeck && firstDeck.cards.length > 0) {
+      store.setDeckId(firstDeck.id)
+      store.initializeGame()
+      
+      // Simulate some gameplay
+      store.markCorrect()
+      store.markCorrect()
+      store.markWrong()
+      
+      // Verify scores are set
+      expect(store.correctCount).toBe(2)
+      expect(store.wrongCount).toBe(1)
+      expect(store.correctCards.length).toBe(2)
+      expect(store.skippedCards.length).toBe(1)
+      
+      // Mark game as ended
+      store.gameEnded = true
+      
+      // Play again
+      store.playAgain()
+      
+      // Verify scores are reset
+      expect(store.correctCount).toBe(0)
+      expect(store.wrongCount).toBe(0)
+      expect(store.correctCards).toEqual([])
+      expect(store.skippedCards).toEqual([])
+      expect(store.usedCards).toEqual([])
+      expect(store.gameEnded).toBe(false)
+      expect(store.gameStarted).toBe(true)
+    }
+  })
+
+  it('should reset game state when choosing new deck', () => {
+    const store = useGameStateStore()
+    const decksStore = useDecksStore()
+    
+    const firstDeck = decksStore.decks[0]
+    if (firstDeck && firstDeck.cards.length > 0) {
+      store.setDeckId(firstDeck.id)
+      store.initializeGame()
+      
+      // Simulate some gameplay
+      store.markCorrect()
+      store.markCorrect()
+      store.markWrong()
+      
+      // Mark game as ended
+      store.gameEnded = true
+      store.gameStarted = false
+      
+      // Verify scores are set
+      expect(store.correctCount).toBe(2)
+      expect(store.wrongCount).toBe(1)
+      expect(store.gameEnded).toBe(true)
+      expect(store.gameStarted).toBe(false)
+      
+      // Choose new deck (note: navigateTo is mocked, won't actually navigate)
+      store.chooseNewDeck()
+      
+      // Verify game state is reset
+      expect(store.correctCount).toBe(0)
+      expect(store.wrongCount).toBe(0)
+      expect(store.correctCards).toEqual([])
+      expect(store.skippedCards).toEqual([])
+      expect(store.usedCards).toEqual([])
+      expect(store.gameEnded).toBe(false)
+      expect(store.gameStarted).toBe(false)
+    }
   })
 })
