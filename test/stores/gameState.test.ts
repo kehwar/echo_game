@@ -214,4 +214,41 @@ describe('Game State Store', () => {
     expect(store.countdownInterval).toBeNull()
     expect(store.feedbackTimeout).toBeNull()
   })
+
+  it('should reset scores when playing again', () => {
+    const store = useGameStateStore()
+    const decksStore = useDecksStore()
+    
+    const firstDeck = decksStore.decks[0]
+    if (firstDeck && firstDeck.cards.length > 0) {
+      store.setDeckId(firstDeck.id)
+      store.initializeGame()
+      
+      // Simulate some gameplay
+      store.markCorrect()
+      store.markCorrect()
+      store.markWrong()
+      
+      // Verify scores are set
+      expect(store.correctCount).toBe(2)
+      expect(store.wrongCount).toBe(1)
+      expect(store.correctCards.length).toBe(2)
+      expect(store.skippedCards.length).toBe(1)
+      
+      // Mark game as ended
+      store.gameEnded = true
+      
+      // Play again
+      store.playAgain()
+      
+      // Verify scores are reset
+      expect(store.correctCount).toBe(0)
+      expect(store.wrongCount).toBe(0)
+      expect(store.correctCards).toEqual([])
+      expect(store.skippedCards).toEqual([])
+      expect(store.usedCards).toEqual([])
+      expect(store.gameEnded).toBe(false)
+      expect(store.gameStarted).toBe(true)
+    }
+  })
 })
