@@ -325,6 +325,12 @@ export const useGameStateStore = defineStore('gameState', {
      * Choose a new deck
      */
     chooseNewDeck() {
+      // Reset game state before navigating to prevent old score data
+      // from appearing when selecting a new deck
+      this.resetScoreState()
+      this.gameEnded = false
+      this.gameStarted = false
+      
       // Unlock orientation when leaving game
       const { isSupported, unlockOrientation } = useScreenOrientation()
       if (isSupported.value) {
