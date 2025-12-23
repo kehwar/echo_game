@@ -42,8 +42,24 @@
       <div class="my-8">
         <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
           <h2 class="text-3xl font-bold">{{ t('home.chooseDeck') }}</h2>
-          <div class="w-full md:w-64">
-            <Select v-model="selectedDeckLocale" @update:model-value="changeDeckLocale">
+          <div class="flex gap-2 w-full md:w-auto">
+            <Select v-model="selectedDeckType" @update:model-value="changeDeckType" class="w-full md:w-48">
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="both">
+                  {{ t('home.deckType.both') }}
+                </SelectItem>
+                <SelectItem value="system">
+                  {{ t('home.deckType.system') }}
+                </SelectItem>
+                <SelectItem value="user">
+                  {{ t('home.deckType.user') }}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+            <Select v-model="selectedDeckLocale" @update:model-value="changeDeckLocale" class="w-full md:w-48">
               <SelectTrigger>
                 <SelectValue :placeholder="t('settings.deckLocale.auto')" />
               </SelectTrigger>
@@ -62,37 +78,25 @@
           </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div 
+          <NuxtLink 
             v-for="deck in displayedDecks" 
             :key="deck.id"
-            class="relative"
+            :to="`/game/${deck.id}`"
           >
-            <NuxtLink :to="`/game/${deck.id}`">
-              <Card 
-                class="h-full border-0 hover:-translate-y-1 transition-transform duration-300 cursor-pointer"
-                :class="deck.isUserDeck ? 'bg-gradient-to-br from-green-500 to-teal-600 text-white' : 'bg-gradient-to-br from-primary to-purple-600 text-primary-foreground'"
-              >
-                <CardHeader>
-                  <CardTitle class="text-2xl" :class="deck.isUserDeck ? 'text-white' : 'text-primary-foreground'">
-                    {{ deck.name }}
-                  </CardTitle>
-                  <CardDescription :class="deck.isUserDeck ? 'text-white/90' : 'text-primary-foreground/90'">
-                    {{ deck.description }}
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </NuxtLink>
-            <!-- Clone button for system decks -->
-            <Button 
-              v-if="!deck.isUserDeck"
-              variant="secondary"
-              size="sm"
-              class="absolute bottom-2 right-2"
-              @click.prevent="cloneDeck(deck)"
+            <Card 
+              class="h-full border-0 hover:-translate-y-1 transition-transform duration-300 cursor-pointer"
+              :class="deck.isUserDeck ? 'bg-gradient-to-br from-green-500 to-teal-600 text-white' : 'bg-gradient-to-br from-primary to-purple-600 text-primary-foreground'"
             >
-              {{ t('customDecks.cloneButton') }}
-            </Button>
-          </div>
+              <CardHeader>
+                <CardTitle class="text-2xl" :class="deck.isUserDeck ? 'text-white' : 'text-primary-foreground'">
+                  {{ deck.name }}
+                </CardTitle>
+                <CardDescription :class="deck.isUserDeck ? 'text-white/90' : 'text-primary-foreground/90'">
+                  {{ deck.description }}
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </NuxtLink>
         </div>
       </div>
     </main>
@@ -115,7 +119,6 @@ const { t, locale } = useI18n()
 const decksStore = useDecksStore()
 const settingsStore = useSettingsStore()
 const userDecksStore = useUserDecksStore()
-const router = useRouter()
 
 // Load user decks on mount
 onMounted(() => {
@@ -125,9 +128,21 @@ onMounted(() => {
 // Selected deck locale from settings
 const selectedDeckLocale = ref(settingsStore.deckLocale)
 
+// Selected deck type (both, system, user)
+const selectedDeckType = ref<'both' | 'system' | 'user'>('both')
+
 // Sort decks: current locale first, then other locales, and filter out hidden decks
 const displayedDecks = computed(() => {
-  return decksStore.getDisplayedDecks(locale.value, selectedDeckLocale.value)
+  let decks = decksStore.getDisplayedDecks(locale.value, selectedDeckLocale.value)
+  
+  // Filter by deck type
+  if (selectedDeckType.value === 'system') {
+    decks = decks.filter(d => !d.isUserDeck)
+  } else if (selectedDeckType.value === 'user') {
+    decks = decks.filter(d => d.isUserDeck)
+  }
+  
+  return decks
 })
 
 // Change deck locale and update settings
@@ -136,11 +151,9 @@ function changeDeckLocale(newDeckLocale: string) {
   settingsStore.setDeckLocale(newDeckLocale)
 }
 
-// Clone a deck to user decks
-function cloneDeck(deck: any) {
-  const clonedDeck = userDecksStore.cloneDeck(deck)
-  alert(t('customDecks.clone.success'))
-  router.push('/decks/manage')
+// Change deck type filter
+function changeDeckType(newDeckType: 'both' | 'system' | 'user') {
+  selectedDeckType.value = newDeckType
 }
 
 // Watch for changes in store

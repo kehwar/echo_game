@@ -14,6 +14,11 @@
       "step6": "¡Tienes 2 minutos para adivinar tantas tarjetas como sea posible!"
     },
     "chooseDeck": "Elige un Mazo",
+    "deckType": {
+      "both": "Todos los Mazos",
+      "system": "Mazos Oficiales",
+      "user": "Mis Mazos Personalizados"
+    },
     "settingsButton": "Configuración",
     "historyButton": "Historial",
     "footer": "Construido con Nuxt 4 | Desplegado en GitHub Pages"

@@ -14,6 +14,11 @@
       "step6": "You have 2 minutes to guess as many cards as possible!"
     },
     "chooseDeck": "Choose a Deck",
+    "deckType": {
+      "both": "All Decks",
+      "system": "Official Decks",
+      "user": "My Custom Decks"
+    },
     "settingsButton": "Settings",
     "historyButton": "History",
     "footer": "Built with Nuxt 4 | Deployed on GitHub Pages"
