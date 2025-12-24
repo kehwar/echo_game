@@ -57,6 +57,40 @@
           </CardContent>
         </Card>
 
+        <!-- Sound Effects Setting -->
+        <Card>
+          <CardHeader>
+            <CardTitle class="text-2xl">{{ t('settings.soundEffects.title') }}</CardTitle>
+            <CardDescription>{{ t('settings.soundEffects.description') }}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div class="flex gap-3 justify-center flex-wrap">
+              <button
+                :class="[
+                  'px-8 py-4 rounded-lg font-medium transition-all text-lg',
+                  settingsStore.soundEnabled
+                    ? 'bg-primary text-primary-foreground shadow-lg scale-105'
+                    : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                ]"
+                @click="settingsStore.setSoundEnabled(true)"
+              >
+                🔊 {{ t('settings.soundEffects.enabled') }}
+              </button>
+              <button
+                :class="[
+                  'px-8 py-4 rounded-lg font-medium transition-all text-lg',
+                  !settingsStore.soundEnabled
+                    ? 'bg-primary text-primary-foreground shadow-lg scale-105'
+                    : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                ]"
+                @click="settingsStore.setSoundEnabled(false)"
+              >
+                🔇 {{ t('settings.soundEffects.disabled') }}
+              </button>
+            </div>
+          </CardContent>
+        </Card>
+
         <!-- Language Setting -->
         <Card>
           <CardHeader>

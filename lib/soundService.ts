@@ -16,11 +16,15 @@ interface GameSounds {
 // Global sound service instance
 let soundService: GameSounds | null = null
 
+// Settings store getter function
+let getSoundEnabled: (() => boolean) | null = null
+
 /**
- * Initialize the sound service with play functions
+ * Initialize the sound service with play functions and settings getter
  */
-export function initSoundService(sounds: GameSounds) {
+export function initSoundService(sounds: GameSounds, soundEnabledGetter: () => boolean) {
   soundService = sounds
+  getSoundEnabled = soundEnabledGetter
 }
 
 /**
@@ -31,29 +35,44 @@ export function getSoundService(): GameSounds | null {
 }
 
 /**
+ * Check if sound is enabled
+ */
+function isSoundEnabled(): boolean {
+  return getSoundEnabled?.() ?? true
+}
+
+/**
  * Play tick sound (for timer)
  */
 export function playTickSound() {
-  soundService?.playTick()
+  if (isSoundEnabled()) {
+    soundService?.playTick()
+  }
 }
 
 /**
  * Play finish sound (for game end)
  */
 export function playFinishSound() {
-  soundService?.playFinish()
+  if (isSoundEnabled()) {
+    soundService?.playFinish()
+  }
 }
 
 /**
  * Play correct sound (for correct answer)
  */
 export function playCorrectSound() {
-  soundService?.playCorrect()
+  if (isSoundEnabled()) {
+    soundService?.playCorrect()
+  }
 }
 
 /**
  * Play pass sound (for skipped card)
  */
 export function playPassSound() {
-  soundService?.playPass()
+  if (isSoundEnabled()) {
+    soundService?.playPass()
+  }
 }

@@ -42,6 +42,12 @@
       "title": "Cuenta Regresiva de Inicio",
       "description": "Elige la duración de la cuenta regresiva antes de que comience cada ronda"
     },
+    "soundEffects": {
+      "title": "Efectos de Sonido",
+      "description": "Activa o desactiva los efectos de sonido del juego",
+      "enabled": "Activados",
+      "disabled": "Desactivados"
+    },
     "language": {
       "title": "Idioma",
       "description": "Selecciona tu idioma preferido"
