@@ -7,6 +7,7 @@ import { useScreenOrientation } from '@vueuse/core'
 import { useDecksStore } from './decks'
 import { useSettingsStore } from './settings'
 import { useGameHistoryStore } from './gameHistory'
+import { playTickSound, playFinishSound, playCorrectSound, playPassSound } from '@/lib/soundService'
 
 export const useGameStateStore = defineStore('gameState', {
   state: () => ({
@@ -150,6 +151,11 @@ export const useGameStateStore = defineStore('gameState', {
       this.timerInterval = setInterval(() => {
         this.timeRemaining--
 
+        // Play tick sound during last 10 seconds
+        if (this.timeRemaining <= 10 && this.timeRemaining > 0) {
+          playTickSound()
+        }
+
         if (this.timeRemaining <= 0) {
           this.endGame()
         }
@@ -194,6 +200,9 @@ export const useGameStateStore = defineStore('gameState', {
         clearInterval(this.timerInterval)
         this.timerInterval = null
       }
+
+      // Play finish sound when round ends
+      playFinishSound()
 
       // Save game record to history
       const deck = this.selectedDeck
@@ -262,6 +271,10 @@ export const useGameStateStore = defineStore('gameState', {
      */
     markCorrect() {
       if (this.gamePaused) return
+      
+      // Play correct sound
+      playCorrectSound()
+      
       this.correctCount++
       if (!this.correctCards.includes(this.currentCard)) {
         this.correctCards.push(this.currentCard)
@@ -275,6 +288,10 @@ export const useGameStateStore = defineStore('gameState', {
      */
     markWrong() {
       if (this.gamePaused) return
+      
+      // Play pass sound
+      playPassSound()
+      
       this.wrongCount++
       if (!this.skippedCards.includes(this.currentCard)) {
         this.skippedCards.push(this.currentCard)

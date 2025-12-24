@@ -62,6 +62,8 @@ import PauseModal from '@/components/game/PauseModal.vue'
 import GameScoreScreen from '@/components/game/GameScoreScreen.vue'
 import { useGameStateStore } from '@/stores/gameState'
 import { useSettingsStore } from '@/stores/settings'
+import { useGameSounds } from '@/composables/useGameSounds'
+import { initSoundService } from '@/lib/soundService'
 
 const route = useRoute()
 const deckId = computed(() => route.params.id as string)
@@ -70,8 +72,19 @@ const deckId = computed(() => route.params.id as string)
 const gameState = useGameStateStore()
 const settingsStore = useSettingsStore()
 
+// Initialize game sounds
+const sounds = useGameSounds()
+
 // Set the deck ID when component mounts
 onMounted(() => {
+  // Initialize sound service with sound functions
+  initSoundService({
+    playTick: sounds.playTick,
+    playFinish: sounds.playFinish,
+    playCorrect: sounds.playCorrect,
+    playPass: sounds.playPass,
+  })
+  
   gameState.setDeckId(deckId.value)
   
   // Redirect if deck not found
