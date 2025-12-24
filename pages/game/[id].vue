@@ -77,13 +77,13 @@ const sounds = useGameSounds()
 
 // Set the deck ID when component mounts
 onMounted(() => {
-  // Initialize sound service with sound functions
+  // Initialize sound service with sound functions and settings getter
   initSoundService({
     playTick: sounds.playTick,
     playFinish: sounds.playFinish,
     playCorrect: sounds.playCorrect,
     playPass: sounds.playPass,
-  })
+  }, () => settingsStore.soundEnabled)
   
   gameState.setDeckId(deckId.value)
   

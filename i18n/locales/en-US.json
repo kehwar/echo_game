@@ -42,6 +42,12 @@
       "title": "Start Countdown",
       "description": "Choose countdown duration before each round starts"
     },
+    "soundEffects": {
+      "title": "Sound Effects",
+      "description": "Enable or disable game sound feedback",
+      "enabled": "Enabled",
+      "disabled": "Disabled"
+    },
     "language": {
       "title": "Language",
       "description": "Select your preferred language"

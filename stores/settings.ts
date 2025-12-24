@@ -11,13 +11,15 @@ interface GameSettings {
   startCountdownDuration: number
   locale: string
   deckLocale: string
+  soundEnabled: boolean
 }
 
 const defaultSettings: GameSettings = {
   timerDuration: 120, // 2 minutes default
   startCountdownDuration: 2, // 2 seconds default countdown
   locale: 'en-US',
-  deckLocale: 'auto' // 'auto' means use UI locale
+  deckLocale: 'auto', // 'auto' means use UI locale
+  soundEnabled: true // Sound effects enabled by default
 }
 
 export const useSettingsStore = defineStore('settings', {
@@ -26,6 +28,7 @@ export const useSettingsStore = defineStore('settings', {
     startCountdownDuration: defaultSettings.startCountdownDuration,
     locale: defaultSettings.locale,
     deckLocale: defaultSettings.deckLocale,
+    soundEnabled: defaultSettings.soundEnabled,
     durationOptions: [60, 90, 120] as const,
     countdownOptions: [1, 2, 3] as const,
   }),
@@ -45,6 +48,7 @@ export const useSettingsStore = defineStore('settings', {
           this.startCountdownDuration = settings.startCountdownDuration ?? defaultSettings.startCountdownDuration
           this.locale = settings.locale ?? defaultSettings.locale
           this.deckLocale = settings.deckLocale ?? defaultSettings.deckLocale
+          this.soundEnabled = settings.soundEnabled ?? defaultSettings.soundEnabled
         }
       } catch (error) {
         console.error('Failed to load settings from localStorage:', error)
@@ -62,7 +66,8 @@ export const useSettingsStore = defineStore('settings', {
           timerDuration: this.timerDuration,
           startCountdownDuration: this.startCountdownDuration,
           locale: this.locale,
-          deckLocale: this.deckLocale
+          deckLocale: this.deckLocale,
+          soundEnabled: this.soundEnabled
         }
         localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings))
       } catch (error) {
@@ -103,6 +108,14 @@ export const useSettingsStore = defineStore('settings', {
     },
 
     /**
+     * Set sound enabled and save
+     */
+    setSoundEnabled(enabled: boolean) {
+      this.soundEnabled = enabled
+      this.saveSettings()
+    },
+
+    /**
      * Reset to default settings
      */
     resetToDefaults() {
@@ -110,6 +123,7 @@ export const useSettingsStore = defineStore('settings', {
       this.startCountdownDuration = defaultSettings.startCountdownDuration
       this.locale = defaultSettings.locale
       this.deckLocale = defaultSettings.deckLocale
+      this.soundEnabled = defaultSettings.soundEnabled
       this.saveSettings()
     }
   }
