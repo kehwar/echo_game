@@ -227,7 +227,7 @@ ${deck.cards.join('\n')}
         // Simple YAML parsing for our use case
         const lines = yamlContent.split('\n')
         let inFrontmatter = false
-        let frontmatterData: Record<string, string> = {}
+        const frontmatterData: Record<string, string> = {}
         let cardsText = ''
 
         for (let i = 0; i < lines.length; i++) {

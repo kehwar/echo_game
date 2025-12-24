@@ -1,72 +1,69 @@
 <template>
-  <div class="h-screen flex flex-col p-4 max-w-7xl mx-auto overflow-y-auto">
-    <header class="mb-8">
+  <div class="h-full flex flex-col">
+    <header class="pt-6 pb-4 px-4">
       <div class="flex items-center justify-between mb-4">
-        <NuxtLink to="/">
-          <Button variant="outline" size="sm">
-            {{ t('customDecks.backButton') }}
-          </Button>
-        </NuxtLink>
-        <Button @click="showCreateDialog = true">
+        <h1 class="text-3xl md:text-4xl font-bold">{{ t('customDecks.title') }}</h1>
+        <Button size="sm" @click="showCreateDialog = true">
           {{ t('customDecks.createButton') }}
         </Button>
       </div>
-      <h1 class="text-4xl md:text-5xl font-bold mb-2">{{ t('customDecks.title') }}</h1>
-      <p class="text-xl text-muted-foreground">{{ t('customDecks.subtitle') }}</p>
+      <p class="text-lg text-muted-foreground">{{ t('customDecks.subtitle') }}</p>
     </header>
 
-    <main class="flex-1">
-      <!-- Empty state -->
-      <div v-if="userDecksStore.decks.length === 0" class="flex flex-col items-center justify-center py-16">
-        <Card class="max-w-md">
-          <CardHeader>
-            <CardTitle>{{ t('customDecks.emptyState.title') }}</CardTitle>
-            <CardDescription>{{ t('customDecks.emptyState.description') }}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button @click="showCreateDialog = true" class="w-full">
-              {{ t('customDecks.emptyState.createButton') }}
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-
-      <!-- User decks list -->
-      <div v-else class="space-y-4">
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-2xl font-bold">{{ t('customDecks.userDecksTitle') }}</h2>
-          <Button variant="outline" @click="showImportDialog = true">
-            {{ t('customDecks.importButton') }}
-          </Button>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <Card v-for="deck in userDecksStore.decks" :key="deck.id" class="relative">
+    <main class="flex-1 overflow-y-auto px-4 pb-4">
+      <div class="max-w-7xl mx-auto">
+        <!-- Empty state -->
+        <div v-if="userDecksStore.decks.length === 0" class="flex flex-col items-center justify-center py-16">
+          <Card class="max-w-md">
             <CardHeader>
-              <CardTitle>{{ deck.name }}</CardTitle>
-              <CardDescription>{{ deck.description }}</CardDescription>
-              <div class="text-sm text-muted-foreground mt-2">
-                {{ deck.cards.length }} cards • {{ deck.locale }}
-              </div>
+              <CardTitle>{{ t('customDecks.emptyState.title') }}</CardTitle>
+              <CardDescription>{{ t('customDecks.emptyState.description') }}</CardDescription>
             </CardHeader>
             <CardContent>
-              <div class="flex gap-2 flex-wrap">
-                <NuxtLink :to="`/game/${deck.id}`">
-                  <Button size="sm" variant="default">
-                    {{ t('customDecks.playButton') }}
-                  </Button>
-                </NuxtLink>
-                <Button size="sm" variant="outline" @click="editDeck(deck)">
-                  {{ t('customDecks.editButton') }}
-                </Button>
-                <Button size="sm" variant="outline" @click="exportDeck(deck.id)">
-                  {{ t('customDecks.exportButton') }}
-                </Button>
-                <Button size="sm" variant="destructive" @click="confirmDelete(deck.id)">
-                  {{ t('customDecks.deleteButton') }}
-                </Button>
-              </div>
+              <Button class="w-full" @click="showCreateDialog = true">
+                {{ t('customDecks.emptyState.createButton') }}
+              </Button>
             </CardContent>
           </Card>
+        </div>
+
+        <!-- User decks list -->
+        <div v-else class="space-y-4">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-bold">{{ t('customDecks.userDecksTitle') }}</h2>
+            <Button variant="outline" size="sm" @click="showImportDialog = true">
+              {{ t('customDecks.importButton') }}
+            </Button>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <Card v-for="deck in userDecksStore.decks" :key="deck.id" class="relative">
+              <CardHeader>
+                <CardTitle>{{ deck.name }}</CardTitle>
+                <CardDescription>{{ deck.description }}</CardDescription>
+                <div class="text-sm text-muted-foreground mt-2">
+                  {{ deck.cards.length }} cards • {{ deck.locale }}
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div class="flex gap-2 flex-wrap">
+                  <NuxtLink :to="`/game/${deck.id}`">
+                    <Button size="sm" variant="default">
+                      {{ t('customDecks.playButton') }}
+                    </Button>
+                  </NuxtLink>
+                  <Button size="sm" variant="outline" @click="editDeck(deck)">
+                    {{ t('customDecks.editButton') }}
+                  </Button>
+                  <Button size="sm" variant="outline" @click="exportDeck(deck.id)">
+                    {{ t('customDecks.exportButton') }}
+                  </Button>
+                  <Button size="sm" variant="destructive" @click="confirmDelete(deck.id)">
+                    {{ t('customDecks.deleteButton') }}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </main>
@@ -78,7 +75,7 @@
           <CardTitle>{{ editingDeck ? t('customDecks.form.editTitle') : t('customDecks.form.createTitle') }}</CardTitle>
         </CardHeader>
         <CardContent>
-          <form @submit.prevent="saveDeck" class="space-y-4">
+          <form class="space-y-4" @submit.prevent="saveDeck">
             <div>
               <Label for="deck-name">{{ t('customDecks.form.nameLabel') }}</Label>
               <Input
@@ -149,7 +146,7 @@
           <CardDescription>{{ t('customDecks.import.description') }}</CardDescription>
         </CardHeader>
         <CardContent>
-          <form @submit.prevent="importDeck" class="space-y-4">
+          <form class="space-y-4" @submit.prevent="importDeck">
             <Textarea
               v-model="importYaml"
               :placeholder="t('customDecks.import.yamlPlaceholder')"

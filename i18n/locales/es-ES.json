@@ -3,6 +3,12 @@
     "title": "Echo Game",
     "subtitle": "¡El juego de mímica con el teléfono en la frente!"
   },
+  "bottomNav": {
+    "decks": "Mazos",
+    "history": "Historial",
+    "userDecks": "Mis Mazos",
+    "settings": "Configuración"
+  },
   "home": {
     "howToPlay": {
       "title": "Cómo Jugar",

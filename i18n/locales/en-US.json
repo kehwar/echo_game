@@ -3,6 +3,12 @@
     "title": "Echo Game",
     "subtitle": "The phone-on-forehead charades game!"
   },
+  "bottomNav": {
+    "decks": "Decks",
+    "history": "History",
+    "userDecks": "My Decks",
+    "settings": "Settings"
+  },
   "home": {
     "howToPlay": {
       "title": "How to Play",
