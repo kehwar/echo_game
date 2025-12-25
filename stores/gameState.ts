@@ -8,6 +8,7 @@ import { useDecksStore } from './decks'
 import { useSettingsStore } from './settings'
 import { useGameHistoryStore } from './gameHistory'
 import { playTickSound, playFinishSound, playCorrectSound, playPassSound } from '@/lib/soundService'
+import type { Card } from '@/data/decks'
 
 export const useGameStateStore = defineStore('gameState', {
   state: () => ({
@@ -21,13 +22,13 @@ export const useGameStateStore = defineStore('gameState', {
     showTapFeedback: false,
     tapFeedbackAction: null as 'correct' | 'wrong' | null,
     timeRemaining: 120,
-    currentCard: '',
+    currentCard: '' as Card,
     correctCount: 0,
     wrongCount: 0,
-    usedCards: [] as string[],
-    correctCards: [] as string[],
-    skippedCards: [] as string[],
-    availableCards: [] as string[],
+    usedCards: [] as Card[],
+    correctCards: [] as Card[],
+    skippedCards: [] as Card[],
+    availableCards: [] as Card[],
     gameStartTime: null as string | null,
 
     // Timer intervals (stored as numbers for browser)
@@ -44,9 +45,69 @@ export const useGameStateStore = defineStore('gameState', {
       const decksStore = useDecksStore()
       return decksStore.getDeckById(state.deckId)
     },
+
+    /**
+     * Get current card text (main text)
+     */
+    currentCardText(state): string {
+      if (typeof state.currentCard === 'string') {
+        return state.currentCard
+      }
+      return state.currentCard.text
+    },
+
+    /**
+     * Get current card subtext (optional)
+     */
+    currentCardSubtext(state): string | undefined {
+      if (typeof state.currentCard === 'string') {
+        return undefined
+      }
+      return state.currentCard.subtext
+    },
+
+    /**
+     * Get correct cards as display strings
+     */
+    correctCardsDisplay(state): string[] {
+      return state.correctCards.map(card => 
+        typeof card === 'string' ? card : (card.subtext ? `${card.text} (${card.subtext})` : card.text)
+      )
+    },
+
+    /**
+     * Get skipped cards as display strings
+     */
+    skippedCardsDisplay(state): string[] {
+      return state.skippedCards.map(card => 
+        typeof card === 'string' ? card : (card.subtext ? `${card.text} (${card.subtext})` : card.text)
+      )
+    },
   },
 
   actions: {
+    /**
+     * Helper to convert Card to string for comparisons
+     */
+    cardToKey(card: Card): string {
+      if (typeof card === 'string') return card
+      return `${card.text}::${card.subtext || ''}`
+    },
+
+    /**
+     * Helper to convert Card to display string
+     */
+    cardToString(card: Card): string {
+      if (typeof card === 'string') return card
+      return card.subtext ? `${card.text} (${card.subtext})` : card.text
+    },
+
+    /**
+     * Helper to check if two cards are equal
+     */
+    cardsEqual(card1: Card, card2: Card): boolean {
+      return this.cardToKey(card1) === this.cardToKey(card2)
+    },
     /**
      * Set the current deck ID
      */
@@ -90,7 +151,7 @@ export const useGameStateStore = defineStore('gameState', {
       if (this.availableCards.length === 0) {
         // Refill with unused cards first, or all cards if all have been used
         const unusedCards = deck.cards.filter(
-          card => !this.usedCards.includes(card)
+          card => !this.usedCards.some(usedCard => this.cardsEqual(usedCard, card))
         )
 
         if (unusedCards.length > 0) {
@@ -230,8 +291,8 @@ export const useGameStateStore = defineStore('gameState', {
           deckName: deck.name,
           startDateTime: this.gameStartTime,
           duration,
-          correctWords: [...this.correctCards],
-          skippedWords: [...this.skippedCards],
+          correctWords: this.correctCards.map(card => this.cardToString(card)),
+          skippedWords: this.skippedCards.map(card => this.cardToString(card)),
         })
       }
 
@@ -293,7 +354,7 @@ export const useGameStateStore = defineStore('gameState', {
       playCorrectSound()
       
       this.correctCount++
-      if (!this.correctCards.includes(this.currentCard)) {
+      if (!this.correctCards.some(card => this.cardsEqual(card, this.currentCard))) {
         this.correctCards.push(this.currentCard)
       }
       this.usedCards.push(this.currentCard)
@@ -310,7 +371,7 @@ export const useGameStateStore = defineStore('gameState', {
       playPassSound()
       
       this.wrongCount++
-      if (!this.skippedCards.includes(this.currentCard)) {
+      if (!this.skippedCards.some(card => this.cardsEqual(card, this.currentCard))) {
         this.skippedCards.push(this.currentCard)
       }
       this.usedCards.push(this.currentCard)

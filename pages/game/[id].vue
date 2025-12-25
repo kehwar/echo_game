@@ -13,7 +13,8 @@
     <!-- Active game screen with tap zones -->
     <div v-else-if="gameState.gameStarted && !gameState.gameEnded" class="h-full flex flex-col">
       <GamePlayScreen
-        :current-card="gameState.currentCard"
+        :current-card-text="gameState.currentCardText"
+        :current-card-subtext="gameState.currentCardSubtext"
         :time-remaining="gameState.timeRemaining"
         @tap="gameState.handleTap"
         @pause="gameState.pauseGame"
@@ -45,8 +46,8 @@
       v-else-if="gameState.gameEnded"
       :correct-count="gameState.correctCount"
       :wrong-count="gameState.wrongCount"
-      :correct-cards="gameState.correctCards"
-      :skipped-cards="gameState.skippedCards"
+      :correct-cards="gameState.correctCardsDisplay"
+      :skipped-cards="gameState.skippedCardsDisplay"
       @play-again="gameState.playAgain"
       @choose-new-deck="gameState.chooseNewDeck"
     />

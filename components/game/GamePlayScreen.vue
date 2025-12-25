@@ -29,7 +29,10 @@
     <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
       <div class="bg-white/95 rounded-2xl p-12 shadow-2xl max-w-2xl mx-4 text-center">
         <div class="text-6xl md:text-8xl font-bold text-primary break-words">
-          {{ currentCard }}
+          {{ currentCardText }}
+        </div>
+        <div v-if="currentCardSubtext" class="text-3xl md:text-4xl font-medium text-primary/70 break-words mt-4">
+          {{ currentCardSubtext }}
         </div>
       </div>
     </div>
@@ -48,7 +51,8 @@
 import { useSettingsStore } from '@/stores/settings'
 
 interface Props {
-  currentCard: string
+  currentCardText: string
+  currentCardSubtext?: string
   timeRemaining: number
 }
 

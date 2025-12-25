@@ -6,12 +6,19 @@ import { readFileSync, writeFileSync, readdirSync, statSync } from 'fs'
 import { join, relative } from 'path'
 import matter from 'gray-matter'
 
+interface CardContent {
+  text: string
+  subtext?: string
+}
+
+type Card = string | CardContent
+
 interface Deck {
   id: string
   name: string
   description: string
   locale: string
-  cards: string[]
+  cards: Card[]
   extends?: string | string[]
   hidden?: boolean
 }
@@ -80,6 +87,18 @@ function generateDecks(): Deck[] {
       .split('\n')
       .map(line => line.trim())
       .filter(line => line.length > 0 && !line.startsWith('# '))
+      .map(line => {
+        // Check if the line contains "//" separator for multiline cards
+        if (line.includes('//')) {
+          const parts = line.split('//')
+          const text = parts[0].trim()
+          const subtext = parts.slice(1).join('//').trim()
+          // Only return object if subtext is not empty
+          return subtext ? { text, subtext } : text
+        }
+        // Return as simple string for single-line cards
+        return line
+      })
 
     // Parse extends property
     let extendsValue: string | string[] | undefined
@@ -116,7 +135,7 @@ function generateDecks(): Deck[] {
   /**
    * Recursively resolve deck extensions and merge cards
    */
-  function resolveExtends(deckId: string, path: string[] = []): string[] {
+  function resolveExtends(deckId: string, path: string[] = []): Card[] {
     // Check for circular dependency
     if (path.includes(deckId)) {
       console.warn(`Circular dependency detected: ${path.join(' -> ')} -> ${deckId}`)
@@ -130,7 +149,7 @@ function generateDecks(): Deck[] {
     }
 
     const newPath = [...path, deckId]
-    const allCards: string[] = []
+    const allCards: Card[] = []
 
     // Resolve extended decks first
     if (deck.extends) {
@@ -162,7 +181,17 @@ function generateDecks(): Deck[] {
       const allCards = resolveExtends(id)
 
       // Remove duplicates while preserving order
-      const uniqueCards = Array.from(new Set(allCards))
+      // For card objects, we need to stringify to compare
+      const uniqueCards: Card[] = []
+      const seen = new Set<string>()
+      
+      for (const card of allCards) {
+        const key = typeof card === 'string' ? card : JSON.stringify(card)
+        if (!seen.has(key)) {
+          seen.add(key)
+          uniqueCards.push(card)
+        }
+      }
 
       resolvedDecks.push({
         id,
