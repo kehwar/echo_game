@@ -5,7 +5,9 @@
   >
     <Card class="max-w-md mx-4 w-full">
       <CardContent class="py-12 text-center space-y-6">
-        <div class="text-6xl mb-4">⏸️</div>
+        <div class="flex justify-center mb-4">
+          <Pause :size="64" class="text-primary" />
+        </div>
         <h2 class="text-4xl font-bold">{{ t('game.pause.title') }}</h2>
         <p class="text-muted-foreground">{{ t('game.pause.subtitle') }}</p>
         
@@ -23,6 +25,7 @@
 </template>
 
 <script setup lang="ts">
+import { Pause } from 'lucide-vue-next'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 

@@ -101,25 +101,25 @@
             <div class="flex gap-3 justify-center flex-wrap">
               <button
                 :class="[
-                  'px-8 py-4 rounded-lg font-medium transition-all text-lg',
+                  'px-8 py-4 rounded-lg font-medium transition-all text-lg flex items-center gap-2 justify-center',
                   settingsStore.pauseButtonPosition === 'left'
                     ? 'bg-primary text-primary-foreground shadow-lg scale-105'
                     : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
                 ]"
                 @click="settingsStore.setPauseButtonPosition('left')"
               >
-                ⏸️ {{ t('settings.pauseButton.left') }}
+                <Pause :size="20" /> {{ t('settings.pauseButton.left') }}
               </button>
               <button
                 :class="[
-                  'px-8 py-4 rounded-lg font-medium transition-all text-lg',
+                  'px-8 py-4 rounded-lg font-medium transition-all text-lg flex items-center gap-2 justify-center',
                   settingsStore.pauseButtonPosition === 'right'
                     ? 'bg-primary text-primary-foreground shadow-lg scale-105'
                     : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
                 ]"
                 @click="settingsStore.setPauseButtonPosition('right')"
               >
-                ⏸️ {{ t('settings.pauseButton.right') }}
+                <Pause :size="20" /> {{ t('settings.pauseButton.right') }}
               </button>
             </div>
           </CardContent>
@@ -191,6 +191,7 @@
 </template>
 
 <script setup lang="ts">
+import { Pause } from 'lucide-vue-next'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { useSettingsStore } from '@/stores/settings'
