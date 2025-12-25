@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen flex flex-col p-4 max-w-2xl mx-auto">
+  <div class="h-full flex flex-col p-4 max-w-2xl mx-auto">
     <div class="flex-1 flex flex-col min-h-0">
       <Card class="flex flex-col flex-1 min-h-0">
         <CardContent class="py-6 text-center flex flex-col flex-1 min-h-0">

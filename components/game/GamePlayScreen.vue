@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen relative flex">
+  <div class="h-full relative flex">
     <!-- Pause button - absolute positioned at top left -->
     <button 
       class="absolute top-4 left-4 z-50 text-2xl font-bold p-3 bg-primary/80 hover:bg-primary text-primary-foreground rounded-lg transition-colors shadow-lg pointer-events-auto"

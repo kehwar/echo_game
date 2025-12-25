@@ -1,6 +1,6 @@
 <template>
   <div class="h-[100dvh] flex flex-col overflow-hidden">
-    <div class="flex-1 overflow-y-auto overflow-x-hidden pb-16">
+    <div class="flex-1 overflow-y-auto overflow-x-hidden" :class="{ 'pb-16': !isGamePage }">
       <NuxtPage />
     </div>
     <BottomNav v-if="!isGamePage" />

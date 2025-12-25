@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen flex flex-col p-4 max-w-2xl mx-auto">
+  <div class="h-full flex flex-col p-4 max-w-2xl mx-auto">
     <header class="text-center mb-4 flex-shrink-0">
       <NuxtLink to="/" class="inline-block mb-2 text-primary hover:underline text-sm">
         {{ t('game.backToDecks') }}
