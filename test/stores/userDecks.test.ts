@@ -91,6 +91,18 @@ describe('UserDecks Store', () => {
       const result = parseCards(text)
       expect(result).toEqual([])
     })
+
+    it('should handle text with empty subtext (trailing //)', () => {
+      const text = 'TEXT // '
+      const result = parseCards(text)
+      expect(result).toEqual(['TEXT'])
+    })
+
+    it('should ignore empty text with subtext', () => {
+      const text = '// SUBTEXT'
+      const result = parseCards(text)
+      expect(result).toEqual([])
+    })
   })
 
   describe('formatCardsToText', () => {
