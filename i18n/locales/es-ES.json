@@ -191,8 +191,8 @@
       "descriptionPlaceholder": "Describe de qué trata este mazo...",
       "localeLabel": "Idioma",
       "cardsLabel": "Cartas",
-      "cardsPlaceholder": "Ingresa una carta por línea\nUsa // al final de una línea para continuar en la siguiente\nUsa # al inicio de una línea para comentarios",
-      "cardsHelp": "Consejos: Una carta por línea • Usa // para cartas de múltiples líneas • Usa # para comentarios",
+      "cardsPlaceholder": "Ingresa una carta por línea\nUsa // al final de una línea para continuar en la siguiente\nUsa // dentro de una línea para separar múltiples cartas (ej., Carta1 // Carta2)\nUsa # al inicio de una línea para comentarios",
+      "cardsHelp": "Consejos: Una carta por línea • Usa // al final para cartas multilínea • Usa // en línea para separar cartas • Usa # para comentarios",
       "saveButton": "Guardar Mazo",
       "cancelButton": "Cancelar"
     },

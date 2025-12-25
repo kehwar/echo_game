@@ -25,7 +25,7 @@ export interface UserDeckInput {
 /**
  * Parse cards from text input
  * - One card per line
- * - Use // for multiline cards
+ * - Use // for multiline cards (end of line or inline separator)
  * - Use # for comments (ignored)
  * - Empty lines are ignored
  */
@@ -42,18 +42,61 @@ export function parseCards(text: string): string[] {
       continue
     }
 
-    // Check for multiline continuation
-    if (line.endsWith('//')) {
-      // Remove the // and add to current card
-      currentCard += line.slice(0, -2).trim() + '\n'
-    } else {
-      // Complete the card
-      if (currentCard) {
-        currentCard += line
-        cards.push(currentCard.trim())
-        currentCard = ''
+    // Process the line, handling all // separators
+    let remaining = line
+    let isFirstSegment = true
+    
+    while (remaining.length > 0) {
+      const separatorIndex = remaining.indexOf('//')
+      
+      if (separatorIndex === -1) {
+        // No more separators in this line
+        if (currentCard) {
+          // Continue the multiline card
+          currentCard += remaining
+          if (!isFirstSegment) {
+            // If this segment came after an inline //, don't complete the card yet
+            currentCard += '\n'
+          } else {
+            // Complete the multiline card
+            cards.push(currentCard.trim())
+            currentCard = ''
+          }
+        } else {
+          if (isFirstSegment) {
+            // Single line card
+            cards.push(remaining)
+          } else {
+            // Start a new multiline card
+            currentCard = remaining + '\n'
+          }
+        }
+        break
+      }
+      
+      // Found a separator
+      const beforeSeparator = remaining.substring(0, separatorIndex).trim()
+      const afterSeparator = remaining.substring(separatorIndex + 2).trim()
+      
+      if (afterSeparator.length > 0) {
+        // Inline separator: "Text // Subtext"
+        // Complete the current card (or create a new one)
+        if (currentCard) {
+          currentCard += beforeSeparator
+          cards.push(currentCard.trim())
+          currentCard = ''
+        } else if (beforeSeparator) {
+          cards.push(beforeSeparator)
+        }
+        
+        // Continue processing the rest of the line (it will start a new card)
+        remaining = afterSeparator
+        isFirstSegment = false
       } else {
-        cards.push(line)
+        // End of line separator: "Text //"
+        // Add to current card and continue on next line
+        currentCard += beforeSeparator + '\n'
+        break
       }
     }
   }
