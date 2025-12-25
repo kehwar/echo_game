@@ -141,7 +141,7 @@
     <!-- Clear confirmation dialog -->
     <div 
       v-if="showClearConfirm"
-      class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+      class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-[60]"
       @click="showClearConfirm = false"
     >
       <Card 

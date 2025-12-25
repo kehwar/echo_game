@@ -69,7 +69,7 @@
     </main>
 
     <!-- Create/Edit Dialog -->
-    <div v-if="showCreateDialog || showEditDialog" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" @click.self="closeDialogs">
+    <div v-if="showCreateDialog || showEditDialog" class="fixed inset-0 bg-black/50 flex items-center justify-center z-[60] p-4" @click.self="closeDialogs">
       <Card class="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <CardHeader>
           <CardTitle>{{ editingDeck ? t('customDecks.form.editTitle') : t('customDecks.form.createTitle') }}</CardTitle>
@@ -139,7 +139,7 @@
     </div>
 
     <!-- Import Dialog -->
-    <div v-if="showImportDialog" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" @click.self="closeDialogs">
+    <div v-if="showImportDialog" class="fixed inset-0 bg-black/50 flex items-center justify-center z-[60] p-4" @click.self="closeDialogs">
       <Card class="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <CardHeader>
           <CardTitle>{{ t('customDecks.import.title') }}</CardTitle>
@@ -168,7 +168,7 @@
     </div>
 
     <!-- Delete Confirmation Dialog -->
-    <div v-if="showDeleteDialog" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" @click.self="closeDialogs">
+    <div v-if="showDeleteDialog" class="fixed inset-0 bg-black/50 flex items-center justify-center z-[60] p-4" @click.self="closeDialogs">
       <Card class="w-full max-w-md">
         <CardHeader>
           <CardTitle>{{ t('customDecks.delete.title') }}</CardTitle>
