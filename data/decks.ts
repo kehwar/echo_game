@@ -4,12 +4,19 @@
  */
 import decksData from './decks.json'
 
+export interface CardContent {
+  text: string
+  subtext?: string
+}
+
+export type Card = string | CardContent
+
 export interface Deck {
   id: string
   name: string
   description: string
   locale: string
-  cards: string[]
+  cards: Card[]
   extends?: string | string[]
   hidden?: boolean
 }
