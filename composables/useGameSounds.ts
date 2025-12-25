@@ -7,11 +7,12 @@ import { useSound } from '@vueuse/sound'
 export function useGameSounds() {
   // Get the base URL from runtime config to ensure sounds work with GitHub Pages deployment
   const config = useRuntimeConfig()
-  const baseURL = config.app.baseURL || '/'
+  const baseURL = config.app.baseURL ?? '/'
   
   // Helper function to construct sound path with baseURL
   const getSoundPath = (filename: string) => {
-    // Normalize baseURL by removing trailing slash, then add sound path
+    // Normalize baseURL by removing trailing slash
+    // When baseURL is '/', this produces '', so '/sounds/file.wav' = '' + '/sounds/file.wav'
     const base = baseURL.replace(/\/$/, '')
     return `${base}/sounds/${filename}`
   }
