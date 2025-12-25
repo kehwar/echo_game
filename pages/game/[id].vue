@@ -49,7 +49,6 @@
       :correct-cards="gameState.correctCardsDisplay"
       :skipped-cards="gameState.skippedCardsDisplay"
       @play-again="gameState.playAgain"
-      @choose-new-deck="gameState.chooseNewDeck"
     />
   </div>
 </template>
