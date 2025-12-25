@@ -1,44 +1,46 @@
 <template>
-  <div class="h-screen flex flex-col p-4 max-w-2xl mx-auto justify-center overflow-y-auto">
-    <header class="text-center mb-8">
-      <NuxtLink to="/" class="inline-block mb-4 text-primary hover:underline">
+  <div class="h-screen flex flex-col p-4 max-w-2xl mx-auto">
+    <header class="text-center mb-4 flex-shrink-0">
+      <NuxtLink to="/" class="inline-block mb-2 text-primary hover:underline text-sm">
         {{ t('game.backToDecks') }}
       </NuxtLink>
-      <h1 class="text-4xl font-bold text-foreground mb-4">{{ deckName }}</h1>
-      <p class="text-xl text-muted-foreground">{{ deckDescription }}</p>
+      <h1 class="text-3xl font-bold text-foreground mb-2">{{ deckName }}</h1>
+      <p class="text-base text-muted-foreground">{{ deckDescription }}</p>
     </header>
 
-    <Card class="mb-8">
-      <CardContent class="py-12 text-center space-y-6">
-        <div class="text-6xl mb-4">📱</div>
-        <h2 class="text-2xl font-bold">{{ t('game.preGame.readyToPlay') }}</h2>
-        <div class="text-left max-w-md mx-auto space-y-3 text-muted-foreground">
-          <p>{{ t('game.preGame.step1') }}</p>
-          <p>{{ t('game.preGame.step2') }}</p>
-          <p>{{ t('game.preGame.step3') }}</p>
-          <p>{{ t('game.preGame.step4') }}</p>
-          <p>{{ t('game.preGame.step5') }}</p>
-          <p>{{ t('game.preGame.step6', { duration: timerDuration }) }}</p>
-        </div>
-        
-        <div class="flex flex-col gap-3 w-full max-w-md mx-auto mt-8">
-          <Button size="lg" class="w-full" @click="$emit('start')">
-            {{ t('game.preGame.startButton') }}
-          </Button>
+    <div class="flex-1 flex flex-col min-h-0 overflow-y-auto">
+      <Card class="my-auto">
+        <CardContent class="py-8 text-center space-y-4">
+          <div class="text-5xl mb-2">📱</div>
+          <h2 class="text-xl font-bold">{{ t('game.preGame.readyToPlay') }}</h2>
+          <div class="text-left max-w-md mx-auto space-y-2 text-sm text-muted-foreground">
+            <p>{{ t('game.preGame.step1') }}</p>
+            <p>{{ t('game.preGame.step2') }}</p>
+            <p>{{ t('game.preGame.step3') }}</p>
+            <p>{{ t('game.preGame.step4') }}</p>
+            <p>{{ t('game.preGame.step5') }}</p>
+            <p>{{ t('game.preGame.step6', { duration: timerDuration }) }}</p>
+          </div>
           
-          <!-- Clone button for system decks -->
-          <Button 
-            v-if="!isUserDeck"
-            variant="outline" 
-            size="lg" 
-            class="w-full"
-            @click="handleClone"
-          >
-            {{ t('customDecks.cloneButton') }}
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+          <div class="flex flex-col gap-3 w-full max-w-md mx-auto mt-6">
+            <Button size="lg" class="w-full" @click="$emit('start')">
+              {{ t('game.preGame.startButton') }}
+            </Button>
+            
+            <!-- Clone button for system decks -->
+            <Button 
+              v-if="!isUserDeck"
+              variant="outline" 
+              size="lg" 
+              class="w-full"
+              @click="handleClone"
+            >
+              {{ t('customDecks.cloneButton') }}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   </div>
 </template>
 
