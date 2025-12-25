@@ -8,6 +8,7 @@ import { useDecksStore } from './decks'
 import { useSettingsStore } from './settings'
 import { useGameHistoryStore } from './gameHistory'
 import { playTickSound, playFinishSound, playCorrectSound, playPassSound } from '@/lib/soundService'
+import { useFullscreen } from '@/composables/useFullscreen'
 
 export const useGameStateStore = defineStore('gameState', {
   state: () => ({
@@ -177,6 +178,10 @@ export const useGameStateStore = defineStore('gameState', {
       // Record game start time
       this.gameStartTime = new Date().toISOString()
 
+      // Request fullscreen mode for mobile devices
+      const { requestFullscreen } = useFullscreen()
+      await requestFullscreen()
+
       // Lock to landscape when game starts
       const { isSupported, lockOrientation } = useScreenOrientation()
       if (isSupported.value) {
@@ -226,7 +231,10 @@ export const useGameStateStore = defineStore('gameState', {
         })
       }
 
-      // Unlock orientation when game ends
+      // Exit fullscreen and unlock orientation when game ends
+      const { exitFullscreen } = useFullscreen()
+      exitFullscreen()
+
       const { isSupported, unlockOrientation } = useScreenOrientation()
       if (isSupported.value) {
         unlockOrientation()
@@ -353,7 +361,10 @@ export const useGameStateStore = defineStore('gameState', {
       this.gameEnded = false
       this.gameStarted = false
       
-      // Unlock orientation when leaving game
+      // Exit fullscreen and unlock orientation when leaving game
+      const { exitFullscreen } = useFullscreen()
+      exitFullscreen()
+
       const { isSupported, unlockOrientation } = useScreenOrientation()
       if (isSupported.value) {
         unlockOrientation()
@@ -378,7 +389,10 @@ export const useGameStateStore = defineStore('gameState', {
         this.feedbackTimeout = null
       }
 
-      // Unlock orientation on cleanup
+      // Exit fullscreen and unlock orientation on cleanup
+      const { exitFullscreen } = useFullscreen()
+      exitFullscreen()
+
       const { isSupported, unlockOrientation } = useScreenOrientation()
       if (isSupported.value) {
         unlockOrientation()
