@@ -191,8 +191,8 @@
       "descriptionPlaceholder": "Describe what this deck is about...",
       "localeLabel": "Language",
       "cardsLabel": "Cards",
-      "cardsPlaceholder": "Enter one card per line\nUse // at the end of a line to continue on the next line\nUse // within a line to separate multiple cards (e.g., Card1 // Card2)\nUse # at the start of a line for comments",
-      "cardsHelp": "Tips: One card per line • Use // at end of line for multiline cards • Use // inline to separate cards • Use # for comments",
+      "cardsPlaceholder": "Enter one card per line\nUse Text // Subtext for cards with additional context\nUse # at the start of a line for comments",
+      "cardsHelp": "Tips: One card per line • Use // to add subtext (e.g., MOVIE // Famous Scene) • Use # for comments",
       "saveButton": "Save Deck",
       "cancelButton": "Cancel"
     },
