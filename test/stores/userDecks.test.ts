@@ -35,23 +35,23 @@ describe('UserDecks Store', () => {
     it('should parse multiline cards with // inline separator', () => {
       const text = 'Text // Subtext'
       const result = parseCards(text)
-      expect(result).toEqual(['Text', 'Subtext'])
+      expect(result).toEqual([{ text: 'Text', subtext: 'Subtext' }])
     })
 
     it('should handle // inline separator with continuation', () => {
       const text = 'Text // Subtext\nMore text'
       const result = parseCards(text)
-      expect(result).toEqual(['Text', 'Subtext\nMore text'])
+      expect(result).toEqual([{ text: 'Text', subtext: 'Subtext' }, 'More text'])
     })
 
     it('should handle multiple // separators', () => {
       const text = 'Card 1 // Card 2 // Card 3'
       const result = parseCards(text)
-      expect(result).toEqual(['Card 1', 'Card 2', 'Card 3'])
+      expect(result).toEqual([{ text: 'Card 1', subtext: 'Card 2 // Card 3' }])
     })
 
     it('should handle mixed inline and end-of-line separators', () => {
-      const text = 'Card 1 // Card 2 //\nCard 2 continued'
+      const text = 'Card 1\nCard 2 //\nCard 2 continued'
       const result = parseCards(text)
       expect(result).toEqual(['Card 1', 'Card 2\nCard 2 continued'])
     })
@@ -71,7 +71,7 @@ describe('UserDecks Store', () => {
     it('should trim whitespace around // separator', () => {
       const text = 'Text   //   Subtext'
       const result = parseCards(text)
-      expect(result).toEqual(['Text', 'Subtext'])
+      expect(result).toEqual([{ text: 'Text', subtext: 'Subtext' }])
     })
 
     it('should handle // with no text after (end of line)', () => {
@@ -100,6 +100,18 @@ describe('UserDecks Store', () => {
       expect(result).toBe('Card 1\nCard 2\nCard 3')
     })
 
+    it('should format CardContent objects with subtext', () => {
+      const cards = [{ text: 'Text', subtext: 'Subtext' }]
+      const result = formatCardsToText(cards)
+      expect(result).toBe('Text // Subtext')
+    })
+
+    it('should format CardContent objects without subtext', () => {
+      const cards = [{ text: 'Text Only', subtext: undefined }]
+      const result = formatCardsToText(cards)
+      expect(result).toBe('Text Only')
+    })
+
     it('should format multiline cards with //', () => {
       const cards = ['Text\nSubtext']
       const result = formatCardsToText(cards)
@@ -116,6 +128,12 @@ describe('UserDecks Store', () => {
       const cards = ['Card 1', 'Text\nSubtext', 'Card 2']
       const result = formatCardsToText(cards)
       expect(result).toBe('Card 1\nText //\nSubtext\nCard 2')
+    })
+
+    it('should handle mixed string and CardContent objects', () => {
+      const cards = ['Card 1', { text: 'Text', subtext: 'Subtext' }, 'Card 2']
+      const result = formatCardsToText(cards)
+      expect(result).toBe('Card 1\nText // Subtext\nCard 2')
     })
   })
 
@@ -143,7 +161,7 @@ describe('UserDecks Store', () => {
         cardsText: 'Text // Subtext',
       })
 
-      expect(deck.cards).toEqual(['Text', 'Subtext'])
+      expect(deck.cards).toEqual([{ text: 'Text', subtext: 'Subtext' }])
     })
 
     it('should create a deck with multiline cards using end-of-line //', () => {
@@ -176,7 +194,7 @@ describe('UserDecks Store', () => {
 
       expect(updated).toBeDefined()
       expect(updated?.name).toBe('Updated Deck')
-      expect(updated?.cards).toEqual(['Card A', 'Card B'])
+      expect(updated?.cards).toEqual([{ text: 'Card A', subtext: 'Card B' }])
     })
 
     it('should delete a deck', () => {

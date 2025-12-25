@@ -3,7 +3,7 @@
  * Manages deck data centrally
  */
 import { defineStore } from 'pinia'
-import { decks as decksData } from '@/data/decks'
+import { decks as decksData, type Card } from '@/data/decks'
 import { useUserDecksStore } from './userDecks'
 
 export interface Deck {
@@ -11,7 +11,7 @@ export interface Deck {
   name: string
   description: string
   locale: string
-  cards: string[]
+  cards: Card[]
   extends?: string | string[]
   hidden?: boolean
   isUserDeck?: boolean
