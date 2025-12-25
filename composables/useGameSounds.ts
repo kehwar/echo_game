@@ -11,8 +11,8 @@ export function useGameSounds() {
   
   // Helper function to construct sound path with baseURL
   const getSoundPath = (filename: string) => {
-    // Remove trailing slash from baseURL if present, then add sound path
-    const base = baseURL.endsWith('/') ? baseURL.slice(0, -1) : baseURL
+    // Normalize baseURL by removing trailing slash, then add sound path
+    const base = baseURL.replace(/\/$/, '')
     return `${base}/sounds/${filename}`
   }
 
