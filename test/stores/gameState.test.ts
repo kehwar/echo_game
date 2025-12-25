@@ -9,6 +9,10 @@ vi.mock('@vueuse/core', () => ({
     isSupported: { value: false },
     lockOrientation: vi.fn(),
     unlockOrientation: vi.fn(),
+  }),
+  useFullscreen: () => ({
+    enter: vi.fn(),
+    exit: vi.fn(),
   })
 }))
 
