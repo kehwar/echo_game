@@ -48,6 +48,12 @@
       "enabled": "Enabled",
       "disabled": "Disabled"
     },
+    "pauseButton": {
+      "title": "Pause Button Position",
+      "description": "Choose where the pause button appears during gameplay",
+      "left": "Left",
+      "right": "Right"
+    },
     "language": {
       "title": "Language",
       "description": "Select your preferred language"

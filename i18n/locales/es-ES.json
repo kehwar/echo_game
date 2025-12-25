@@ -48,6 +48,12 @@
       "enabled": "Activados",
       "disabled": "Desactivados"
     },
+    "pauseButton": {
+      "title": "Posición del Botón de Pausa",
+      "description": "Elige dónde aparece el botón de pausa durante el juego",
+      "left": "Izquierda",
+      "right": "Derecha"
+    },
     "language": {
       "title": "Idioma",
       "description": "Selecciona tu idioma preferido"

@@ -12,6 +12,7 @@ interface GameSettings {
   locale: string
   deckLocale: string
   soundEnabled: boolean
+  pauseButtonPosition: 'left' | 'right'
 }
 
 const defaultSettings: GameSettings = {
@@ -19,7 +20,8 @@ const defaultSettings: GameSettings = {
   startCountdownDuration: 2, // 2 seconds default countdown
   locale: 'en-US',
   deckLocale: 'auto', // 'auto' means use UI locale
-  soundEnabled: true // Sound effects enabled by default
+  soundEnabled: true, // Sound effects enabled by default
+  pauseButtonPosition: 'left' // Default pause button position
 }
 
 export const useSettingsStore = defineStore('settings', {
@@ -29,8 +31,10 @@ export const useSettingsStore = defineStore('settings', {
     locale: defaultSettings.locale,
     deckLocale: defaultSettings.deckLocale,
     soundEnabled: defaultSettings.soundEnabled,
+    pauseButtonPosition: defaultSettings.pauseButtonPosition,
     durationOptions: [60, 90, 120] as const,
     countdownOptions: [1, 2, 3] as const,
+    pausePositionOptions: ['left', 'right'] as const,
   }),
 
   actions: {
@@ -49,6 +53,7 @@ export const useSettingsStore = defineStore('settings', {
           this.locale = settings.locale ?? defaultSettings.locale
           this.deckLocale = settings.deckLocale ?? defaultSettings.deckLocale
           this.soundEnabled = settings.soundEnabled ?? defaultSettings.soundEnabled
+          this.pauseButtonPosition = settings.pauseButtonPosition ?? defaultSettings.pauseButtonPosition
         }
       } catch (error) {
         console.error('Failed to load settings from localStorage:', error)
@@ -67,7 +72,8 @@ export const useSettingsStore = defineStore('settings', {
           startCountdownDuration: this.startCountdownDuration,
           locale: this.locale,
           deckLocale: this.deckLocale,
-          soundEnabled: this.soundEnabled
+          soundEnabled: this.soundEnabled,
+          pauseButtonPosition: this.pauseButtonPosition
         }
         localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings))
       } catch (error) {
@@ -116,6 +122,14 @@ export const useSettingsStore = defineStore('settings', {
     },
 
     /**
+     * Set pause button position and save
+     */
+    setPauseButtonPosition(position: 'left' | 'right') {
+      this.pauseButtonPosition = position
+      this.saveSettings()
+    },
+
+    /**
      * Reset to default settings
      */
     resetToDefaults() {
@@ -124,6 +138,7 @@ export const useSettingsStore = defineStore('settings', {
       this.locale = defaultSettings.locale
       this.deckLocale = defaultSettings.deckLocale
       this.soundEnabled = defaultSettings.soundEnabled
+      this.pauseButtonPosition = defaultSettings.pauseButtonPosition
       this.saveSettings()
     }
   }
