@@ -3,18 +3,18 @@
     <!-- Pause button - absolutely positioned based on settings -->
     <button 
       :class="[
-        'absolute top-4 z-50 text-xl font-bold p-3 bg-primary/80 hover:bg-primary text-primary-foreground rounded-lg transition-colors shadow-lg pointer-events-auto',
+        'absolute top-4 z-50 p-2 text-gray-600 hover:text-gray-800 transition-colors pointer-events-auto',
         pauseButtonPosition === 'left' ? 'left-4' : 'right-4'
       ]"
       :aria-label="t('game.ariaLabels.pauseGame')"
       @click="$emit('pause')"
     >
-      ⏸️
+      <Pause :size="24" />
     </button>
 
     <!-- Timer - absolute positioned at top center -->
-    <div class="absolute top-4 left-1/2 transform -translate-x-1/2 z-50 text-2xl font-bold px-6 py-3 bg-primary/80 text-primary-foreground rounded-lg shadow-lg pointer-events-none">
-      ⏱️ {{ timeRemaining }}s
+    <div class="absolute top-4 left-1/2 transform -translate-x-1/2 z-50 text-lg font-semibold px-3 py-1 text-gray-600 pointer-events-none">
+      {{ timeRemaining }}s
     </div>
 
     <!-- Left tap zone (Correct) -->
@@ -48,6 +48,7 @@
 </template>
 
 <script setup lang="ts">
+import { Pause } from 'lucide-vue-next'
 import { useSettingsStore } from '@/stores/settings'
 
 interface Props {
