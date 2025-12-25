@@ -176,15 +176,6 @@
           </CardContent>
         </Card>
 
-        <!-- Info Card -->
-        <Card class="border-primary/20">
-          <CardContent class="py-6">
-            <div class="text-center text-muted-foreground space-y-2">
-              <p>💡 {{ t('settings.info.line1') }}</p>
-              <p>{{ t('settings.info.line2') }}</p>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </main>
   </div>

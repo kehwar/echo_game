@@ -64,10 +64,6 @@
       "auto": "Auto (Usar Idioma de UI)",
       "en-US": "Inglés (EE. UU.)",
       "es-ES": "Español"
-    },
-    "info": {
-      "line1": "Estas configuraciones se aplican a todas las rondas del juego.",
-      "line2": "Los cambios se guardan automáticamente."
     }
   },
   "game": {
