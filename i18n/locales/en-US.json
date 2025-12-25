@@ -64,10 +64,6 @@
       "auto": "Auto (Use UI Language)",
       "en-US": "English (US)",
       "es-ES": "Spanish"
-    },
-    "info": {
-      "line1": "These settings apply to all game rounds.",
-      "line2": "Changes are saved automatically."
     }
   },
   "game": {
