@@ -27,43 +27,28 @@ export interface UserDeckInput {
  * Parse cards from text input
  * - One card per line
  * - Use "Text // Subtext" for cards with subtext (creates CardContent object)
- * - Use "Text //" at end of line to continue card on next line (creates multiline string)
  * - Use # for comments (ignored)
  * - Empty lines are ignored
  */
 export function parseCards(text: string): Card[] {
   const lines = text.split('\n')
   const cards: Card[] = []
-  let currentMultilineCard = ''
 
   for (let line of lines) {
     line = line.trim()
 
-    // Skip comments (unless we're building a multiline card)
-    if (!currentMultilineCard && line.startsWith('#')) {
+    // Skip comments
+    if (line.startsWith('#')) {
       continue
     }
 
-    // Skip empty lines (unless we're building a multiline card)
-    if (!currentMultilineCard && line.length === 0) {
-      continue
-    }
-
-    // If we're building a multiline card, skip empty lines and comments but continue
-    if (currentMultilineCard && (line.length === 0 || line.startsWith('#'))) {
-      continue
-    }
-
-    // Check if line ends with //
-    if (line.endsWith('//')) {
-      // End of line separator: continue on next line
-      const textPart = line.substring(0, line.length - 2).trim()
-      currentMultilineCard += (currentMultilineCard ? '\n' : '') + textPart
+    // Skip empty lines
+    if (line.length === 0) {
       continue
     }
 
     // Check if line contains // (inline separator for subtext)
-    if (!currentMultilineCard && line.includes('//')) {
+    if (line.includes('//')) {
       const separatorIndex = line.indexOf('//')
       const text = line.substring(0, separatorIndex).trim()
       const subtext = line.substring(separatorIndex + 2).trim()
@@ -78,21 +63,10 @@ export function parseCards(text: string): Card[] {
       continue
     }
 
-    // Regular line
-    if (currentMultilineCard) {
-      // Complete the multiline card
-      currentMultilineCard += '\n' + line
-      cards.push(currentMultilineCard.trim())
-      currentMultilineCard = ''
-    } else if (line.length > 0) {
-      // Single line card
+    // Regular line - single line card
+    if (line.length > 0) {
       cards.push(line)
     }
-  }
-
-  // Add any remaining multiline card
-  if (currentMultilineCard.trim()) {
-    cards.push(currentMultilineCard.trim())
   }
 
   return cards.filter(card => {
@@ -113,12 +87,8 @@ export function formatCardsToText(cards: Card[]): string {
       return card.subtext ? `${card.text} // ${card.subtext}` : card.text
     }
     
-    // Handle string cards (check for newlines)
+    // Handle string cards
     if (typeof card === 'string') {
-      if (card.includes('\n')) {
-        const lines = card.split('\n')
-        return lines.map((line, i) => i < lines.length - 1 ? line + ' //' : line).join('\n')
-      }
       return card
     }
     

@@ -26,13 +26,7 @@ describe('UserDecks Store', () => {
       expect(result).toEqual(['Card 1', 'Card 2', 'Card 3'])
     })
 
-    it('should parse multiline cards with // at end of line', () => {
-      const text = 'Text //\nSubtext'
-      const result = parseCards(text)
-      expect(result).toEqual(['Text\nSubtext'])
-    })
-
-    it('should parse multiline cards with // inline separator', () => {
+    it('should parse cards with // inline separator (subtext)', () => {
       const text = 'Text // Subtext'
       const result = parseCards(text)
       expect(result).toEqual([{ text: 'Text', subtext: 'Subtext' }])
@@ -44,22 +38,22 @@ describe('UserDecks Store', () => {
       expect(result).toEqual([{ text: 'Text', subtext: 'Subtext' }, 'More text'])
     })
 
-    it('should handle multiple // separators', () => {
+    it('should handle multiple // separators (only first is separator)', () => {
       const text = 'Card 1 // Card 2 // Card 3'
       const result = parseCards(text)
       expect(result).toEqual([{ text: 'Card 1', subtext: 'Card 2 // Card 3' }])
     })
 
-    it('should handle mixed inline and end-of-line separators', () => {
-      const text = 'Card 1\nCard 2 //\nCard 2 continued'
+    it('should handle line ending with // (treated as text with empty subtext)', () => {
+      const text = 'Card 1\nCard 2 //\nCard 3'
       const result = parseCards(text)
-      expect(result).toEqual(['Card 1', 'Card 2\nCard 2 continued'])
+      expect(result).toEqual(['Card 1', 'Card 2', 'Card 3'])
     })
 
-    it('should handle complex multiline card with // at end', () => {
-      const text = 'Line 1 //\nLine 2 //\nLine 3'
+    it('should handle // at end with empty lines (treated as text with empty subtext)', () => {
+      const text = 'Text //\n\nSubtext'
       const result = parseCards(text)
-      expect(result).toEqual(['Line 1\nLine 2\nLine 3'])
+      expect(result).toEqual(['Text', 'Subtext'])
     })
 
     it('should trim whitespace from cards', () => {
@@ -74,10 +68,10 @@ describe('UserDecks Store', () => {
       expect(result).toEqual([{ text: 'Text', subtext: 'Subtext' }])
     })
 
-    it('should handle // with no text after (end of line)', () => {
-      const text = 'Text //\n\nSubtext'
+    it('should handle text with empty subtext (trailing //)', () => {
+      const text = 'TEXT // '
       const result = parseCards(text)
-      expect(result).toEqual(['Text\nSubtext'])
+      expect(result).toEqual(['TEXT'])
     })
 
     it('should handle empty card text gracefully', () => {
@@ -90,12 +84,6 @@ describe('UserDecks Store', () => {
       const text = '# Comment 1\n\n# Comment 2\n\n'
       const result = parseCards(text)
       expect(result).toEqual([])
-    })
-
-    it('should handle text with empty subtext (trailing //)', () => {
-      const text = 'TEXT // '
-      const result = parseCards(text)
-      expect(result).toEqual(['TEXT'])
     })
 
     it('should ignore empty text with subtext', () => {
@@ -124,24 +112,6 @@ describe('UserDecks Store', () => {
       expect(result).toBe('Text Only')
     })
 
-    it('should format multiline cards with //', () => {
-      const cards = ['Text\nSubtext']
-      const result = formatCardsToText(cards)
-      expect(result).toBe('Text //\nSubtext')
-    })
-
-    it('should format multiline cards with multiple lines', () => {
-      const cards = ['Line 1\nLine 2\nLine 3']
-      const result = formatCardsToText(cards)
-      expect(result).toBe('Line 1 //\nLine 2 //\nLine 3')
-    })
-
-    it('should handle mixed single and multiline cards', () => {
-      const cards = ['Card 1', 'Text\nSubtext', 'Card 2']
-      const result = formatCardsToText(cards)
-      expect(result).toBe('Card 1\nText //\nSubtext\nCard 2')
-    })
-
     it('should handle mixed string and CardContent objects', () => {
       const cards = ['Card 1', { text: 'Text', subtext: 'Subtext' }, 'Card 2']
       const result = formatCardsToText(cards)
@@ -164,28 +134,16 @@ describe('UserDecks Store', () => {
       expect(deck.cards).toEqual(['Card 1', 'Card 2', 'Card 3'])
     })
 
-    it('should create a deck with multiline cards using inline //', () => {
+    it('should create a deck with cards using inline // (subtext)', () => {
       const store = useUserDecksStore()
       const deck = store.createDeck({
-        name: 'Multiline Deck',
-        description: 'Test multiline cards',
+        name: 'Subtext Deck',
+        description: 'Test cards with subtext',
         locale: 'en-US',
         cardsText: 'Text // Subtext',
       })
 
       expect(deck.cards).toEqual([{ text: 'Text', subtext: 'Subtext' }])
-    })
-
-    it('should create a deck with multiline cards using end-of-line //', () => {
-      const store = useUserDecksStore()
-      const deck = store.createDeck({
-        name: 'Multiline Deck',
-        description: 'Test multiline cards',
-        locale: 'en-US',
-        cardsText: 'Text //\nSubtext',
-      })
-
-      expect(deck.cards).toEqual(['Text\nSubtext'])
     })
 
     it('should update an existing deck', () => {
