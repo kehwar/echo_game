@@ -71,7 +71,7 @@ export const useGameStateStore = defineStore('gameState', {
      */
     correctCardsDisplay(state): string[] {
       return state.correctCards.map(card => 
-        typeof card === 'string' ? card : `${card.text} (${card.subtext})`
+        typeof card === 'string' ? card : (card.subtext ? `${card.text} (${card.subtext})` : card.text)
       )
     },
 
@@ -80,7 +80,7 @@ export const useGameStateStore = defineStore('gameState', {
      */
     skippedCardsDisplay(state): string[] {
       return state.skippedCards.map(card => 
-        typeof card === 'string' ? card : `${card.text} (${card.subtext})`
+        typeof card === 'string' ? card : (card.subtext ? `${card.text} (${card.subtext})` : card.text)
       )
     },
   },
@@ -97,7 +97,8 @@ export const useGameStateStore = defineStore('gameState', {
      * Helper to convert Card to display string
      */
     cardToString(card: Card): string {
-      return typeof card === 'string' ? card : `${card.text} (${card.subtext})`
+      if (typeof card === 'string') return card
+      return card.subtext ? `${card.text} (${card.subtext})` : card.text
     },
 
     /**
