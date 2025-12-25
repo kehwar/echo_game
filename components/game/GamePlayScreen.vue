@@ -1,6 +1,6 @@
 <template>
   <div class="h-full relative flex">
-    <!-- Pause button - absolute positioned based on settings -->
+    <!-- Pause button - absolutely positioned based on settings -->
     <button 
       :class="[
         'absolute top-4 z-50 text-xl font-bold p-3 bg-primary/80 hover:bg-primary text-primary-foreground rounded-lg transition-colors shadow-lg pointer-events-auto',
