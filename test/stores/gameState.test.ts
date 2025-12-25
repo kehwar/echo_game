@@ -47,6 +47,24 @@ describe('Game State Store', () => {
     expect(store.deckId).toBe('test-deck')
   })
 
+  it('should reset game state flags when setting deck ID', () => {
+    const store = useGameStateStore()
+    
+    // Simulate a finished game state
+    store.gameStarted = true
+    store.gameEnded = true
+    store.gamePaused = true
+    
+    // Set a new deck ID
+    store.setDeckId('new-deck')
+    
+    // Verify that game state flags are reset
+    expect(store.deckId).toBe('new-deck')
+    expect(store.gameStarted).toBe(false)
+    expect(store.gameEnded).toBe(false)
+    expect(store.gamePaused).toBe(false)
+  })
+
   it('should get selected deck', () => {
     const store = useGameStateStore()
     const decksStore = useDecksStore()

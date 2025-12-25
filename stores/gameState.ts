@@ -52,6 +52,11 @@ export const useGameStateStore = defineStore('gameState', {
      */
     setDeckId(deckId: string) {
       this.deckId = deckId
+      // Reset game state when selecting a new deck to prevent
+      // showing old scores from previous games
+      this.gameStarted = false
+      this.gameEnded = false
+      this.gamePaused = false
     },
 
     /**
