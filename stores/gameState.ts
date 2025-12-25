@@ -90,7 +90,8 @@ export const useGameStateStore = defineStore('gameState', {
      * Helper to convert Card to string for comparisons
      */
     cardToKey(card: Card): string {
-      return typeof card === 'string' ? card : JSON.stringify(card)
+      if (typeof card === 'string') return card
+      return `${card.text}::${card.subtext || ''}`
     },
 
     /**

@@ -93,7 +93,8 @@ function generateDecks(): Deck[] {
           const parts = line.split('//')
           const text = parts[0].trim()
           const subtext = parts.slice(1).join('//').trim()
-          return { text, subtext }
+          // Only return object if subtext is not empty
+          return subtext ? { text, subtext } : text
         }
         // Return as simple string for single-line cards
         return line
