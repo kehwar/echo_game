@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen bg-background overflow-hidden">
+  <div class="h-full bg-background overflow-hidden">
     <!-- Pre-game screen -->
     <GameStartScreen
       v-if="!gameState.gameStarted && !gameState.gameEnded"
@@ -11,7 +11,7 @@
     />
 
     <!-- Active game screen with tap zones -->
-    <div v-else-if="gameState.gameStarted && !gameState.gameEnded" class="h-screen flex flex-col">
+    <div v-else-if="gameState.gameStarted && !gameState.gameEnded" class="h-full flex flex-col">
       <GamePlayScreen
         :current-card="gameState.currentCard"
         :time-remaining="gameState.timeRemaining"
