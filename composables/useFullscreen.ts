@@ -32,24 +32,24 @@ export function useFullscreen() {
 
       // Try standard fullscreen API
       if (elem.requestFullscreen) {
-        await elem.requestFullscreen()
+        await Promise.resolve(elem.requestFullscreen())
         isFullscreen.value = true
         return true
       }
       // Try webkit fullscreen API (iOS Safari)
       else if (elem.webkitRequestFullscreen) {
-        await elem.webkitRequestFullscreen()
+        await Promise.resolve(elem.webkitRequestFullscreen())
         isFullscreen.value = true
         return true
       }
       // Fallback for older browsers
       else if (elem.mozRequestFullScreen) {
-        await elem.mozRequestFullScreen()
+        await Promise.resolve(elem.mozRequestFullScreen())
         isFullscreen.value = true
         return true
       }
       else if (elem.msRequestFullscreen) {
-        await elem.msRequestFullscreen()
+        await Promise.resolve(elem.msRequestFullscreen())
         isFullscreen.value = true
         return true
       }
@@ -69,13 +69,13 @@ export function useFullscreen() {
       const doc = document as DocumentWithFullscreen
       
       if (doc.exitFullscreen) {
-        await doc.exitFullscreen()
+        await Promise.resolve(doc.exitFullscreen())
       } else if (doc.webkitExitFullscreen) {
-        await doc.webkitExitFullscreen()
+        await Promise.resolve(doc.webkitExitFullscreen())
       } else if (doc.mozCancelFullScreen) {
-        await doc.mozCancelFullScreen()
+        await Promise.resolve(doc.mozCancelFullScreen())
       } else if (doc.msExitFullscreen) {
-        await doc.msExitFullscreen()
+        await Promise.resolve(doc.msExitFullscreen())
       }
       isFullscreen.value = false
     } catch (error) {
