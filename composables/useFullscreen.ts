@@ -6,17 +6,17 @@
 // Extended Document and Element interfaces to support vendor-prefixed fullscreen APIs
 interface DocumentWithFullscreen extends Document {
   webkitFullscreenElement?: Element
-  webkitExitFullscreen?: () => Promise<void>
+  webkitExitFullscreen?: () => Promise<void> | void
   mozFullScreenElement?: Element
-  mozCancelFullScreen?: () => Promise<void>
+  mozCancelFullScreen?: () => Promise<void> | void
   msFullscreenElement?: Element
-  msExitFullscreen?: () => Promise<void>
+  msExitFullscreen?: () => Promise<void> | void
 }
 
 interface ElementWithFullscreen extends HTMLElement {
-  webkitRequestFullscreen?: () => Promise<void>
-  mozRequestFullScreen?: () => Promise<void>
-  msRequestFullscreen?: () => Promise<void>
+  webkitRequestFullscreen?: () => Promise<void> | void
+  mozRequestFullScreen?: () => Promise<void> | void
+  msRequestFullscreen?: () => Promise<void> | void
 }
 
 export function useFullscreen() {

@@ -179,8 +179,13 @@ export const useGameStateStore = defineStore('gameState', {
       this.gameStartTime = new Date().toISOString()
 
       // Request fullscreen mode for mobile devices
-      const { requestFullscreen } = useFullscreen()
-      await requestFullscreen()
+      try {
+        const { requestFullscreen } = useFullscreen()
+        await requestFullscreen()
+      } catch (error) {
+        // Silently fail if fullscreen is not supported or denied
+        console.warn('Could not enter fullscreen mode:', error)
+      }
 
       // Lock to landscape when game starts
       const { isSupported, lockOrientation } = useScreenOrientation()
