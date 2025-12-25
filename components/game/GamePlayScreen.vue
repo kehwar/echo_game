@@ -1,24 +1,17 @@
 <template>
-  <div class="h-screen flex flex-col">
-    <!-- Timer and pause bar -->
-    <div class="bg-gradient-to-br from-primary to-purple-600 text-primary-foreground p-4">
-      <div class="max-w-7xl mx-auto flex justify-between items-center">
-        <button 
-          class="text-2xl font-bold p-2 hover:bg-white/20 rounded-lg transition-colors"
-          :aria-label="t('game.ariaLabels.pauseGame')"
-          @click="$emit('pause')"
-        >
-          ⏸️
-        </button>
-        <div class="text-3xl font-bold">⏱️ {{ timeRemaining }}s</div>
-        <button 
-          class="text-2xl font-bold p-2 hover:bg-white/20 rounded-lg transition-colors"
-          :aria-label="t('game.ariaLabels.pauseGame')"
-          @click="$emit('pause')"
-        >
-          ⏸️
-        </button>
-      </div>
+  <div class="h-screen flex relative">
+    <!-- Pause button - absolute positioned at top left -->
+    <button 
+      class="absolute top-4 left-4 z-50 text-2xl font-bold p-3 bg-primary/80 hover:bg-primary text-primary-foreground rounded-lg transition-colors shadow-lg pointer-events-auto"
+      :aria-label="t('game.ariaLabels.pauseGame')"
+      @click="$emit('pause')"
+    >
+      ⏸️
+    </button>
+
+    <!-- Timer - absolute positioned at top center -->
+    <div class="absolute top-4 left-1/2 transform -translate-x-1/2 z-50 text-3xl font-bold px-6 py-3 bg-primary/80 text-primary-foreground rounded-lg shadow-lg pointer-events-none">
+      ⏱️ {{ timeRemaining }}s
     </div>
 
     <!-- Main game area with left/right tap zones -->
