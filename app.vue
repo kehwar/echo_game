@@ -25,9 +25,10 @@ onMounted(() => {
   }
 })
 
-// Hide bottom nav only during active gameplay (not on pre/post game screens)
+// Determines if bottom nav should be hidden (only during active gameplay)
 const isGamePage = computed(() => {
-  // Only hide navbar during active gameplay
+  // Return true to hide bottom nav during active gameplay
+  // Bottom nav remains visible on game start and score screens
   if (route.path.startsWith('/game/')) {
     return gameState.gameStarted && !gameState.gameEnded
   }
