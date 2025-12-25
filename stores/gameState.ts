@@ -3,12 +3,11 @@
  * Manages the active game session state
  */
 import { defineStore } from 'pinia'
-import { useScreenOrientation } from '@vueuse/core'
+import { useScreenOrientation, useFullscreen } from '@vueuse/core'
 import { useDecksStore } from './decks'
 import { useSettingsStore } from './settings'
 import { useGameHistoryStore } from './gameHistory'
 import { playTickSound, playFinishSound, playCorrectSound, playPassSound } from '@/lib/soundService'
-import { useFullscreen } from '@/composables/useFullscreen'
 
 export const useGameStateStore = defineStore('gameState', {
   state: () => ({
@@ -180,8 +179,8 @@ export const useGameStateStore = defineStore('gameState', {
 
       // Request fullscreen mode for mobile devices
       try {
-        const { requestFullscreen } = useFullscreen()
-        await requestFullscreen()
+        const { enter } = useFullscreen()
+        await enter()
       } catch (error) {
         // Silently fail if fullscreen is not supported or denied
         console.warn('Could not enter fullscreen mode:', error)
@@ -237,8 +236,8 @@ export const useGameStateStore = defineStore('gameState', {
       }
 
       // Exit fullscreen and unlock orientation when game ends
-      const { exitFullscreen } = useFullscreen()
-      exitFullscreen()
+      const { exit } = useFullscreen()
+      exit()
 
       const { isSupported, unlockOrientation } = useScreenOrientation()
       if (isSupported.value) {
@@ -367,8 +366,8 @@ export const useGameStateStore = defineStore('gameState', {
       this.gameStarted = false
       
       // Exit fullscreen and unlock orientation when leaving game
-      const { exitFullscreen } = useFullscreen()
-      exitFullscreen()
+      const { exit } = useFullscreen()
+      exit()
 
       const { isSupported, unlockOrientation } = useScreenOrientation()
       if (isSupported.value) {
@@ -395,8 +394,8 @@ export const useGameStateStore = defineStore('gameState', {
       }
 
       // Exit fullscreen and unlock orientation on cleanup
-      const { exitFullscreen } = useFullscreen()
-      exitFullscreen()
+      const { exit } = useFullscreen()
+      exit()
 
       const { isSupported, unlockOrientation } = useScreenOrientation()
       if (isSupported.value) {
