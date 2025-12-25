@@ -9,11 +9,13 @@
 
 <script setup lang="ts">
 import { useSettingsStore } from '@/stores/settings'
+import { useGameStateStore } from '@/stores/gameState'
 import BottomNav from '@/components/BottomNav.vue'
 
 // Initialize settings and sync locale
 const { setLocale } = useI18n()
 const settingsStore = useSettingsStore()
+const gameState = useGameStateStore()
 const route = useRoute()
 
 // On mount, sync the i18n locale with the saved locale in settings
@@ -23,8 +25,12 @@ onMounted(() => {
   }
 })
 
-// Hide bottom nav on all game screens (start, active, and score)
+// Hide bottom nav only during active gameplay (not on pre/post game screens)
 const isGamePage = computed(() => {
-  return route.path.startsWith('/game/')
+  // Only hide navbar during active gameplay
+  if (route.path.startsWith('/game/')) {
+    return gameState.gameStarted && !gameState.gameEnded
+  }
+  return false
 })
 </script>
