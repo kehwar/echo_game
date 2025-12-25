@@ -3,13 +3,14 @@
  * Manages custom user-created decks with localStorage persistence
  */
 import { defineStore } from 'pinia'
+import type { Card } from '@/data/decks'
 
 export interface UserDeck {
   id: string
   name: string
   description: string
   locale: string
-  cards: string[]
+  cards: Card[]
   createdAt: string
   updatedAt: string
   isUserDeck: true
@@ -25,101 +26,103 @@ export interface UserDeckInput {
 /**
  * Parse cards from text input
  * - One card per line
- * - Use // for multiline cards (end of line or inline separator)
+ * - Use "Text // Subtext" for cards with subtext (creates CardContent object)
+ * - Use "Text //" at end of line to continue card on next line (creates multiline string)
  * - Use # for comments (ignored)
  * - Empty lines are ignored
  */
-export function parseCards(text: string): string[] {
+export function parseCards(text: string): Card[] {
   const lines = text.split('\n')
-  const cards: string[] = []
-  let currentCard = ''
+  const cards: Card[] = []
+  let currentMultilineCard = ''
 
   for (let line of lines) {
     line = line.trim()
 
-    // Skip comments and empty lines
-    if (line.startsWith('#') || line.length === 0) {
+    // Skip comments (unless we're building a multiline card)
+    if (!currentMultilineCard && line.startsWith('#')) {
       continue
     }
 
-    // Process the line, handling all // separators
-    let remaining = line
-    let isFirstSegment = true
-    
-    while (remaining.length > 0) {
-      const separatorIndex = remaining.indexOf('//')
+    // Skip empty lines (unless we're building a multiline card)
+    if (!currentMultilineCard && line.length === 0) {
+      continue
+    }
+
+    // If we're building a multiline card, skip empty lines and comments but continue
+    if (currentMultilineCard && (line.length === 0 || line.startsWith('#'))) {
+      continue
+    }
+
+    // Check if line ends with //
+    if (line.endsWith('//')) {
+      // End of line separator: continue on next line
+      const textPart = line.substring(0, line.length - 2).trim()
+      currentMultilineCard += (currentMultilineCard ? '\n' : '') + textPart
+      continue
+    }
+
+    // Check if line contains // (inline separator for subtext)
+    if (!currentMultilineCard && line.includes('//')) {
+      const separatorIndex = line.indexOf('//')
+      const text = line.substring(0, separatorIndex).trim()
+      const subtext = line.substring(separatorIndex + 2).trim()
       
-      if (separatorIndex === -1) {
-        // No more separators in this line
-        if (currentCard) {
-          // Continue the multiline card
-          currentCard += remaining
-          if (!isFirstSegment) {
-            // If this segment came after an inline //, don't complete the card yet
-            currentCard += '\n'
-          } else {
-            // Complete the multiline card
-            cards.push(currentCard.trim())
-            currentCard = ''
-          }
-        } else {
-          if (isFirstSegment) {
-            // Single line card
-            cards.push(remaining)
-          } else {
-            // Start a new multiline card
-            currentCard = remaining + '\n'
-          }
-        }
-        break
+      if (text && subtext) {
+        // Create CardContent object
+        cards.push({ text, subtext })
+      } else if (text) {
+        // No subtext, just add text as string
+        cards.push(text)
       }
-      
-      // Found a separator
-      const beforeSeparator = remaining.substring(0, separatorIndex).trim()
-      const afterSeparator = remaining.substring(separatorIndex + 2).trim()
-      
-      if (afterSeparator.length > 0) {
-        // Inline separator: "Text // Subtext"
-        // Complete the current card (or create a new one)
-        if (currentCard) {
-          currentCard += beforeSeparator
-          cards.push(currentCard.trim())
-          currentCard = ''
-        } else if (beforeSeparator) {
-          cards.push(beforeSeparator)
-        }
-        
-        // Continue processing the rest of the line (it will start a new card)
-        remaining = afterSeparator
-        isFirstSegment = false
-      } else {
-        // End of line separator: "Text //"
-        // Add to current card and continue on next line
-        currentCard += beforeSeparator + '\n'
-        break
-      }
+      continue
+    }
+
+    // Regular line
+    if (currentMultilineCard) {
+      // Complete the multiline card
+      currentMultilineCard += '\n' + line
+      cards.push(currentMultilineCard.trim())
+      currentMultilineCard = ''
+    } else if (line.length > 0) {
+      // Single line card
+      cards.push(line)
     }
   }
 
-  // Add any remaining card
-  if (currentCard.trim()) {
-    cards.push(currentCard.trim())
+  // Add any remaining multiline card
+  if (currentMultilineCard.trim()) {
+    cards.push(currentMultilineCard.trim())
   }
 
-  return cards.filter(card => card.length > 0)
+  return cards.filter(card => {
+    if (typeof card === 'string') {
+      return card.length > 0
+    }
+    return card.text.length > 0
+  })
 }
 
 /**
  * Format cards to text for editing
  */
-export function formatCardsToText(cards: string[]): string {
+export function formatCardsToText(cards: Card[]): string {
   return cards.map(card => {
-    // If card has newlines, add // to continue on next line
-    if (card.includes('\n')) {
-      const lines = card.split('\n')
-      return lines.map((line, i) => i < lines.length - 1 ? line + ' //' : line).join('\n')
+    // Handle CardContent objects
+    if (typeof card === 'object' && 'text' in card) {
+      return card.subtext ? `${card.text} // ${card.subtext}` : card.text
     }
-    return card
+    
+    // Handle string cards (check for newlines)
+    if (typeof card === 'string') {
+      if (card.includes('\n')) {
+        const lines = card.split('\n')
+        return lines.map((line, i) => i < lines.length - 1 ? line + ' //' : line).join('\n')
+      }
+      return card
+    }
+    
+    return ''
   }).join('\n')
 }
 
@@ -224,7 +227,7 @@ export const useUserDecksStore = defineStore('userDecks', {
     /**
      * Clone a system deck to create a user deck
      */
-    cloneDeck(sourceDeck: { name: string; description: string; locale: string; cards: string[] }): UserDeck {
+    cloneDeck(sourceDeck: { name: string; description: string; locale: string; cards: Card[] }): UserDeck {
       const now = new Date().toISOString()
       const id = `user-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`
 
@@ -251,13 +254,16 @@ export const useUserDecksStore = defineStore('userDecks', {
       const deck = this.getDeckById(id)
       if (!deck) return null
 
+      // Format cards for export
+      const cardsText = formatCardsToText(deck.cards)
+
       const yaml = `---
 name: ${deck.name}
 description: ${deck.description}
 locale: ${deck.locale}
 ---
 
-${deck.cards.join('\n')}
+${cardsText}
 `
       return yaml
     },
