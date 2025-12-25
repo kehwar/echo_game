@@ -3,7 +3,7 @@
  * Manages custom user-created decks with localStorage persistence
  */
 import { defineStore } from 'pinia'
-import type { Card, CardContent } from '@/data/decks'
+import type { Card } from '@/data/decks'
 
 export interface UserDeck {
   id: string
