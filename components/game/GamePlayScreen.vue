@@ -75,40 +75,52 @@ const settingsStore = useSettingsStore()
 const pauseButtonPosition = computed(() => settingsStore.pauseButtonPosition)
 
 /**
+ * Get the font family value for CSS
+ */
+const fontFamilyValue = computed(() => {
+  const { fontFamily } = settingsStore
+  return fontFamily === 'sans-serif' ? 'inherit' : fontFamily
+})
+
+/**
+ * Calculate scale based on text length
+ */
+const getScaleForLength = (textLength: number, baseScale = 1.0): number => {
+  let scale = baseScale
+  
+  if (textLength > 20) {
+    scale *= 0.7
+  } else if (textLength > 15) {
+    scale *= 0.8
+  } else if (textLength > 10) {
+    scale *= 0.9
+  }
+  
+  return scale
+}
+
+/**
  * Calculate the font size for card text based on settings
  */
 const cardTextStyle = computed(() => {
-  const { fontSize, fontFamily, autoScaleFont, scaleFactor } = settingsStore
+  const { fontSize, autoScaleFont, scaleFactor } = settingsStore
   
   if (!autoScaleFont) {
     // Use fixed font size
     return {
       fontSize: `${fontSize}rem`,
-      fontFamily: fontFamily === 'sans-serif' ? 'inherit' : fontFamily
+      fontFamily: fontFamilyValue.value
     }
   }
   
   // Auto-scale based on character count
   const textLength = props.currentCardText.length
-  let scale = 1.0
-  
-  // Scale down for longer text
-  if (textLength > 20) {
-    scale = 0.7
-  } else if (textLength > 15) {
-    scale = 0.8
-  } else if (textLength > 10) {
-    scale = 0.9
-  }
-  
-  // Apply user's scale factor
-  scale *= scaleFactor
-  
+  const scale = getScaleForLength(textLength, scaleFactor)
   const calculatedSize = fontSize * scale
   
   return {
     fontSize: `${calculatedSize}rem`,
-    fontFamily: fontFamily === 'sans-serif' ? 'inherit' : fontFamily
+    fontFamily: fontFamilyValue.value
   }
 })
 
@@ -116,37 +128,24 @@ const cardTextStyle = computed(() => {
  * Calculate the font size for card subtext
  */
 const cardSubtextStyle = computed(() => {
-  const { fontFamily, autoScaleFont, scaleFactor } = settingsStore
+  const { fontSize, autoScaleFont, scaleFactor } = settingsStore
   
   if (!autoScaleFont) {
     // Use fixed font size (half of main text)
     return {
-      fontSize: `${settingsStore.fontSize / 2}rem`,
-      fontFamily: fontFamily === 'sans-serif' ? 'inherit' : fontFamily
+      fontSize: `${fontSize / 2}rem`,
+      fontFamily: fontFamilyValue.value
     }
   }
   
   // Auto-scale based on character count
   const textLength = props.currentCardSubtext?.length || 0
-  let scale = 0.5 // Subtext is always smaller
-  
-  // Scale down for longer text
-  if (textLength > 20) {
-    scale = 0.35
-  } else if (textLength > 15) {
-    scale = 0.4
-  } else if (textLength > 10) {
-    scale = 0.45
-  }
-  
-  // Apply user's scale factor
-  scale *= scaleFactor
-  
-  const calculatedSize = settingsStore.fontSize * scale
+  const scale = getScaleForLength(textLength, 0.5 * scaleFactor)
+  const calculatedSize = fontSize * scale
   
   return {
     fontSize: `${calculatedSize}rem`,
-    fontFamily: fontFamily === 'sans-serif' ? 'inherit' : fontFamily
+    fontFamily: fontFamilyValue.value
   }
 })
 </script>
