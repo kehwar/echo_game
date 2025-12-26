@@ -64,6 +64,29 @@
       "auto": "Auto (Usar Idioma de UI)",
       "en-US": "Inglés (EE. UU.)",
       "es-ES": "Español"
+    },
+    "fontSize": {
+      "title": "Tamaño de Fuente de Tarjetas",
+      "description": "Elige el tamaño de fuente base para las tarjetas del juego"
+    },
+    "fontFamily": {
+      "title": "Estilo de Fuente de Tarjetas",
+      "description": "Elige el estilo de fuente para las tarjetas del juego",
+      "sans-serif": "Sans Serif",
+      "monospace": "Monoespaciada",
+      "courier": "Courier",
+      "monaco": "Monaco",
+      "consolas": "Consolas"
+    },
+    "autoScaleFont": {
+      "title": "Ajuste Automático de Fuente",
+      "description": "Ajusta automáticamente el tamaño de fuente según la longitud del texto de la tarjeta",
+      "enabled": "Activado",
+      "disabled": "Desactivado"
+    },
+    "scaleFactor": {
+      "title": "Factor de Escala",
+      "description": "Ajusta finamente el comportamiento del escalado automático (menor = texto más pequeño, mayor = texto más grande)"
     }
   },
   "game": {

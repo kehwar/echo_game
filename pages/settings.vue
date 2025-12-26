@@ -176,6 +176,114 @@
           </CardContent>
         </Card>
 
+        <!-- Font Size Setting -->
+        <Card>
+          <CardHeader>
+            <CardTitle class="text-2xl">{{ t('settings.fontSize.title') }}</CardTitle>
+            <CardDescription>{{ t('settings.fontSize.description') }}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div class="flex gap-3 justify-center flex-wrap">
+              <button
+                v-for="size in settingsStore.fontSizeOptions"
+                :key="size"
+                :class="[
+                  'px-8 py-4 rounded-lg font-medium transition-all text-lg',
+                  settingsStore.fontSize === size
+                    ? 'bg-primary text-primary-foreground shadow-lg scale-105'
+                    : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                ]"
+                @click="settingsStore.setFontSize(size)"
+              >
+                {{ size }}
+              </button>
+            </div>
+          </CardContent>
+        </Card>
+
+        <!-- Font Family Setting -->
+        <Card>
+          <CardHeader>
+            <CardTitle class="text-2xl">{{ t('settings.fontFamily.title') }}</CardTitle>
+            <CardDescription>{{ t('settings.fontFamily.description') }}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Select v-model="selectedFontFamily" @update:model-value="changeFontFamily">
+              <SelectTrigger class="w-full">
+                <SelectValue :placeholder="t('settings.fontFamily.sansSerif')" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem
+                  v-for="font in settingsStore.fontFamilyOptions"
+                  :key="font.value"
+                  :value="font.value"
+                >
+                  {{ t(`settings.fontFamily.${font.value}`) }}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </CardContent>
+        </Card>
+
+        <!-- Auto Scale Font Setting -->
+        <Card>
+          <CardHeader>
+            <CardTitle class="text-2xl">{{ t('settings.autoScaleFont.title') }}</CardTitle>
+            <CardDescription>{{ t('settings.autoScaleFont.description') }}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div class="flex gap-3 justify-center flex-wrap">
+              <button
+                :class="[
+                  'px-8 py-4 rounded-lg font-medium transition-all text-lg',
+                  settingsStore.autoScaleFont
+                    ? 'bg-primary text-primary-foreground shadow-lg scale-105'
+                    : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                ]"
+                @click="settingsStore.setAutoScaleFont(true)"
+              >
+                {{ t('settings.autoScaleFont.enabled') }}
+              </button>
+              <button
+                :class="[
+                  'px-8 py-4 rounded-lg font-medium transition-all text-lg',
+                  !settingsStore.autoScaleFont
+                    ? 'bg-primary text-primary-foreground shadow-lg scale-105'
+                    : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                ]"
+                @click="settingsStore.setAutoScaleFont(false)"
+              >
+                {{ t('settings.autoScaleFont.disabled') }}
+              </button>
+            </div>
+          </CardContent>
+        </Card>
+
+        <!-- Scale Factor Setting (only shown when auto-scale is enabled) -->
+        <Card v-if="settingsStore.autoScaleFont">
+          <CardHeader>
+            <CardTitle class="text-2xl">{{ t('settings.scaleFactor.title') }}</CardTitle>
+            <CardDescription>{{ t('settings.scaleFactor.description') }}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div class="flex gap-3 justify-center flex-wrap">
+              <button
+                v-for="factor in settingsStore.scaleFactorOptions"
+                :key="factor"
+                :class="[
+                  'px-8 py-4 rounded-lg font-medium transition-all text-lg',
+                  settingsStore.scaleFactor === factor
+                    ? 'bg-primary text-primary-foreground shadow-lg scale-105'
+                    : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                ]"
+                @click="settingsStore.setScaleFactor(factor)"
+              >
+                {{ factor }}x
+              </button>
+            </div>
+          </CardContent>
+        </Card>
+
       </div>
     </main>
   </div>
@@ -196,6 +304,9 @@ const availableLocales = computed(() => locales.value)
 // Selected deck locale
 const selectedDeckLocale = ref(settingsStore.deckLocale)
 
+// Selected font family
+const selectedFontFamily = ref(settingsStore.fontFamily)
+
 // Change locale and update settings
 function changeLocale(newLocale: string) {
   setLocale(newLocale)
@@ -208,8 +319,18 @@ function changeDeckLocale(newDeckLocale: string) {
   settingsStore.setDeckLocale(newDeckLocale)
 }
 
+// Change font family and update settings
+function changeFontFamily(newFontFamily: string) {
+  selectedFontFamily.value = newFontFamily
+  settingsStore.setFontFamily(newFontFamily)
+}
+
 // Watch for changes in store
 watch(() => settingsStore.deckLocale, (newValue) => {
   selectedDeckLocale.value = newValue
+})
+
+watch(() => settingsStore.fontFamily, (newValue) => {
+  selectedFontFamily.value = newValue
 })
 </script>
