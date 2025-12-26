@@ -9,7 +9,7 @@ interface FittyOptions {
   minSize?: number
   maxSize?: number
   multiLine?: boolean
-  observeMutations?: boolean
+  observeMutations?: boolean | MutationObserverInit
 }
 
 /**
@@ -24,11 +24,7 @@ export function useFitty(elementRef: Ref<HTMLElement | null>, options: FittyOpti
     minSize: 16,
     maxSize: 200,
     multiLine: true,
-    observeMutations: {
-      subtree: true,
-      childList: true,
-      characterData: true,
-    },
+    observeMutations: true,
     ...options,
   }
 
