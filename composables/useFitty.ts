@@ -24,7 +24,7 @@ export function useFitty(elementRef: Ref<HTMLElement | null>, options: FittyOpti
     minSize: 16,
     maxSize: 200,
     multiLine: true,
-    observeMutations: true,
+    observeMutations: false,
     ...options,
   }
 

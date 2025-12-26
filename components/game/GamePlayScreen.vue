@@ -26,20 +26,22 @@
     />
 
     <!-- Center card display -->
-    <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-      <div class="bg-white/95 rounded-2xl p-12 shadow-2xl max-w-2xl mx-4 text-center flex flex-col justify-center" style="max-height: 80vh;">
+    <div class="absolute inset-0 flex items-center justify-center pointer-events-none px-4">
+      <div 
+        ref="cardContainerRef"
+        class="bg-white/95 rounded-2xl p-8 md:p-12 shadow-2xl w-full max-w-2xl text-center overflow-hidden"
+        style="max-height: 70vh;"
+      >
         <div 
           ref="cardTextRef"
-          class="font-bold text-primary break-words leading-tight"
-          style="white-space: pre-wrap; word-break: break-word;"
+          class="font-bold text-primary"
         >
           {{ currentCardText }}
         </div>
         <div 
           v-if="currentCardSubtext"
           ref="cardSubtextRef"
-          class="font-medium text-primary/70 break-words mt-4 leading-tight"
-          style="white-space: pre-wrap; word-break: break-word;"
+          class="font-medium text-primary/70 mt-4"
         >
           {{ currentCardSubtext }}
         </div>
@@ -78,20 +80,22 @@ const settingsStore = useSettingsStore()
 const pauseButtonPosition = computed(() => settingsStore.pauseButtonPosition)
 
 // Refs for text elements
+const cardContainerRef = ref<HTMLElement | null>(null)
 const cardTextRef = ref<HTMLElement | null>(null)
 const cardSubtextRef = ref<HTMLElement | null>(null)
 
 // Initialize Fitty for card text with appropriate sizing
+// Fitty will size text to fit within the parent container
 const { refresh: refreshCardText } = useFitty(cardTextRef, {
-  minSize: 32,
-  maxSize: 200,
+  minSize: 24,
+  maxSize: 150,
   multiLine: true,
 })
 
 // Initialize Fitty for card subtext
 const { refresh: refreshSubtext } = useFitty(cardSubtextRef, {
-  minSize: 24,
-  maxSize: 120,
+  minSize: 18,
+  maxSize: 80,
   multiLine: true,
 })
 
