@@ -28,7 +28,6 @@
     <!-- Center card display -->
     <div class="absolute inset-0 flex items-center justify-center pointer-events-none px-4">
       <div 
-        ref="cardContainerRef"
         class="bg-white/95 rounded-2xl p-8 md:p-12 shadow-2xl w-full max-w-2xl text-center overflow-hidden"
         style="max-height: 70vh;"
       >
@@ -80,12 +79,10 @@ const settingsStore = useSettingsStore()
 const pauseButtonPosition = computed(() => settingsStore.pauseButtonPosition)
 
 // Refs for text elements
-const cardContainerRef = ref<HTMLElement | null>(null)
 const cardTextRef = ref<HTMLElement | null>(null)
 const cardSubtextRef = ref<HTMLElement | null>(null)
 
 // Initialize Fitty for card text with appropriate sizing
-// Fitty will size text to fit within the parent container
 const { refresh: refreshCardText } = useFitty(cardTextRef, {
   minSize: 24,
   maxSize: 150,
