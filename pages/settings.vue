@@ -210,7 +210,7 @@
           <CardContent>
             <Select v-model="selectedFontFamily" @update:model-value="changeFontFamily">
               <SelectTrigger class="w-full">
-                <SelectValue :placeholder="t('settings.fontFamily.sansSerif')" />
+                <SelectValue :placeholder="t('settings.fontFamily.sans-serif')" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem
