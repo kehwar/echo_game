@@ -26,21 +26,18 @@
     />
 
     <!-- Center card display -->
-    <div class="absolute inset-0 flex items-center justify-center pointer-events-none px-4">
-      <div 
-        class="bg-white/95 rounded-2xl p-8 md:p-12 shadow-2xl w-full max-w-2xl text-center overflow-hidden"
-        style="max-height: 70vh;"
-      >
+    <div class="absolute inset-0 flex items-center justify-center pointer-events-none p-4">
+      <div class="w-full h-full flex flex-col items-center justify-center">
         <div 
           ref="cardTextRef"
-          class="font-bold text-primary"
+          class="font-bold text-primary w-full text-center"
         >
           {{ currentCardText }}
         </div>
         <div 
           v-if="currentCardSubtext"
           ref="cardSubtextRef"
-          class="font-medium text-primary/70 mt-4"
+          class="font-medium text-primary/70 mt-4 w-full text-center"
         >
           {{ currentCardSubtext }}
         </div>
@@ -82,17 +79,17 @@ const pauseButtonPosition = computed(() => settingsStore.pauseButtonPosition)
 const cardTextRef = ref<HTMLElement | null>(null)
 const cardSubtextRef = ref<HTMLElement | null>(null)
 
-// Initialize Fitty for card text with appropriate sizing
+// Initialize Fitty for card text to fit the viewport
 const { refresh: refreshCardText } = useFitty(cardTextRef, {
-  minSize: 24,
-  maxSize: 150,
+  minSize: 32,
+  maxSize: 300,
   multiLine: true,
 })
 
 // Initialize Fitty for card subtext
 const { refresh: refreshSubtext } = useFitty(cardSubtextRef, {
-  minSize: 18,
-  maxSize: 80,
+  minSize: 24,
+  maxSize: 150,
   multiLine: true,
 })
 
