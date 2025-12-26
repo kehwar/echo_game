@@ -26,21 +26,19 @@
     />
 
     <!-- Center card display -->
-    <div class="absolute inset-0 flex items-center justify-center pointer-events-none p-4">
-      <div class="w-full h-full flex flex-col items-center justify-center">
-        <div 
-          ref="cardTextRef"
-          class="font-bold text-primary w-full text-center"
-        >
-          {{ currentCardText }}
-        </div>
-        <div 
-          v-if="currentCardSubtext"
-          ref="cardSubtextRef"
-          class="font-medium text-primary/70 mt-4 w-full text-center"
-        >
-          {{ currentCardSubtext }}
-        </div>
+    <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none p-4">
+      <div 
+        ref="cardTextRef"
+        class="font-bold text-primary w-full"
+      >
+        {{ currentCardText }}
+      </div>
+      <div 
+        v-if="currentCardSubtext"
+        ref="cardSubtextRef"
+        class="font-medium text-primary/70 mt-4 w-full"
+      >
+        {{ currentCardSubtext }}
       </div>
     </div>
 
