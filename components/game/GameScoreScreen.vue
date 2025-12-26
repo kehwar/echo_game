@@ -53,9 +53,6 @@
             <Button size="lg" class="w-full" @click="$emit('playAgain')">
               {{ t('game.results.playAgainButton') }}
             </Button>
-            <Button variant="outline" size="lg" class="w-full" @click="$emit('chooseNewDeck')">
-              {{ t('game.results.chooseDifferentButton') }}
-            </Button>
           </div>
         </CardContent>
       </Card>
@@ -78,7 +75,6 @@ interface Props {
 const props = defineProps<Props>()
 defineEmits<{
   playAgain: []
-  chooseNewDeck: []
 }>()
 
 const { t } = useI18n()
