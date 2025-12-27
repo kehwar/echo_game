@@ -13,6 +13,10 @@ interface GameSettings {
   deckLocale: string
   soundEnabled: boolean
   pauseButtonPosition: 'left' | 'right'
+  fontSize: number
+  fontFamily: string
+  autoScaleFont: boolean
+  scaleFactor: number
 }
 
 const defaultSettings: GameSettings = {
@@ -21,7 +25,11 @@ const defaultSettings: GameSettings = {
   locale: 'en-US',
   deckLocale: 'auto', // 'auto' means use UI locale
   soundEnabled: true, // Sound effects enabled by default
-  pauseButtonPosition: 'left' // Default pause button position
+  pauseButtonPosition: 'left', // Default pause button position
+  fontSize: 6, // Default font size in rem (6rem = text-6xl)
+  fontFamily: 'sans-serif', // Default font family
+  autoScaleFont: true, // Auto-scale font based on character count
+  scaleFactor: 1.0 // Scale factor for auto-scaling (1.0 = default)
 }
 
 export const useSettingsStore = defineStore('settings', {
@@ -32,9 +40,22 @@ export const useSettingsStore = defineStore('settings', {
     deckLocale: defaultSettings.deckLocale,
     soundEnabled: defaultSettings.soundEnabled,
     pauseButtonPosition: defaultSettings.pauseButtonPosition,
+    fontSize: defaultSettings.fontSize,
+    fontFamily: defaultSettings.fontFamily,
+    autoScaleFont: defaultSettings.autoScaleFont,
+    scaleFactor: defaultSettings.scaleFactor,
     durationOptions: [60, 90, 120] as const,
     countdownOptions: [1, 2, 3] as const,
     pausePositionOptions: ['left', 'right'] as const,
+    fontSizeOptions: [4, 5, 6, 7, 8] as const, // rem values
+    fontFamilyOptions: [
+      { value: 'sans-serif', label: 'Sans Serif' },
+      { value: 'monospace', label: 'Monospace' },
+      { value: 'courier', label: 'Courier' },
+      { value: 'monaco', label: 'Monaco' },
+      { value: 'consolas', label: 'Consolas' }
+    ] as const,
+    scaleFactorOptions: [0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3] as const,
   }),
 
   actions: {
@@ -54,6 +75,10 @@ export const useSettingsStore = defineStore('settings', {
           this.deckLocale = settings.deckLocale ?? defaultSettings.deckLocale
           this.soundEnabled = settings.soundEnabled ?? defaultSettings.soundEnabled
           this.pauseButtonPosition = settings.pauseButtonPosition ?? defaultSettings.pauseButtonPosition
+          this.fontSize = settings.fontSize ?? defaultSettings.fontSize
+          this.fontFamily = settings.fontFamily ?? defaultSettings.fontFamily
+          this.autoScaleFont = settings.autoScaleFont ?? defaultSettings.autoScaleFont
+          this.scaleFactor = settings.scaleFactor ?? defaultSettings.scaleFactor
         }
       } catch (error) {
         console.error('Failed to load settings from localStorage:', error)
@@ -73,7 +98,11 @@ export const useSettingsStore = defineStore('settings', {
           locale: this.locale,
           deckLocale: this.deckLocale,
           soundEnabled: this.soundEnabled,
-          pauseButtonPosition: this.pauseButtonPosition
+          pauseButtonPosition: this.pauseButtonPosition,
+          fontSize: this.fontSize,
+          fontFamily: this.fontFamily,
+          autoScaleFont: this.autoScaleFont,
+          scaleFactor: this.scaleFactor
         }
         localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings))
       } catch (error) {
@@ -130,6 +159,38 @@ export const useSettingsStore = defineStore('settings', {
     },
 
     /**
+     * Set font size and save
+     */
+    setFontSize(size: number) {
+      this.fontSize = size
+      this.saveSettings()
+    },
+
+    /**
+     * Set font family and save
+     */
+    setFontFamily(family: string) {
+      this.fontFamily = family
+      this.saveSettings()
+    },
+
+    /**
+     * Set auto-scale font and save
+     */
+    setAutoScaleFont(enabled: boolean) {
+      this.autoScaleFont = enabled
+      this.saveSettings()
+    },
+
+    /**
+     * Set scale factor and save
+     */
+    setScaleFactor(factor: number) {
+      this.scaleFactor = factor
+      this.saveSettings()
+    },
+
+    /**
      * Reset to default settings
      */
     resetToDefaults() {
@@ -139,6 +200,10 @@ export const useSettingsStore = defineStore('settings', {
       this.deckLocale = defaultSettings.deckLocale
       this.soundEnabled = defaultSettings.soundEnabled
       this.pauseButtonPosition = defaultSettings.pauseButtonPosition
+      this.fontSize = defaultSettings.fontSize
+      this.fontFamily = defaultSettings.fontFamily
+      this.autoScaleFont = defaultSettings.autoScaleFont
+      this.scaleFactor = defaultSettings.scaleFactor
       this.saveSettings()
     }
   }

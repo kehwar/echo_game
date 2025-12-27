@@ -24,8 +24,14 @@ describe('Settings Store', () => {
     expect(store.timerDuration).toBe(120)
     expect(store.startCountdownDuration).toBe(2)
     expect(store.locale).toBe('en-US')
+    expect(store.fontSize).toBe(6)
+    expect(store.fontFamily).toBe('sans-serif')
+    expect(store.autoScaleFont).toBe(true)
+    expect(store.scaleFactor).toBe(1.0)
     expect(store.durationOptions).toEqual([60, 90, 120])
     expect(store.countdownOptions).toEqual([1, 2, 3])
+    expect(store.fontSizeOptions).toEqual([4, 5, 6, 7, 8])
+    expect(store.scaleFactorOptions).toEqual([0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3])
   })
 
   it('should set timer duration', () => {
@@ -51,10 +57,18 @@ describe('Settings Store', () => {
     store.setTimerDuration(90)
     store.setStartCountdownDuration(3)
     store.setLocale('es-ES')
+    store.setFontSize(8)
+    store.setFontFamily('monospace')
+    store.setAutoScaleFont(false)
+    store.setScaleFactor(1.2)
     store.resetToDefaults()
     expect(store.timerDuration).toBe(120)
     expect(store.startCountdownDuration).toBe(2)
     expect(store.locale).toBe('en-US')
+    expect(store.fontSize).toBe(6)
+    expect(store.fontFamily).toBe('sans-serif')
+    expect(store.autoScaleFont).toBe(true)
+    expect(store.scaleFactor).toBe(1.0)
   })
 
   it('should save settings to localStorage', () => {
@@ -79,7 +93,11 @@ describe('Settings Store', () => {
     const mockSettings = JSON.stringify({
       timerDuration: 60,
       startCountdownDuration: 1,
-      locale: 'es-ES'
+      locale: 'es-ES',
+      fontSize: 8,
+      fontFamily: 'monospace',
+      autoScaleFont: false,
+      scaleFactor: 1.2
     })
     vi.mocked(localStorage.getItem).mockReturnValue(mockSettings)
 
@@ -89,5 +107,33 @@ describe('Settings Store', () => {
     expect(store.timerDuration).toBe(60)
     expect(store.startCountdownDuration).toBe(1)
     expect(store.locale).toBe('es-ES')
+    expect(store.fontSize).toBe(8)
+    expect(store.fontFamily).toBe('monospace')
+    expect(store.autoScaleFont).toBe(false)
+    expect(store.scaleFactor).toBe(1.2)
+  })
+
+  it('should set font size', () => {
+    const store = useSettingsStore()
+    store.setFontSize(8)
+    expect(store.fontSize).toBe(8)
+  })
+
+  it('should set font family', () => {
+    const store = useSettingsStore()
+    store.setFontFamily('monospace')
+    expect(store.fontFamily).toBe('monospace')
+  })
+
+  it('should set auto-scale font', () => {
+    const store = useSettingsStore()
+    store.setAutoScaleFont(false)
+    expect(store.autoScaleFont).toBe(false)
+  })
+
+  it('should set scale factor', () => {
+    const store = useSettingsStore()
+    store.setScaleFactor(1.2)
+    expect(store.scaleFactor).toBe(1.2)
   })
 })

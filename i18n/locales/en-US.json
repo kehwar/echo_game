@@ -64,6 +64,29 @@
       "auto": "Auto (Use UI Language)",
       "en-US": "English (US)",
       "es-ES": "Spanish"
+    },
+    "fontSize": {
+      "title": "Card Font Size",
+      "description": "Choose the base font size for game cards"
+    },
+    "fontFamily": {
+      "title": "Card Font Style",
+      "description": "Choose the font style for game cards",
+      "sans-serif": "Sans Serif",
+      "monospace": "Monospace",
+      "courier": "Courier",
+      "monaco": "Monaco",
+      "consolas": "Consolas"
+    },
+    "autoScaleFont": {
+      "title": "Auto-Scale Font",
+      "description": "Automatically adjust font size based on card text length",
+      "enabled": "Enabled",
+      "disabled": "Disabled"
+    },
+    "scaleFactor": {
+      "title": "Scale Factor",
+      "description": "Fine-tune the auto-scaling behavior (lower = smaller text, higher = larger text)"
     }
   },
   "game": {
