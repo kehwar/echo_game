@@ -1,4 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+
+const isDev = process.env.NODE_ENV !== 'production'
+const baseURL = isDev ? '/' : '/echo_game/'
+
 export default defineNuxtConfig({
   devtools: { enabled: true },
   
@@ -7,15 +11,21 @@ export default defineNuxtConfig({
   
   // Configure for GitHub Pages deployment
   app: {
-    baseURL: process.env.NODE_ENV === 'production' ? '/echo_game/' : '/',
+    baseURL,
     buildAssetsDir: '/assets/',
     head: {
+      link: [
+        { rel: 'icon', type: 'image/svg+xml', href: `${baseURL}icon.svg` },
+        { rel: 'apple-touch-icon', href: `${baseURL}apple-touch-icon.png` },
+        { rel: 'manifest', href: `${baseURL}manifest.webmanifest` },
+      ],
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover' },
         { name: 'mobile-web-app-capable', content: 'yes' },
         { name: 'apple-mobile-web-app-capable', content: 'yes' },
         { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' },
         { name: 'theme-color', content: '#7c3aed' },
+        { name: 'apple-mobile-web-app-title', content: 'Echo Game' },
       ],
     },
   },
@@ -74,23 +84,23 @@ export default defineNuxtConfig({
       background_color: '#ffffff',
       display: 'standalone',
       orientation: 'portrait',
-      scope: process.env.NODE_ENV === 'production' ? '/echo_game/' : '/',
-      start_url: process.env.NODE_ENV === 'production' ? '/echo_game/' : '/',
+      scope: baseURL,
+      start_url: baseURL,
       icons: [
         {
-          src: 'icon-192x192.png',
+          src: `${baseURL}icon-192x192.png`,
           sizes: '192x192',
           type: 'image/png',
           purpose: 'any',
         },
         {
-          src: 'icon-512x512.png',
+          src: `${baseURL}icon-512x512.png`,
           sizes: '512x512',
           type: 'image/png',
           purpose: 'any',
         },
         {
-          src: 'icon-512x512.png',
+          src: `${baseURL}icon-512x512.png`,
           sizes: '512x512',
           type: 'image/png',
           purpose: 'maskable',
@@ -98,7 +108,7 @@ export default defineNuxtConfig({
       ],
     },
     workbox: {
-      navigateFallback: process.env.NODE_ENV === 'production' ? '/echo_game/' : '/',
+      navigateFallback: baseURL,
       globPatterns: ['**/*.{js,css,html,png,svg,ico,wav}'],
       runtimeCaching: [
         {

@@ -15,6 +15,7 @@ A phone-on-forehead charades game built with Nuxt 4, designed for local group pl
 - **Score Tracking**: See your correct guesses and skipped cards at the end
 - **Responsive Design**: Optimized for mobile devices
 - **No Network Required**: Fully local gameplay, no server or multiplayer needed
+- **PWA Support**: Install as a Progressive Web App for offline play and app-like experience
 
 ## 🚀 Getting Started
 
@@ -156,6 +157,31 @@ To add a new deck:
    - Tap the **RIGHT** side to skip a difficult card ✗
 6. **Beat the Clock**: You have 2 minutes to guess as many cards as possible!
 7. **See Your Score**: After time runs out, view your correct and skipped cards
+
+## 📱 Progressive Web App (PWA)
+
+Echo Game is a fully-featured Progressive Web App that can be installed on your device for an app-like experience:
+
+### Installation
+
+**On Mobile (iOS/Android):**
+1. Visit the game in your mobile browser
+2. Tap the browser menu (⋮ or share icon)
+3. Select "Add to Home Screen" or "Install App"
+4. The game icon will appear on your home screen
+
+**On Desktop (Chrome/Edge):**
+1. Visit the game in your browser
+2. Look for the install icon (⊕) in the address bar
+3. Click "Install" to add Echo Game to your applications
+
+### Benefits
+
+- **Offline Play**: Play anytime, even without an internet connection (after first visit)
+- **Fast Loading**: Instant app launch with cached resources
+- **App-Like Experience**: Runs in standalone mode without browser UI
+- **Auto-Updates**: Automatically updates to the latest version when online
+- **Home Screen Access**: Quick access directly from your device's home screen
 
 ## 🔧 Configuration
 
