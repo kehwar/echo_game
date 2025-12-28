@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background -->
+  <rect width="512" height="512" fill="#7c3aed" rx="128"/>
+  
+  <!-- Echo waves - representing sound/communication -->
+  <g fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="round">
+    <!-- Inner wave -->
+    <path d="M 256 180 Q 280 200, 280 256 Q 280 312, 256 332" opacity="0.9"/>
+    <path d="M 256 180 Q 232 200, 232 256 Q 232 312, 256 332" opacity="0.9"/>
+    
+    <!-- Middle wave -->
+    <path d="M 256 140 Q 300 170, 300 256 Q 300 342, 256 372" opacity="0.7"/>
+    <path d="M 256 140 Q 212 170, 212 256 Q 212 342, 256 372" opacity="0.7"/>
+    
+    <!-- Outer wave -->
+    <path d="M 256 100 Q 320 140, 320 256 Q 320 372, 256 412" opacity="0.5"/>
+    <path d="M 256 100 Q 192 140, 192 256 Q 192 372, 256 412" opacity="0.5"/>
+  </g>
+  
+  <!-- Phone icon in center -->
+  <g fill="#ffffff">
+    <rect x="226" y="206" width="60" height="100" rx="8"/>
+    <circle cx="256" cy="290" r="6"/>
+  </g>
+</svg>

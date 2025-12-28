@@ -27,7 +27,7 @@ export default defineNuxtConfig({
   },
   
   // ESLint module
-  modules: ['@nuxt/eslint', '@nuxtjs/tailwindcss', 'shadcn-nuxt', '@nuxtjs/i18n', '@pinia/nuxt'],
+  modules: ['@nuxt/eslint', '@nuxtjs/tailwindcss', 'shadcn-nuxt', '@nuxtjs/i18n', '@pinia/nuxt', '@vite-pwa/nuxt'],
 
   // Global CSS
   css: ['~/assets/css/main.css'],
@@ -61,5 +61,69 @@ export default defineNuxtConfig({
   // Nitro configuration for static generation
   nitro: {
     preset: 'static',
+  },
+
+  // PWA configuration
+  pwa: {
+    registerType: 'autoUpdate',
+    manifest: {
+      name: 'Echo Game',
+      short_name: 'Echo Game',
+      description: 'A phone-on-forehead charades game for group play',
+      theme_color: '#7c3aed',
+      background_color: '#ffffff',
+      display: 'standalone',
+      orientation: 'portrait',
+      scope: process.env.NODE_ENV === 'production' ? '/echo_game/' : '/',
+      start_url: process.env.NODE_ENV === 'production' ? '/echo_game/' : '/',
+      icons: [
+        {
+          src: 'icon-192x192.png',
+          sizes: '192x192',
+          type: 'image/png',
+          purpose: 'any',
+        },
+        {
+          src: 'icon-512x512.png',
+          sizes: '512x512',
+          type: 'image/png',
+          purpose: 'any',
+        },
+        {
+          src: 'icon-512x512.png',
+          sizes: '512x512',
+          type: 'image/png',
+          purpose: 'maskable',
+        },
+      ],
+    },
+    workbox: {
+      navigateFallback: process.env.NODE_ENV === 'production' ? '/echo_game/' : '/',
+      globPatterns: ['**/*.{js,css,html,png,svg,ico,wav}'],
+      runtimeCaching: [
+        {
+          urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'google-fonts-cache',
+            expiration: {
+              maxEntries: 10,
+              maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+            },
+            cacheableResponse: {
+              statuses: [0, 200],
+            },
+          },
+        },
+      ],
+    },
+    client: {
+      installPrompt: true,
+      periodicSyncForUpdates: 3600, // Check for updates every hour
+    },
+    devOptions: {
+      enabled: true,
+      type: 'module',
+    },
   },
 })
