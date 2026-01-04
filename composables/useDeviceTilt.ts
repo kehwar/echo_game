@@ -4,11 +4,19 @@
  * 
  * When phone is in landscape mode on forehead (screen facing away):
  * - Gamma (y-axis rotation) controls up/down tilt
- * - Tilt upwards (gamma increases) -> Correct
- * - Tilt downwards (gamma decreases) -> Pass/Skip
+ * - Screen orientation determines how to interpret gamma values
+ * - Gamma range: -90° to +90° (jumps when phone is vertical)
+ * 
+ * Landscape-primary: home button on right
+ * - Tilt up (away from face): gamma increases toward +90°
+ * - Tilt down (toward chest): gamma decreases toward -90°
+ * 
+ * Landscape-secondary: home button on left  
+ * - Tilt up (away from face): gamma decreases toward -90°
+ * - Tilt down (toward chest): gamma increases toward +90°
  */
 import { useDeviceOrientation } from '@vueuse/core'
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 
 export interface TiltEvent {
   action: 'correct' | 'wrong'
@@ -25,9 +33,26 @@ export function useDeviceTilt() {
   const baselineGamma = ref<number | null>(null)
   
   // Thresholds for tilt detection (in degrees from baseline)
-  // In landscape mode with screen facing away, gamma controls up/down tilt
-  const TILT_UP_THRESHOLD = 30 // Tilt upwards (phone moves away from face, gamma increases)
-  const TILT_DOWN_THRESHOLD = -30 // Tilt downwards (phone moves toward chest, gamma decreases)
+  const TILT_THRESHOLD = 30 // Degrees of tilt required to trigger action
+  
+  /**
+   * Get the current screen orientation
+   * Returns 'landscape-primary' or 'landscape-secondary'
+   */
+  const getScreenOrientation = (): string => {
+    if (typeof window === 'undefined' || !window.screen?.orientation) {
+      // Fallback: assume landscape-primary
+      return 'landscape-primary'
+    }
+    return window.screen.orientation.type
+  }
+  
+  /**
+   * Check if screen orientation is landscape-secondary (home button on left)
+   */
+  const isLandscapeSecondary = computed(() => {
+    return getScreenOrientation().includes('landscape-secondary')
+  })
   
   /**
    * Initialize baseline orientation
@@ -48,22 +73,36 @@ export function useDeviceTilt() {
   
   /**
    * Check if device is tilted up (for correct action)
-   * In landscape mode, tilting up increases gamma
+   * Takes screen orientation into account to properly interpret gamma
    */
   const isTiltedUp = computed(() => {
     if (gamma.value === null || baselineGamma.value === null) return false
     const delta = gamma.value - baselineGamma.value
-    return delta > TILT_UP_THRESHOLD
+    
+    // In landscape-secondary, movement is inverted
+    if (isLandscapeSecondary.value) {
+      return delta < -TILT_THRESHOLD
+    }
+    
+    // In landscape-primary, tilting up increases gamma
+    return delta > TILT_THRESHOLD
   })
   
   /**
    * Check if device is tilted down (for pass/skip action)
-   * In landscape mode, tilting down decreases gamma
+   * Takes screen orientation into account to properly interpret gamma
    */
   const isTiltedDown = computed(() => {
     if (gamma.value === null || baselineGamma.value === null) return false
     const delta = gamma.value - baselineGamma.value
-    return delta < TILT_DOWN_THRESHOLD
+    
+    // In landscape-secondary, movement is inverted
+    if (isLandscapeSecondary.value) {
+      return delta > TILT_THRESHOLD
+    }
+    
+    // In landscape-primary, tilting down decreases gamma
+    return delta < -TILT_THRESHOLD
   })
   
   /**
