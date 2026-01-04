@@ -34,6 +34,17 @@ export function useDeviceTilt() {
   
   // Thresholds for tilt detection (in degrees from baseline)
   const TILT_THRESHOLD = 30 // Degrees of tilt required to trigger action
+  const VERTICAL_DEADZONE = 15 // Degrees near ±90° to ignore (deadzone to avoid jitter at vertical position)
+  
+  /**
+   * Check if gamma value is in the vertical deadzone
+   * Returns true if gamma is near ±90° where discontinuities occur
+   */
+  const isInVerticalDeadzone = (gammaValue: number | null): boolean => {
+    if (gammaValue === null) return true
+    const absGamma = Math.abs(gammaValue)
+    return absGamma > (90 - VERTICAL_DEADZONE)
+  }
   
   /**
    * Get the current screen orientation
@@ -59,7 +70,7 @@ export function useDeviceTilt() {
    * Call this when the game starts to set the initial phone orientation
    */
   const initializeBaseline = () => {
-    if (gamma.value !== null) {
+    if (gamma.value !== null && !isInVerticalDeadzone(gamma.value)) {
       baselineGamma.value = gamma.value
     }
   }
@@ -77,6 +88,12 @@ export function useDeviceTilt() {
    */
   const isTiltedUp = computed(() => {
     if (gamma.value === null || baselineGamma.value === null) return false
+    
+    // Ignore readings in the vertical deadzone to avoid jitter
+    if (isInVerticalDeadzone(gamma.value) || isInVerticalDeadzone(baselineGamma.value)) {
+      return false
+    }
+    
     const delta = gamma.value - baselineGamma.value
     
     // In landscape-secondary, movement is inverted
@@ -94,6 +111,12 @@ export function useDeviceTilt() {
    */
   const isTiltedDown = computed(() => {
     if (gamma.value === null || baselineGamma.value === null) return false
+    
+    // Ignore readings in the vertical deadzone to avoid jitter
+    if (isInVerticalDeadzone(gamma.value) || isInVerticalDeadzone(baselineGamma.value)) {
+      return false
+    }
+    
     const delta = gamma.value - baselineGamma.value
     
     // In landscape-secondary, movement is inverted
@@ -142,7 +165,8 @@ export function useDeviceTilt() {
         setTimeout(() => {
           isInCooldown.value = false
           // Reset baseline after cooldown to allow continuous play
-          if (gamma.value !== null) {
+          // Only reset if not in the vertical deadzone
+          if (gamma.value !== null && !isInVerticalDeadzone(gamma.value)) {
             baselineGamma.value = gamma.value
           }
         }, cooldownDuration)
