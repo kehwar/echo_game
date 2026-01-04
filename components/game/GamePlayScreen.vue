@@ -17,8 +17,9 @@
       {{ timeRemaining }}s
     </div>
 
-    <!-- Left tap zone (Correct) -->
+    <!-- Left tap zone (Correct) - only active when input method is tap -->
     <div 
+      v-if="inputMethod === 'tap'"
       class="flex-1 cursor-pointer"
       role="button"
       :aria-label="t('game.ariaLabels.markCorrect')"
@@ -44,8 +45,9 @@
       </div>
     </div>
 
-    <!-- Right tap zone (Skip/Wrong) -->
+    <!-- Right tap zone (Skip/Wrong) - only active when input method is tap -->
     <div 
+      v-if="inputMethod === 'tap'"
       class="flex-1 cursor-pointer"
       role="button"
       :aria-label="t('game.ariaLabels.markSkip')"
@@ -57,6 +59,7 @@
 <script setup lang="ts">
 import { Pause } from 'lucide-vue-next'
 import { useSettingsStore } from '@/stores/settings'
+import { useDeviceTilt } from '@/composables/useDeviceTilt'
 
 interface Props {
   currentCardText: string
@@ -65,7 +68,7 @@ interface Props {
 }
 
 const props = defineProps<Props>()
-defineEmits<{
+const emit = defineEmits<{
   tap: [action: 'correct' | 'wrong']
   pause: []
 }>()
@@ -73,6 +76,41 @@ defineEmits<{
 const { t } = useI18n()
 const settingsStore = useSettingsStore()
 const pauseButtonPosition = computed(() => settingsStore.pauseButtonPosition)
+const inputMethod = computed(() => settingsStore.inputMethod)
+
+// Setup device tilt detection
+const { onTilt, isSupported: isTiltSupported } = useDeviceTilt()
+
+// Cleanup function for tilt detection
+let cleanupTilt: (() => void) | null = null
+
+// Watch for input method changes and setup/cleanup tilt detection
+watch(inputMethod, (newMethod) => {
+  if (newMethod === 'tilt') {
+    // Setup tilt detection
+    if (isTiltSupported.value) {
+      cleanupTilt = onTilt((event) => {
+        emit('tap', event.action)
+      })
+    } else {
+      console.warn('Device tilt is not supported on this device')
+    }
+  } else {
+    // Cleanup tilt detection
+    if (cleanupTilt) {
+      cleanupTilt()
+      cleanupTilt = null
+    }
+  }
+}, { immediate: true })
+
+// Cleanup on unmount
+onUnmounted(() => {
+  if (cleanupTilt) {
+    cleanupTilt()
+    cleanupTilt = null
+  }
+})
 
 /**
  * Get the font family value for CSS
