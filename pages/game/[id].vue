@@ -7,7 +7,7 @@
       :deck-name="gameState.selectedDeck?.name || ''"
       :deck-description="gameState.selectedDeck?.description || ''"
       :timer-duration="settingsStore.timerDuration"
-      @start="gameState.startGame"
+      @start="handleGameStart"
     />
 
     <!-- Active game screen with tap zones -->
@@ -64,6 +64,7 @@ import { useGameStateStore } from '@/stores/gameState'
 import { useSettingsStore } from '@/stores/settings'
 import { useGameSounds } from '@/composables/useGameSounds'
 import { initSoundService } from '@/lib/soundService'
+import { useDeviceTilt } from '@/composables/useDeviceTilt'
 
 const route = useRoute()
 const deckId = computed(() => route.params.id as string)
@@ -74,6 +75,25 @@ const settingsStore = useSettingsStore()
 
 // Initialize game sounds
 const sounds = useGameSounds()
+
+// Initialize device tilt for permission requests
+const { requestPermission: requestTiltPermission } = useDeviceTilt()
+
+// Handle game start with permission request for tilt mode
+const handleGameStart = async () => {
+  // If tilt mode is enabled, request permission before starting the game
+  if (settingsStore.inputMethod === 'tilt') {
+    const granted = await requestTiltPermission()
+    if (!granted) {
+      // Permission denied - show warning and don't start game yet
+      alert('Device orientation permission is required for tilt mode. Please allow access or switch to tap mode in settings.')
+      return
+    }
+  }
+  
+  // Permission granted or not needed - start the game
+  gameState.startGame()
+}
 
 // Set the deck ID when component mounts
 onMounted(() => {
