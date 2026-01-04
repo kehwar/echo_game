@@ -48,6 +48,13 @@
       "enabled": "Enabled",
       "disabled": "Disabled"
     },
+    "inputMethod": {
+      "title": "Input Method",
+      "description": "Choose how to mark cards as correct or pass",
+      "tap": "Tap Screen",
+      "tilt": "Tilt Phone",
+      "tiltInstructions": "Tilt phone upwards (away from face) for correct, tilt downwards (toward chest) to pass"
+    },
     "pauseButton": {
       "title": "Pause Button Position",
       "description": "Choose where the pause button appears during gameplay",

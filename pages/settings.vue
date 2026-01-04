@@ -91,6 +91,43 @@
           </CardContent>
         </Card>
 
+        <!-- Input Method Setting -->
+        <Card>
+          <CardHeader>
+            <CardTitle class="text-2xl">{{ t('settings.inputMethod.title') }}</CardTitle>
+            <CardDescription>{{ t('settings.inputMethod.description') }}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div class="flex gap-3 justify-center flex-wrap">
+              <button
+                :class="[
+                  'px-8 py-4 rounded-lg font-medium transition-all text-lg',
+                  settingsStore.inputMethod === 'tap'
+                    ? 'bg-primary text-primary-foreground shadow-lg scale-105'
+                    : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                ]"
+                @click="settingsStore.setInputMethod('tap')"
+              >
+                👆 {{ t('settings.inputMethod.tap') }}
+              </button>
+              <button
+                :class="[
+                  'px-8 py-4 rounded-lg font-medium transition-all text-lg',
+                  settingsStore.inputMethod === 'tilt'
+                    ? 'bg-primary text-primary-foreground shadow-lg scale-105'
+                    : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                ]"
+                @click="settingsStore.setInputMethod('tilt')"
+              >
+                📱 {{ t('settings.inputMethod.tilt') }}
+              </button>
+            </div>
+            <div v-if="settingsStore.inputMethod === 'tilt'" class="mt-4 text-sm text-muted-foreground text-center">
+              <p>{{ t('settings.inputMethod.tiltInstructions') }}</p>
+            </div>
+          </CardContent>
+        </Card>
+
         <!-- Pause Button Position Setting -->
         <Card>
           <CardHeader>

@@ -17,6 +17,7 @@ interface GameSettings {
   fontFamily: string
   autoScaleFont: boolean
   scaleFactor: number
+  inputMethod: 'tap' | 'tilt'
 }
 
 const defaultSettings: GameSettings = {
@@ -29,7 +30,8 @@ const defaultSettings: GameSettings = {
   fontSize: 6, // Default font size in rem (6rem = text-6xl)
   fontFamily: 'sans-serif', // Default font family
   autoScaleFont: true, // Auto-scale font based on character count
-  scaleFactor: 1.0 // Scale factor for auto-scaling (1.0 = default)
+  scaleFactor: 1.0, // Scale factor for auto-scaling (1.0 = default)
+  inputMethod: 'tap' // Input method: 'tap' for touch input, 'tilt' for device tilt
 }
 
 export const useSettingsStore = defineStore('settings', {
@@ -44,6 +46,7 @@ export const useSettingsStore = defineStore('settings', {
     fontFamily: defaultSettings.fontFamily,
     autoScaleFont: defaultSettings.autoScaleFont,
     scaleFactor: defaultSettings.scaleFactor,
+    inputMethod: defaultSettings.inputMethod,
     durationOptions: [60, 90, 120] as const,
     countdownOptions: [1, 2, 3] as const,
     pausePositionOptions: ['left', 'right'] as const,
@@ -56,6 +59,7 @@ export const useSettingsStore = defineStore('settings', {
       { value: 'consolas', label: 'Consolas' }
     ] as const,
     scaleFactorOptions: [0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3] as const,
+    inputMethodOptions: ['tap', 'tilt'] as const,
   }),
 
   actions: {
@@ -79,6 +83,7 @@ export const useSettingsStore = defineStore('settings', {
           this.fontFamily = settings.fontFamily ?? defaultSettings.fontFamily
           this.autoScaleFont = settings.autoScaleFont ?? defaultSettings.autoScaleFont
           this.scaleFactor = settings.scaleFactor ?? defaultSettings.scaleFactor
+          this.inputMethod = settings.inputMethod ?? defaultSettings.inputMethod
         }
       } catch (error) {
         console.error('Failed to load settings from localStorage:', error)
@@ -102,7 +107,8 @@ export const useSettingsStore = defineStore('settings', {
           fontSize: this.fontSize,
           fontFamily: this.fontFamily,
           autoScaleFont: this.autoScaleFont,
-          scaleFactor: this.scaleFactor
+          scaleFactor: this.scaleFactor,
+          inputMethod: this.inputMethod
         }
         localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings))
       } catch (error) {
@@ -191,6 +197,14 @@ export const useSettingsStore = defineStore('settings', {
     },
 
     /**
+     * Set input method and save
+     */
+    setInputMethod(method: 'tap' | 'tilt') {
+      this.inputMethod = method
+      this.saveSettings()
+    },
+
+    /**
      * Reset to default settings
      */
     resetToDefaults() {
@@ -204,6 +218,7 @@ export const useSettingsStore = defineStore('settings', {
       this.fontFamily = defaultSettings.fontFamily
       this.autoScaleFont = defaultSettings.autoScaleFont
       this.scaleFactor = defaultSettings.scaleFactor
+      this.inputMethod = defaultSettings.inputMethod
       this.saveSettings()
     }
   }

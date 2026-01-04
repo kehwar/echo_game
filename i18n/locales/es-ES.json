@@ -48,6 +48,13 @@
       "enabled": "Activados",
       "disabled": "Desactivados"
     },
+    "inputMethod": {
+      "title": "Método de Entrada",
+      "description": "Elige cómo marcar las cartas como correctas o pasarlas",
+      "tap": "Tocar Pantalla",
+      "tilt": "Inclinar Teléfono",
+      "tiltInstructions": "Inclina el teléfono hacia arriba (lejos de la cara) para correcto, inclina hacia abajo (hacia el pecho) para pasar"
+    },
     "pauseButton": {
       "title": "Posición del Botón de Pausa",
       "description": "Elige dónde aparece el botón de pausa durante el juego",
