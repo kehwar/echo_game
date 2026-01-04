@@ -2,8 +2,10 @@
  * Composable for detecting device tilt gestures
  * Uses @vueuse/core's useDeviceOrientation for tilt detection
  * 
- * Tilt downwards (beta increases) -> Pass/Skip
- * Tilt upwards (beta decreases) -> Correct
+ * When phone is in landscape mode on forehead (screen facing away):
+ * - Gamma (y-axis rotation) controls up/down tilt
+ * - Tilt upwards (gamma increases) -> Correct
+ * - Tilt downwards (gamma decreases) -> Pass/Skip
  */
 import { useDeviceOrientation } from '@vueuse/core'
 import { ref, watch } from 'vue'
@@ -20,19 +22,20 @@ export function useDeviceTilt() {
   const cooldownDuration = 500 // ms - prevents multiple triggers
   
   // Track baseline orientation when starting
-  const baselineBeta = ref<number | null>(null)
+  const baselineGamma = ref<number | null>(null)
   
   // Thresholds for tilt detection (in degrees from baseline)
-  const TILT_UP_THRESHOLD = -30 // Tilt upwards (phone moves away from face)
-  const TILT_DOWN_THRESHOLD = 30 // Tilt downwards (phone moves toward chest)
+  // In landscape mode with screen facing away, gamma controls up/down tilt
+  const TILT_UP_THRESHOLD = 30 // Tilt upwards (phone moves away from face, gamma increases)
+  const TILT_DOWN_THRESHOLD = -30 // Tilt downwards (phone moves toward chest, gamma decreases)
   
   /**
    * Initialize baseline orientation
    * Call this when the game starts to set the initial phone orientation
    */
   const initializeBaseline = () => {
-    if (beta.value !== null) {
-      baselineBeta.value = beta.value
+    if (gamma.value !== null) {
+      baselineGamma.value = gamma.value
     }
   }
   
@@ -40,25 +43,27 @@ export function useDeviceTilt() {
    * Reset the baseline orientation
    */
   const resetBaseline = () => {
-    baselineBeta.value = null
+    baselineGamma.value = null
   }
   
   /**
    * Check if device is tilted up (for correct action)
+   * In landscape mode, tilting up increases gamma
    */
   const isTiltedUp = computed(() => {
-    if (beta.value === null || baselineBeta.value === null) return false
-    const delta = beta.value - baselineBeta.value
-    return delta < TILT_UP_THRESHOLD
+    if (gamma.value === null || baselineGamma.value === null) return false
+    const delta = gamma.value - baselineGamma.value
+    return delta > TILT_UP_THRESHOLD
   })
   
   /**
    * Check if device is tilted down (for pass/skip action)
+   * In landscape mode, tilting down decreases gamma
    */
   const isTiltedDown = computed(() => {
-    if (beta.value === null || baselineBeta.value === null) return false
-    const delta = beta.value - baselineBeta.value
-    return delta > TILT_DOWN_THRESHOLD
+    if (gamma.value === null || baselineGamma.value === null) return false
+    const delta = gamma.value - baselineGamma.value
+    return delta < TILT_DOWN_THRESHOLD
   })
   
   /**
@@ -67,7 +72,7 @@ export function useDeviceTilt() {
    */
   const onTilt = (callback: (event: TiltEvent) => void) => {
     // Initialize baseline when starting to watch
-    if (beta.value !== null && baselineBeta.value === null) {
+    if (gamma.value !== null && baselineGamma.value === null) {
       initializeBaseline()
     }
     
@@ -76,8 +81,8 @@ export function useDeviceTilt() {
       if (isInCooldown.value) return
       
       // Ensure we have a baseline
-      if (baselineBeta.value === null && beta.value !== null) {
-        baselineBeta.value = beta.value
+      if (baselineGamma.value === null && gamma.value !== null) {
+        baselineGamma.value = gamma.value
         return
       }
       
@@ -98,8 +103,8 @@ export function useDeviceTilt() {
         setTimeout(() => {
           isInCooldown.value = false
           // Reset baseline after cooldown to allow continuous play
-          if (beta.value !== null) {
-            baselineBeta.value = beta.value
+          if (gamma.value !== null) {
+            baselineGamma.value = gamma.value
           }
         }, cooldownDuration)
       }
@@ -121,6 +126,6 @@ export function useDeviceTilt() {
     initializeBaseline,
     resetBaseline,
     onTilt,
-    baselineBeta,
+    baselineGamma,
   }
 }
