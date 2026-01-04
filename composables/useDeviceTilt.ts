@@ -103,9 +103,13 @@ export function useDeviceTilt() {
     }
     
     // Check if permission request is needed (iOS 13+)
-    if (typeof (DeviceOrientationEvent as unknown as { requestPermission?: () => Promise<string> }).requestPermission === 'function') {
+    const DeviceOrientationEventWithPermission = DeviceOrientationEvent as unknown as {
+      requestPermission?: () => Promise<PermissionState>
+    }
+    
+    if (typeof DeviceOrientationEventWithPermission.requestPermission === 'function') {
       try {
-        const permission = await (DeviceOrientationEvent as unknown as { requestPermission: () => Promise<string> }).requestPermission()
+        const permission = await DeviceOrientationEventWithPermission.requestPermission()
         if (permission === 'granted') {
           permissionGranted.value = true
           permissionDenied.value = false

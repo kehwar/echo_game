@@ -136,6 +136,10 @@
       "pauseGame": "Pausar juego",
       "markCorrect": "Marcar respuesta como correcta",
       "markSkip": "Saltar o marcar respuesta como incorrecta"
+    },
+    "errors": {
+      "tiltPermissionDenied": "Se requiere permiso de inclinación del dispositivo para el modo de inclinación. Por favor, permite el acceso o cambia al modo táctil en la configuración.",
+      "tiltNotSupported": "La inclinación del dispositivo no es compatible con este dispositivo. Por favor, usa el modo táctil en su lugar."
     }
   },
   "history": {

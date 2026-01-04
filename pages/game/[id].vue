@@ -68,6 +68,7 @@ import { useDeviceTilt } from '@/composables/useDeviceTilt'
 
 const route = useRoute()
 const deckId = computed(() => route.params.id as string)
+const { t } = useI18n()
 
 // Initialize stores
 const gameState = useGameStateStore()
@@ -86,7 +87,7 @@ const handleGameStart = async () => {
     const granted = await requestTiltPermission()
     if (!granted) {
       // Permission denied - show warning and don't start game yet
-      alert('Device orientation permission is required for tilt mode. Please allow access or switch to tap mode in settings.')
+      alert(t('game.errors.tiltPermissionDenied'))
       return
     }
   }
