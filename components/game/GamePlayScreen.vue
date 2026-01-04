@@ -79,28 +79,41 @@ const pauseButtonPosition = computed(() => settingsStore.pauseButtonPosition)
 const inputMethod = computed(() => settingsStore.inputMethod)
 
 // Setup device tilt detection
-const { onTilt, isSupported: isTiltSupported } = useDeviceTilt()
+const { onTilt, isSupported: isTiltSupported, requestPermission } = useDeviceTilt()
 
 // Cleanup function for tilt detection
 let cleanupTilt: (() => void) | null = null
 
-// Watch for input method changes and setup/cleanup tilt detection
-watch(inputMethod, (newMethod) => {
-  if (newMethod === 'tilt') {
+// Request permissions and setup tilt detection
+const setupTiltDetection = async () => {
+  if (!isTiltSupported.value) {
+    console.warn('Device tilt is not supported on this device')
+    return
+  }
+  
+  // Request permission if needed
+  const granted = await requestPermission()
+  
+  if (granted) {
     // Setup tilt detection
-    if (isTiltSupported.value) {
-      cleanupTilt = onTilt((event) => {
-        emit('tap', event.action)
-      })
-    } else {
-      console.warn('Device tilt is not supported on this device')
-    }
+    cleanupTilt = onTilt((event) => {
+      emit('tap', event.action)
+    })
   } else {
-    // Cleanup tilt detection
-    if (cleanupTilt) {
-      cleanupTilt()
-      cleanupTilt = null
-    }
+    console.warn('Device orientation permission denied')
+  }
+}
+
+// Watch for input method changes and setup/cleanup tilt detection
+watch(inputMethod, async (newMethod) => {
+  // Cleanup any existing tilt detection first
+  if (cleanupTilt) {
+    cleanupTilt()
+    cleanupTilt = null
+  }
+  
+  if (newMethod === 'tilt') {
+    await setupTiltDetection()
   }
 }, { immediate: true })
 
