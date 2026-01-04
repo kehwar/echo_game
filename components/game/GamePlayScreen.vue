@@ -84,23 +84,29 @@ const { onTilt, isSupported: isTiltSupported } = useDeviceTilt()
 // Cleanup function for tilt detection
 let cleanupTilt: (() => void) | null = null
 
+// Setup tilt detection without requesting permission (permission already requested at game start)
+const setupTiltDetection = () => {
+  if (!isTiltSupported.value) {
+    console.warn('Device tilt is not supported on this device')
+    return
+  }
+  
+  // Setup tilt detection - permission should already be granted
+  cleanupTilt = onTilt((event) => {
+    emit('tap', event.action)
+  })
+}
+
 // Watch for input method changes and setup/cleanup tilt detection
 watch(inputMethod, (newMethod) => {
+  // Cleanup any existing tilt detection first
+  if (cleanupTilt) {
+    cleanupTilt()
+    cleanupTilt = null
+  }
+  
   if (newMethod === 'tilt') {
-    // Setup tilt detection
-    if (isTiltSupported.value) {
-      cleanupTilt = onTilt((event) => {
-        emit('tap', event.action)
-      })
-    } else {
-      console.warn('Device tilt is not supported on this device')
-    }
-  } else {
-    // Cleanup tilt detection
-    if (cleanupTilt) {
-      cleanupTilt()
-      cleanupTilt = null
-    }
+    setupTiltDetection()
   }
 }, { immediate: true })
 

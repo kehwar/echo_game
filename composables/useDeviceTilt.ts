@@ -29,6 +29,10 @@ export function useDeviceTilt() {
   const isInCooldown = ref(false)
   const cooldownDuration = 500 // ms - prevents multiple triggers
   
+  // Track permission state
+  const permissionGranted = ref(false)
+  const permissionDenied = ref(false)
+  
   // Track baseline orientation when starting
   const baselineGamma = ref<number | null>(null)
   
@@ -80,6 +84,53 @@ export function useDeviceTilt() {
    */
   const resetBaseline = () => {
     baselineGamma.value = null
+  }
+  
+  /**
+   * Request permission for device orientation (required on iOS 13+ and some browsers)
+   * Returns true if permission granted, false otherwise
+   */
+  const requestPermission = async (): Promise<boolean> => {
+    // Check if we're in a browser environment
+    if (typeof window === 'undefined') {
+      return false
+    }
+    
+    // Check if DeviceOrientationEvent exists
+    if (typeof DeviceOrientationEvent === 'undefined') {
+      permissionDenied.value = true
+      return false
+    }
+    
+    // Check if permission request is needed (iOS 13+)
+    const DeviceOrientationEventWithPermission = DeviceOrientationEvent as unknown as {
+      requestPermission?: () => Promise<PermissionState>
+    }
+    
+    if (typeof DeviceOrientationEventWithPermission.requestPermission === 'function') {
+      try {
+        const permission = await DeviceOrientationEventWithPermission.requestPermission()
+        if (permission === 'granted') {
+          permissionGranted.value = true
+          permissionDenied.value = false
+          return true
+        } else {
+          permissionDenied.value = true
+          permissionGranted.value = false
+          return false
+        }
+      } catch (error) {
+        console.error('Error requesting device orientation permission:', error)
+        permissionDenied.value = true
+        permissionGranted.value = false
+        return false
+      }
+    } else {
+      // Permission not needed on this device/browser
+      permissionGranted.value = true
+      permissionDenied.value = false
+      return true
+    }
   }
   
   /**
@@ -190,5 +241,8 @@ export function useDeviceTilt() {
     resetBaseline,
     onTilt,
     baselineGamma,
+    requestPermission,
+    permissionGranted,
+    permissionDenied,
   }
 }

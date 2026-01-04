@@ -136,6 +136,10 @@
       "pauseGame": "Pause game",
       "markCorrect": "Mark answer as correct",
       "markSkip": "Skip or mark answer as wrong"
+    },
+    "errors": {
+      "tiltPermissionDenied": "Device tilt permission is required for tilt mode. Please allow access or switch to tap mode in settings.",
+      "tiltNotSupported": "Device tilt is not supported on this device. Please use tap mode instead."
     }
   },
   "history": {
